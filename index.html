@@ -56,7 +56,7 @@
     look-controls="enabled: false">
 
     <!-- クリック判定 -->
-    <a-cursor raycaster="objects: .clickable"> </a-cursor>
+    <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"> </a-entity>
   </a-camera>
 
   <!-- 画像1 -->
@@ -80,38 +80,42 @@
 </a-scene>
 
 
+
 <script>
 
 const effect = document.querySelector("#effect");
 
-// scene読み込み後
 document.querySelector("a-scene").addEventListener("loaded", () => {
 
   document.querySelectorAll(".clickable").forEach(el => {
 
-    el.addEventListener("click", () => {
+    // PCクリック
+    el.addEventListener("click", showEffect);
 
-      console.log("クリック成功");
-
-      // 発見表示
-      effect.style.display = "block";
-
-      // 音
-      const audio = new Audio("discover.mp3");
-      audio.play();
-
-      // 1秒後消す
-      setTimeout(() => {
-        effect.style.display = "none";
-      }, 1000);
-
-    });
+    // スマホタップ
+    el.addEventListener("touchstart", showEffect);
 
   });
 
 });
 
+function showEffect() {
+
+  console.log("発見！");
+
+  effect.style.display = "block";
+
+  const audio = new Audio("discover.mp3");
+  audio.play();
+
+  setTimeout(() => {
+    effect.style.display = "none";
+  }, 1000);
+
+}
+
 </script>
+
 
 </body>
 </html>
