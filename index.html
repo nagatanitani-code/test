@@ -51,13 +51,13 @@
  <img id="img3" src="ar-image3.jpg" />
  </a-assets>
 
-  <a-camera
-    position="0 0 0"
-    look-controls="enabled: false">
 
-    <!-- クリック判定 -->
-   
+<a-camera
+  camera
+  position="0 0 0"
+  look-controls="enabled: false">
 </a-camera>
+
 
   <!-- 画像1 -->
   <a-entity mindar-image-target="targetIndex: 0">
@@ -83,19 +83,101 @@
 
 
 
-<script> 
-const effect = document.querySelector("#effect"); const scene = document.querySelector("a-scene"); 
-scene.addEventListener("loaded", () => { // 画面タップ window.addEventListener("touchstart", handleTouch); // PCクリック 
-window.addEventListener("click", handleTouch); });
- function handleTouch(event) { // camera取得 const camera = document.querySelector("[camera]"); // raycaster作成
- const raycaster = new THREE.Raycaster(); // マウス座標
- const mouse = new THREE.Vector2(); // タッチ位置 
-const x = event.touches ? event.touches[0].clientX : event.clientX; const y = event.touches ? event.touches[0].clientY : event.clientY; // -1〜1へ変換
- mouse.x = (x / window.innerWidth) * 2 - 1; mouse.y = -(y / window.innerHeight) * 2 + 1; // ray発射 
-raycaster.setFromCamera(mouse, camera.getObject3D('camera')); // clickable取得 
-const clickable = document.querySelectorAll(".clickable"); const objects = []; clickable.forEach(el => { if(el.object3D.visible){ objects.push(el.object3D); } }); // 当たり判定
- const intersects = raycaster.intersectObjects(objects, true); if(intersects.length > 0){ console.log("発見！"); effect.style.display = "block"; const audio = new Audio("discover.mp3"); audio.play(); setTimeout(() => { effect.style.display = "none"; }, 1000); } }
- </script>
+
+<script>
+
+const effect = document.querySelector("#effect");
+const scene = document.querySelector("a-scene");
+
+scene.addEventListener("loaded", () => {
+
+  // スマホタップ
+  window.addEventListener("touchstart", handleTouch);
+
+  // PCクリック
+  window.addEventListener("click", handleTouch);
+
+});
+
+function handleTouch(event){
+
+  console.log("タッチ検出");
+
+  // camera取得
+  const camera = document.querySelector("[camera]");
+
+  if(!camera){
+    console.log("camera取得失敗");
+    return;
+  }
+
+  // raycaster
+  const raycaster = new THREE.Raycaster();
+
+  // 座標
+  const mouse = new THREE.Vector2();
+
+  // タッチ位置
+  const x = event.touches ?
+    event.touches[0].clientX :
+    event.clientX;
+
+  const y = event.touches ?
+    event.touches[0].clientY :
+    event.clientY;
+
+  // -1〜1変換
+  mouse.x = (x / window.innerWidth) * 2 - 1;
+  mouse.y = -(y / window.innerHeight) * 2 + 1;
+
+  // ray発射
+  raycaster.setFromCamera(
+    mouse,
+    camera.getObject3D("camera")
+  );
+
+  // clickable取得
+  const clickable =
+    document.querySelectorAll(".clickable");
+
+  const objects = [];
+
+  clickable.forEach(el => {
+
+    if(el.object3D.visible){
+      objects.push(el.object3D);
+    }
+
+  });
+
+  console.log(objects);
+
+  // 判定
+  const intersects =
+    raycaster.intersectObjects(objects, true);
+
+  console.log(intersects);
+
+  // 当たった
+  if(intersects.length > 0){
+
+    console.log("発見！");
+
+    effect.style.display = "block";
+
+    const audio = new Audio("discover.mp3");
+    audio.play();
+
+    setTimeout(() => {
+      effect.style.display = "none";
+    }, 1000);
+
+  }
+
+}
+
+</script>
+
 
 
 </body>
