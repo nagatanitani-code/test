@@ -57,6 +57,30 @@
 
 }
 
+<div id="treasureBox">
+
+  <div id="treasureTitle">
+    宝発見数
+  </div>
+
+  <div id="treasureCount">
+    0 / 1
+  </div>
+
+  <img
+    id="treasureImage"
+    src=""
+    style="
+      width:120px;
+      display:none;
+      margin-top:10px;
+      border-radius:12px;
+    "
+  >
+
+</div>
+
+
 #missionTitle{
 
   font-size: 16px;
@@ -68,6 +92,36 @@
   font-size: 28px;
   font-weight: bold;
 
+}
+
+#treasureBox{
+
+  position: fixed;
+
+  right: 20px;
+  top: 20px;
+
+  background: rgba(0,0,0,0.7);
+
+  color: white;
+
+  padding: 16px;
+
+  border-radius: 14px;
+
+  z-index: 999;
+
+  text-align: center;
+
+}
+
+#treasureTitle{
+  font-size:18px;
+}
+
+#treasureCount{
+  font-size:32px;
+  font-weight:bold;
 }
 
 
@@ -124,13 +178,13 @@
   <a-entity id="target2" mindar-image-target="targetIndex: 1">
 
   <a-plane src="#img2"  width="1" height="1"material="shader: flat; transparent: true;"> </a-plane>
-<a-plane class="clickable" color="red" opacity="0.3" width="0.2" height="0.2" position="0.15 -0.1 0.02" > </a-plane>
+<a-plane class="clickable" data-name="女の子"color="red" opacity="0.3" width="0.2" height="0.2" position="0.15 -0.1 0.02" > </a-plane>
 
  </a-entity>
 <!-- 画像3 --> 
 <a-entity id="target3" mindar-image-target="targetIndex: 2">
 <a-plane src="#img3"  width="1" height="1"material="shader: flat; transparent: true;"> </a-plane>
-<a-plane class="clickable" color="red" opacity="0.3" width="0.2" height="0.2" position="0.15 -0.1 0.02"> </a-plane>
+<a-plane class="clickable" data-name="きのこ"color="red" opacity="0.3" width="0.2" height="0.2" position="0.15 -0.1 0.02"> </a-plane>
 
 </a-entity>
 </a-scene>
@@ -215,34 +269,61 @@ function handleTouch(event){
   console.log(intersects);
 
   // 当たった
-  if(intersects.length > 0){
+if(intersects.length > 0){
+const foundName =
+intersects[0].object.el.dataset.name;
 
-    console.log("発見！");
+effect.innerHTML =
+  foundName + " 発見!!";
 
-    effect.style.display = "block";
+intersects[0].object.visible = false;
 
-    const audio = new Audio("discover.mp3");
-    audio.play();
+effect.style.display = "block";
 
-    setTimeout(() => {
-      effect.style.display = "none";
-    }, 1000);
+const audio = new Audio("discover.mp3");
+audio.play();
 
-  }
+setTimeout(() => {
+  effect.style.display = "none";
+}, 1000);
+});
+
 
 }
 
 const missionText =
 document.querySelector("#missionText");
 
+const treasureCount =
+document.querySelector("#treasureCount");
+
+const treasureImage =
+document.querySelector("#treasureImage");
+
+let foundTreasure = 0;
+const totalTreasure = 1;
+
+
 document
 .querySelector("#target1")
 .addEventListener("targetFound", () => {
 
   missionText.innerHTML =
-    "金貨を探せ！";
+    "宝発見！";
+
+  foundTreasure++;
+
+  treasureCount.innerHTML =
+    foundTreasure + " / " + totalTreasure;
+
+  treasureImage.src =
+    "treasure.png";
+
+  treasureImage.style.display =
+    "block";
 
 });
+
 
 document
 .querySelector("#target2")
