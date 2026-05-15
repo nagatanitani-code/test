@@ -34,6 +34,7 @@
       50% { transform: translate(-50%, -50%) scale(1.4); }
       100% { transform: translate(-50%, -50%) scale(1); opacity:1; }
     }
+
 #missionBox{
 
   position: fixed;
@@ -43,19 +44,28 @@
 
   transform: translateX(-50%);
 
-  background: rgba(0,0,0,0.7);
+  background:
+    linear-gradient(
+      45deg,
+      #1e3c72,
+      #2a5298
+    );
 
   color: white;
 
-  padding: 12px 24px;
+  padding: 14px 30px;
 
-  border-radius: 14px;
+  border-radius: 18px;
 
   z-index: 999;
 
   text-align: center;
 
+  box-shadow:
+    0 0 20px rgba(0,0,0,0.5);
+
 }
+
 
 
 #missionTitle{
@@ -101,6 +111,34 @@
   font-weight:bold;
 }
 
+#treasureEffect{
+
+  position: fixed;
+
+
+  bottom: 40px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  background: gold;
+
+  color: black;
+
+  font-size: 42px;
+
+  font-weight: bold;
+
+  padding: 20px 40px;
+
+  border-radius: 20px;
+
+  display: none;
+
+  z-index: 999;
+
+}
+
 
   </style>
 </head>
@@ -108,6 +146,11 @@
 <body>
 
 <div id="effect">発見!!</div>
+
+<div id="treasureEffect">
+  宝発見！
+</div>
+
 <div id="missionBox">
 
   <div id="missionTitle">
@@ -193,6 +236,8 @@
 <script>
 
 const effect = document.querySelector("#effect");
+const treasureEffect =
+document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
 
 scene.addEventListener("loaded", () => {
@@ -310,8 +355,16 @@ document
 
   treasure1Found = true;
 
-  missionText.innerHTML =
-    "宝発見！";
+treasureEffect.style.display =
+  "block";
+
+setTimeout(() => {
+
+  treasureEffect.style.display =
+    "none";
+
+}, 1500);
+
 
   foundTreasure++;
 
