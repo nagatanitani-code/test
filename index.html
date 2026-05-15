@@ -57,29 +57,6 @@
 
 }
 
-<div id="treasureBox">
-
-  <div id="treasureTitle">
-    宝発見数
-  </div>
-
-  <div id="treasureCount">
-    0 / 1
-  </div>
-
-  <img
-    id="treasureImage"
-    src=""
-    style="
-      width:120px;
-      display:none;
-      margin-top:10px;
-      border-radius:12px;
-    "
-  >
-
-</div>
-
 
 #missionTitle{
 
@@ -141,7 +118,28 @@
     読み込み待機中
   </div>
 </div>
+<div id="treasureBox">
 
+  <div id="treasureTitle">
+    宝発見数
+  </div>
+
+  <div id="treasureCount">
+    0 / 1
+  </div>
+
+  <img
+    id="treasureImage"
+    src=""
+    style="
+      width:120px;
+      display:none;
+      margin-top:10px;
+      border-radius:12px;
+    "
+  >
+
+</div>
 
 
 <a-scene
@@ -286,7 +284,7 @@ audio.play();
 setTimeout(() => {
   effect.style.display = "none";
 }, 1000);
-});
+}
 
 
 }
