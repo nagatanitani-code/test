@@ -299,12 +299,16 @@ const treasureImage =
 document.querySelector("#treasureImage");
 
 let foundTreasure = 0;
+let treasure1Found = false;
 const totalTreasure = 1;
-
 
 document
 .querySelector("#target1")
 .addEventListener("targetFound", () => {
+
+  if(treasure1Found) return;
+
+  treasure1Found = true;
 
   missionText.innerHTML =
     "宝発見！";
@@ -315,12 +319,14 @@ document
     foundTreasure + " / " + totalTreasure;
 
   treasureImage.src =
-    "treasure.png";
+    "treasure.jpg";
 
   treasureImage.style.display =
     "block";
 
 });
+
+
 
 
 document
