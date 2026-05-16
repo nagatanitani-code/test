@@ -359,6 +359,12 @@ document.querySelector("#treasureCount");
 const treasureImage =
 document.querySelector("#treasureImage");
 
+const missionBox =
+document.querySelector("#missionBox");
+
+const treasureBox =
+document.querySelector("#treasureBox");
+
 let foundTreasure = 0;
 let treasure1Found = false;
 const totalTreasure = 1;
@@ -367,20 +373,46 @@ document
 .querySelector("#target1")
 .addEventListener("targetFound", () => {
 
-  if(treasure1Found) return;
+  // 宝UI表示
+  treasureBox.style.display = "block";
+
+  // お題UI隠す
+  missionBox.style.display = "none";
+
+  // 既に取得済みなら終了
+  if(treasure1Found){
+
+    treasureEffect.innerHTML =
+      "発見済みのお宝！";
+
+    treasureEffect.style.display =
+      "block";
+
+    setTimeout(() => {
+
+      treasureEffect.style.display =
+        "none";
+
+    }, 1200);
+
+    return;
+  }
 
   treasure1Found = true;
 
-treasureEffect.style.display =
-  "block";
-
-setTimeout(() => {
+  // 演出
+  treasureEffect.innerHTML =
+    "宝発見！！";
 
   treasureEffect.style.display =
-    "none";
+    "block";
 
-}, 1500);
+  setTimeout(() => {
 
+    treasureEffect.style.display =
+      "none";
+
+  }, 1500);
 
   foundTreasure++;
 
@@ -402,8 +434,11 @@ document
 .querySelector("#target2")
 .addEventListener("targetFound", () => {
 
-  document.querySelector("#treasureBox")
-    .style.display = "none";
+  // 宝UI消す
+  treasureBox.style.display = "none";
+
+  // お題UI表示
+  missionBox.style.display = "block";
 
   missionText.innerHTML =
     "女の子を探せ！";
@@ -412,19 +447,18 @@ document
 
 
 
-
 document
 .querySelector("#target3")
 .addEventListener("targetFound", () => {
 
-  document.querySelector("#treasureBox")
-    .style.display = "none";
+  treasureBox.style.display = "none";
+
+  missionBox.style.display = "block";
 
   missionText.innerHTML =
     "きのこを探せ！";
 
 });
-
 
 
 </script>
