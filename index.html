@@ -92,6 +92,8 @@
   top: 20px;
   right: 20px;
 
+display: none;
+
   background:
     linear-gradient(
       45deg,
@@ -155,6 +157,31 @@
 
 }
 
+#photoMessage{
+
+  position: fixed;
+
+  bottom: 30px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  background: rgba(0,0,0,0.8);
+
+  color: white;
+
+  padding: 14px 28px;
+
+  border-radius: 20px;
+
+  font-size: 24px;
+
+  z-index: 999;
+
+  display: none;
+
+}
+
 
   </style>
 </head>
@@ -186,6 +213,10 @@
   <div id="treasureCount">
     0 / 1
   </div>
+
+<div id="photoMessage">
+  スクリーンショットで撮影してね！
+</div>
 
   <img
     id="treasureImage"
@@ -244,11 +275,12 @@
   id="target3"
   mindar-image-target="targetIndex: 2">
 
+  <!-- フレーム -->
   <a-plane
     src="#frameImg"
-    width="1.4"
-    height="1.4"
-    position="0 0 0"
+    width="2.2"
+    height="2.2"
+    position="0.8 0 0"
     material="shader: flat; transparent: true;">
   </a-plane>
 
@@ -461,15 +493,26 @@ document
 .querySelector("#target3")
 .addEventListener("targetFound", () => {
 
+  // 宝UI消す
   treasureBox.style.display = "none";
 
-  missionBox.style.display = "block";
+  // お題UI消す
+  missionBox.style.display = "none";
 
-  missionText.innerHTML =
-    "きのこを探せ！";
+  // 撮影メッセージ表示
+  document.querySelector("#photoMessage")
+    .style.display = "block";
 
 });
 
+document
+.querySelector("#target3")
+.addEventListener("targetLost", () => {
+
+  document.querySelector("#photoMessage")
+    .style.display = "none";
+
+});
 
 </script>
 
