@@ -35,14 +35,13 @@
       100% { transform: translate(-50%, -50%) scale(1); opacity:1; }
     }
 
+
 #missionBox{
 
   position: fixed;
 
   top: 20px;
-  left: 50%;
-
-  transform: translateX(-50%);
+  left: 20px;
 
   background:
     linear-gradient(
@@ -53,18 +52,22 @@
 
   color: white;
 
-  padding: 14px 30px;
+  padding: 14px 24px;
 
   border-radius: 18px;
 
   z-index: 999;
 
-  text-align: center;
+  text-align: left;
+
+  min-width: 220px;
 
   box-shadow:
     0 0 20px rgba(0,0,0,0.5);
 
 }
+
+
 
 
 
@@ -81,26 +84,39 @@
 
 }
 
+
 #treasureBox{
 
   position: fixed;
 
-  right: 20px;
   top: 20px;
+  right: 20px;
 
-  background: rgba(0,0,0,0.7);
+  background:
+    linear-gradient(
+      45deg,
+      #7b5e00,
+      #d4af37
+    );
 
   color: white;
 
-  padding: 16px;
+  padding: 14px 24px;
 
-  border-radius: 14px;
+  border-radius: 18px;
 
   z-index: 999;
 
   text-align: center;
 
+  min-width: 180px;
+
+  box-shadow:
+    0 0 20px rgba(0,0,0,0.5);
+
 }
+
+
 
 #treasureTitle{
   font-size:18px;
@@ -386,14 +402,23 @@ document
 .querySelector("#target2")
 .addEventListener("targetFound", () => {
 
+  document.querySelector("#treasureBox")
+    .style.display = "none";
+
   missionText.innerHTML =
     "女の子を探せ！";
 
 });
 
+
+
+
 document
 .querySelector("#target3")
 .addEventListener("targetFound", () => {
+
+  document.querySelector("#treasureBox")
+    .style.display = "none";
 
   missionText.innerHTML =
     "きのこを探せ！";
