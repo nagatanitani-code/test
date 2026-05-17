@@ -407,7 +407,9 @@ const treasureEffect =
 document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
 
-scene.addEventListener("loaded", () => {
+scene.addEventListener("renderstart", () => {
+
+  console.log("AR READY");
 
   // スマホタップ
   window.addEventListener("touchstart", handleTouch);
@@ -415,8 +417,135 @@ scene.addEventListener("loaded", () => {
   // PCクリック
   window.addEventListener("click", handleTouch);
 
-});
 
+
+  document
+  .querySelector("#target5")
+  .addEventListener("targetFound", () => {
+
+    console.log("stamp3 found");
+
+    if(!stamp3Get){
+
+      stamp3Get = true;
+
+      document.querySelector("#stamp3").src =
+        "stamp3.jpg";
+
+      showStampEffect();
+
+    }
+
+  });
+
+
+
+
+  document
+  .querySelector("#target3")
+  .addEventListener("targetFound", () => {
+
+    console.log("stamp1 found");
+
+    if(!stamp1Get){
+
+      stamp1Get = true;
+
+      document.querySelector("#stamp1").src =
+        "stamp1.jpg";
+
+      showStampEffect();
+
+    }
+
+  });
+
+
+
+
+  document
+  .querySelector("#target4")
+  .addEventListener("targetFound", () => {
+
+    console.log("stamp2 found");
+
+    if(!stamp2Get){
+
+      stamp2Get = true;
+
+      document.querySelector("#stamp2").src =
+        "stamp2.jpg";
+
+      showStampEffect();
+
+    }
+
+  });
+
+
+
+
+  document
+  .querySelector("#target1")
+  .addEventListener("targetFound", () => {
+
+    console.log("girl found");
+
+    missionBox.style.display = "block";
+
+    stampBox.style.display = "block";
+
+    treasureBox.style.display = "none";
+
+    missionText.innerHTML =
+      "女の子を探せ！";
+
+  });
+
+
+
+
+  document
+  .querySelector("#target2")
+  .addEventListener("targetFound", () => {
+
+    console.log("photo found");
+
+    document.querySelector("#photoMessage")
+      .style.display = "block";
+
+  });
+
+
+
+
+  document
+  .querySelector("#target2")
+  .addEventListener("targetLost", () => {
+
+    document.querySelector("#photoMessage")
+      .style.display = "none";
+
+  });
+
+
+
+
+  document
+  .querySelector("#target6")
+  .addEventListener("targetFound", () => {
+
+    console.log("treasure found");
+
+    treasureBox.style.display =
+      "block";
+
+    missionBox.style.display =
+      "none";
+
+  });
+
+});
 
 
 function handleTouch(event){
