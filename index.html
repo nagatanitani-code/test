@@ -492,8 +492,7 @@ intersects[0].object.visible = false;
 
 effect.style.display = "block";
 
-const audio = new Audio("discover.mp3");
-audio.play();
+
 
 setTimeout(() => {
   effect.style.display = "none";
@@ -701,19 +700,6 @@ function showStampEffect(){
     "スタンプGET!!";
 
   effect.style.display = "block";
-
-  try{
-
-    const audio =
-      new Audio("discover.mp3");
-
-    audio.play();
-
-  }catch(e){
-
-    console.log(e);
-
-  }
 
   setTimeout(() => {
 
