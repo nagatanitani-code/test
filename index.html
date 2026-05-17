@@ -5,7 +5,7 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+ <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
   <style>
@@ -23,6 +23,7 @@
       font-size: 48px;
       font-weight: bold;
       display: none;
+opacity:1 !important;
       z-index: 999;
 pointer-events: auto;
       animation: pop 0.8s ease;
@@ -308,12 +309,7 @@ pointer-events: auto;
 </div>
 
 <a-scene
-  mindar-image="
-    imageTargetSrc: targets.mind;
-    maxTrack: 6;
-    uiScanning: yes;
-    uiLoading: yes;
-  "
+  mindar-image="imageTargetSrc: targets.mind;maxTrack: 6;uiScanning: yes;uiLoading: yes;"
   color-space="sRGB"
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: false">
@@ -344,7 +340,7 @@ pointer-events: auto;
   <a-plane
     src="#girlImg"
     width="1"
-    height="1.5"
+    height="1"
     material="shader: flat; transparent: true;">
   </a-plane>
 
@@ -436,7 +432,7 @@ let foundTreasure = 0;
 let treasure1Found = false;
 const totalTreasure = 1;
 
-scene.addEventListener("arReady", () => {
+scene.addEventListener("renderstart", () => {
 console.log("AR READY");
 
   console.log("scene loaded");
