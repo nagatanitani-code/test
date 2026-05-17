@@ -366,10 +366,10 @@ markerhandler
 markerhandler
   mindar-image-target="targetIndex: 2">
 <a-plane
-    width="1"
-    height="1"
-    opacity="0">
-  </a-plane>
+    width="0.01"
+    height="0.01"
+    visible="false">
+</a-plane>
 
 
 </a-entity>
@@ -379,11 +379,10 @@ markerhandler
 markerhandler
   mindar-image-target="targetIndex: 3">
 <a-plane
-    width="1"
-    height="1"
-    opacity="0">
-  </a-plane>
-
+    width="0.01"
+    height="0.01"
+    visible="false">
+</a-plane>
 
 </a-entity>
 
@@ -392,10 +391,10 @@ markerhandler
 markerhandler
   mindar-image-target="targetIndex: 4">
 <a-plane
-    width="1"
-    height="1"
-    opacity="0">
-  </a-plane>
+    width="0.01"
+    height="0.01"
+    visible="false">
+</a-plane>
 
 
 </a-entity>
@@ -708,27 +707,32 @@ function showStampEffect(){
   checkComplete();
 
 }
-
 function checkComplete(){
 
   if(
     stamp1Get &&
     stamp2Get &&
-    stamp3Get 
-
+    stamp3Get
   ){
+
+    effect.style.display = "none";
+
+    void effect.offsetWidth;
+
+    effect.innerHTML =
+      "コンプリート！！";
+
+    effect.style.display = "block";
 
     setTimeout(() => {
 
-      alert("スタンプラリー コンプリート！！");
+      effect.style.display = "none";
 
-    }, 300);
+    }, 2000);
 
   }
 
-}
-
-</script>
+}</script>
 
 
 </body>
