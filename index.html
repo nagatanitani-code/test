@@ -188,6 +188,51 @@ display: none;
   user-select: none;
 
 }
+#stampBox{
+
+  position: fixed;
+
+  bottom: 20px;
+  right: 20px;
+
+  background: rgba(0,0,0,0.7);
+
+  padding: 16px;
+
+  border-radius: 18px;
+
+  z-index: 999;
+
+  color: white;
+
+  text-align: center;
+
+}
+
+#stampTitle{
+
+  font-size: 20px;
+  margin-bottom: 10px;
+
+}
+
+#stampArea{
+
+  display: flex;
+  gap: 10px;
+
+}
+
+#stampArea img{
+
+  width: 70px;
+  height: 70px;
+
+  border-radius: 12px;
+
+  background: white;
+
+}
 
   </style>
 </head>
@@ -241,8 +286,24 @@ display: none;
 (タップで閉じる)
 </div>
 
+<div id="stampBox">
+
+  <div id="stampTitle">
+    スタンプラリー
+  </div>
+
+  <div id="stampArea">
+
+    <img id="stamp1" src="stamp_empty.jpg">
+    <img id="stamp2" src="stamp_empty.jpg">
+    <img id="stamp3" src="stamp_empty.jpg">
+
+  </div>
+
+</div>
+
 <a-scene
-  mindar-image="imageTargetSrc: targets.mind; maxTrack: 3;"
+  mindar-image="imageTargetSrc: targets.mind; maxTrack: 7;"
   color-space="sRGB"
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: false">
@@ -531,6 +592,35 @@ document
     .style.display = "none";
 
 });
+
+let stamp1Get = false;
+let stamp2Get = false;
+let stamp3Get = false;
+
+if(!stamp1Get){
+
+  stamp1Get = true;
+
+  document.querySelector("#stamp1").src =
+    "stamp1.jpg";
+
+}
+if(!stamp2Get){
+
+  stamp2Get = true;
+
+  document.querySelector("#stamp2").src =
+    "stamp2.jpg";
+
+}
+if(!stamp3Get){
+
+  stamp3Get = true;
+
+  document.querySelector("#stamp3").src =
+    "stamp3.jpg";
+
+}
 
 </script>
 
