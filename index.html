@@ -95,7 +95,7 @@ pointer-events: auto;
   top: 20px;
   right: 20px;
 
-display: none;
+
 
   background:
     linear-gradient(
@@ -155,7 +155,6 @@ pointer-events: auto;
 
   border-radius: 20px;
 
-  display: none;
 
   z-index: 999;
 
@@ -183,7 +182,7 @@ pointer-events: auto;
   z-index: 999;
 pointer-events: auto;
 
-  display: none;
+
 
 }
 #photoMessage{
@@ -278,7 +277,6 @@ pointer-events: auto;
     src=""
     style="
       width:120px;
-      display:none;
       margin-top:10px;
       border-radius:12px;
     "
@@ -292,7 +290,7 @@ pointer-events: auto;
 (タップで閉じる)
 </div>
 
-<div id="stampBox" style="display:none;">
+<div id="stampBox">
 
   <div id="stampTitle">
     スタンプラリー
@@ -409,6 +407,99 @@ const treasureEffect =
 document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
 
+scene.addEventListener("loaded", () => {
+
+  // スマホタップ
+  window.addEventListener("touchstart", handleTouch);
+
+  // PCクリック
+  window.addEventListener("click", handleTouch);
+
+});
+
+
+
+function handleTouch(event){
+
+  console.log("タッチ検出");
+
+  // camera取得
+  const camera = document.querySelector("[camera]");
+
+  if(!camera){
+    console.log("camera取得失敗");
+    return;
+  }
+
+  // raycaster
+  const raycaster = new THREE.Raycaster();
+
+  // 座標
+  const mouse = new THREE.Vector2();
+
+  // タッチ位置
+  const x = event.touches ?
+    event.touches[0].clientX :
+    event.clientX;
+
+  const y = event.touches ?
+    event.touches[0].clientY :
+    event.clientY;
+
+  // -1〜1変換
+  mouse.x = (x / window.innerWidth) * 2 - 1;
+  mouse.y = -(y / window.innerHeight) * 2 + 1;
+
+  // ray発射
+  raycaster.setFromCamera(
+    mouse,
+    camera.getObject3D("camera")
+  );
+
+  // clickable取得
+  const clickable =
+    document.querySelectorAll(".clickable");
+
+  const objects = [];
+
+  clickable.forEach(el => {
+
+    if(el.object3D.visible){
+      objects.push(el.object3D);
+    }
+
+  });
+
+  console.log(objects);
+
+  // 判定
+  const intersects =
+    raycaster.intersectObjects(objects, true);
+
+  console.log(intersects);
+
+  // 当たった
+if(intersects.length > 0){
+const foundName =
+intersects[0].object.el.dataset.name;
+
+effect.innerHTML =
+  foundName + " 発見!!";
+
+intersects[0].object.visible = false;
+
+effect.style.display = "block";
+
+const audio = new Audio("discover.mp3");
+audio.play();
+
+setTimeout(() => {
+  effect.style.display = "none";
+}, 1000);
+}
+
+
+}
 
 const missionText =
 document.querySelector("#missionText");
