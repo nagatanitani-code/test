@@ -327,24 +327,32 @@ display: none;
 </a-camera>
 
 
-<!-- target1 スタンプ3 -->
 <a-entity
   id="target1"
   mindar-image-target="targetIndex: 0">
 
   <a-plane
-    src="#stamp3Img"
+    src="#girlImg"
     width="1"
-    height="1">
+    height="1.5"
+    material="shader: flat; transparent: true;">
   </a-plane>
 
 </a-entity>
 
+<a-entity
+  id="target2"
+  mindar-image-target="targetIndex: 1">
 
+  <a-plane
+    src="#frameImg"
+    width="2"
+    height="2"
+    material="shader: flat; transparent: true;">
+  </a-plane>
 
+</a-entity>
 
-
-<!-- target3 スタンプ1 -->
 <a-entity
   id="target3"
   mindar-image-target="targetIndex: 2">
@@ -357,8 +365,6 @@ display: none;
 
 </a-entity>
 
-
-<!-- target4 スタンプ2 -->
 <a-entity
   id="target4"
   mindar-image-target="targetIndex: 3">
@@ -371,41 +377,21 @@ display: none;
 
 </a-entity>
 
-
-<!-- target5 フォトフレーム -->
 <a-entity
   id="target5"
   mindar-image-target="targetIndex: 4">
 
   <a-plane
-    src="#frameImg"
-    width="2"
-    height="2"
-    material="shader: flat; transparent: true;">
+    src="#stamp3Img"
+    width="1"
+    height="1">
   </a-plane>
 
 </a-entity>
 
-
-<!-- target6 女の子 -->
 <a-entity
   id="target6"
   mindar-image-target="targetIndex: 5">
-
-  <a-plane
-    src="#girlImg"
-    width="1"
-    height="1.5"
-    material="shader: flat; transparent: true;">
-  </a-plane>
-
-</a-entity>
-
-
-<!-- target7 お宝 -->
-<a-entity
-  id="target7"
-  mindar-image-target="targetIndex: 6">
 
   <a-plane
     src="#treasureImg"
@@ -415,6 +401,7 @@ display: none;
   </a-plane>
 
 </a-entity>
+
 
 </a-scene>
 
@@ -542,7 +529,7 @@ let treasure1Found = false;
 const totalTreasure = 1;
 
 document
-.querySelector("#target1")
+.querySelector("#target5")
 .addEventListener("targetFound", () => {
 
   if(!stamp3Get){
@@ -595,7 +582,7 @@ document
 
 
 document
-.querySelector("#target6")
+.querySelector("#target1")
 .addEventListener("targetFound", () => {
 
   missionBox.style.display =
@@ -610,7 +597,7 @@ document
 });
 
 document
-.querySelector("#target5")
+.querySelector("#target2")
 .addEventListener("targetFound", () => {
 
   document.querySelector("#photoMessage")
@@ -619,7 +606,7 @@ document
 });
 
 document
-.querySelector("#target5")
+.querySelector("#target2")
 .addEventListener("targetLost", () => {
 
   document.querySelector("#photoMessage")
@@ -628,7 +615,7 @@ document
 });
 
 document
-.querySelector("#target7")
+.querySelector("#target6")
 .addEventListener("targetFound", () => {
 
   treasureBox.style.display =
