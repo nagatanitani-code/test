@@ -588,6 +588,23 @@ document
 
 });
 
+document
+.querySelector("#target4")
+.addEventListener("targetFound", () => {
+
+  if(!stamp2Get){
+
+    stamp2Get = true;
+
+    document.querySelector("#stamp2").src =
+      "stamp2.jpg";
+
+    showStampEffect();
+
+  }
+
+});
+
 
 document
 .querySelector("#target6")
