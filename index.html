@@ -8,7 +8,263 @@
  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
-  <style>
+ 
+<script>
+
+const effect = document.querySelector("#effect");
+const treasureEffect =
+document.querySelector("#treasureEffect");
+const scene = document.querySelector("a-scene");
+
+
+
+function handleTouch(event){
+
+  console.log("タッチ検出");
+
+  // camera取得
+  const camera = document.querySelector("[camera]");
+
+  if(!camera){
+    console.log("camera取得失敗");
+    return;
+  }
+
+  // raycaster
+  const raycaster = new THREE.Raycaster();
+
+  // 座標
+  const mouse = new THREE.Vector2();
+
+  // タッチ位置
+  const x = event.touches ?
+    event.touches[0].clientX :
+    event.clientX;
+
+  const y = event.touches ?
+    event.touches[0].clientY :
+    event.clientY;
+
+  // -1〜1変換
+  mouse.x = (x / window.innerWidth) * 2 - 1;
+  mouse.y = -(y / window.innerHeight) * 2 + 1;
+
+  // ray発射
+  raycaster.setFromCamera(
+    mouse,
+    camera.getObject3D("camera")
+  );
+
+  // clickable取得
+  const clickable =
+    document.querySelectorAll(".clickable");
+
+  const objects = [];
+
+  clickable.forEach(el => {
+
+    if(el.object3D.visible){
+      objects.push(el.object3D);
+    }
+
+  });
+
+  console.log(objects);
+
+  // 判定
+  const intersects =
+    raycaster.intersectObjects(objects, true);
+
+  console.log(intersects);
+
+  // 当たった
+if(intersects.length > 0){
+const foundName =
+intersects[0].object.el.dataset.name;
+
+effect.innerHTML =
+  foundName + " 発見!!";
+
+intersects[0].object.visible = false;
+
+effect.style.display = "block";
+
+
+
+setTimeout(() => {
+  effect.style.display = "none";
+}, 1000);
+}
+
+
+}
+
+const missionText =
+document.querySelector("#missionText");
+
+const treasureCount =
+document.querySelector("#treasureCount");
+
+const treasureImage =
+document.querySelector("#treasureImage");
+
+const missionBox =
+document.querySelector("#missionBox");
+
+const treasureBox =
+document.querySelector("#treasureBox");
+
+const stampBox =
+document.querySelector("#stampBox");
+
+let foundTreasure = 0;
+let treasure1Found = false;
+const totalTreasure = 1;
+
+
+
+AFRAME.registerComponent("markerhandler", {
+
+  init: function () {
+
+    this.el.addEventListener("targetFound", () => {
+
+      console.log(this.el.id + " found");
+
+      // target3
+      if(this.el.id === "target3"){
+
+        if(!stamp1Get){
+
+          stamp1Get = true;
+
+          document.querySelector("#stamp1").src =
+            "stamp1.jpg";
+
+          showStampEffect();
+
+        }
+
+      }
+
+      // target4
+      if(this.el.id === "target4"){
+
+        if(!stamp2Get){
+
+          stamp2Get = true;
+
+          document.querySelector("#stamp2").src =
+            "stamp2.jpg";
+
+          showStampEffect();
+
+        }
+
+      }
+
+      // target5
+      if(this.el.id === "target5"){
+
+        if(!stamp3Get){
+
+          stamp3Get = true;
+
+          document.querySelector("#stamp3").src =
+            "stamp3.jpg";
+
+          showStampEffect();
+
+        }
+
+      }
+
+      // target2
+      if(this.el.id === "target2"){
+
+        document.querySelector("#photoMessage")
+          .style.display = "block";
+
+      }
+
+    });
+
+    this.el.addEventListener("targetLost", () => {
+
+      if(this.el.id === "target2"){
+
+        document.querySelector("#photoMessage")
+          .style.display = "none";
+
+      }
+
+    });
+
+  }
+
+});
+
+
+
+
+
+document
+.querySelector("#photoMessage")
+.addEventListener("click", () => {
+
+  document.querySelector("#photoMessage")
+    .style.display = "none";
+
+});
+
+let stamp1Get = false;
+let stamp2Get = false;
+let stamp3Get = false;
+
+
+function showStampEffect(){
+
+  effect.style.display = "none";
+
+  void effect.offsetWidth;
+
+  effect.innerHTML =
+    "スタンプGET!!";
+
+  effect.style.display = "block";
+
+  setTimeout(() => {
+
+    effect.style.display = "none";
+
+  }, 1000);
+
+  checkComplete();
+
+}
+
+function checkComplete(){
+
+  if(
+    stamp1Get &&
+    stamp2Get &&
+    stamp3Get 
+
+  ){
+
+    setTimeout(() => {
+
+      alert("スタンプラリー コンプリート！！");
+
+    }, 300);
+
+  }
+
+}
+
+</script>
+
+ <style>
     body {
       margin: 0;
       overflow: hidden;
@@ -414,266 +670,6 @@ markerhandler
 
 
 </a-scene>
-
-
-
-
-<script>
-
-const effect = document.querySelector("#effect");
-const treasureEffect =
-document.querySelector("#treasureEffect");
-const scene = document.querySelector("a-scene");
-
-
-
-function handleTouch(event){
-
-  console.log("タッチ検出");
-
-  // camera取得
-  const camera = document.querySelector("[camera]");
-
-  if(!camera){
-    console.log("camera取得失敗");
-    return;
-  }
-
-  // raycaster
-  const raycaster = new THREE.Raycaster();
-
-  // 座標
-  const mouse = new THREE.Vector2();
-
-  // タッチ位置
-  const x = event.touches ?
-    event.touches[0].clientX :
-    event.clientX;
-
-  const y = event.touches ?
-    event.touches[0].clientY :
-    event.clientY;
-
-  // -1〜1変換
-  mouse.x = (x / window.innerWidth) * 2 - 1;
-  mouse.y = -(y / window.innerHeight) * 2 + 1;
-
-  // ray発射
-  raycaster.setFromCamera(
-    mouse,
-    camera.getObject3D("camera")
-  );
-
-  // clickable取得
-  const clickable =
-    document.querySelectorAll(".clickable");
-
-  const objects = [];
-
-  clickable.forEach(el => {
-
-    if(el.object3D.visible){
-      objects.push(el.object3D);
-    }
-
-  });
-
-  console.log(objects);
-
-  // 判定
-  const intersects =
-    raycaster.intersectObjects(objects, true);
-
-  console.log(intersects);
-
-  // 当たった
-if(intersects.length > 0){
-const foundName =
-intersects[0].object.el.dataset.name;
-
-effect.innerHTML =
-  foundName + " 発見!!";
-
-intersects[0].object.visible = false;
-
-effect.style.display = "block";
-
-
-
-setTimeout(() => {
-  effect.style.display = "none";
-}, 1000);
-}
-
-
-}
-
-const missionText =
-document.querySelector("#missionText");
-
-const treasureCount =
-document.querySelector("#treasureCount");
-
-const treasureImage =
-document.querySelector("#treasureImage");
-
-const missionBox =
-document.querySelector("#missionBox");
-
-const treasureBox =
-document.querySelector("#treasureBox");
-
-const stampBox =
-document.querySelector("#stampBox");
-
-let foundTreasure = 0;
-let treasure1Found = false;
-const totalTreasure = 1;
-
-
-
-AFRAME.registerComponent("markerhandler", {
-
-  init: function () {
-
-    this.el.addEventListener("targetFound", () => {
-
-      console.log(this.el.id + " found");
-
-      // target3
-      if(this.el.id === "target3"){
-
-        if(!stamp1Get){
-
-          stamp1Get = true;
-
-          document.querySelector("#stamp1").src =
-            "stamp1.jpg";
-
-          showStampEffect();
-
-        }
-
-      }
-
-      // target4
-      if(this.el.id === "target4"){
-
-        if(!stamp2Get){
-
-          stamp2Get = true;
-
-          document.querySelector("#stamp2").src =
-            "stamp2.jpg";
-
-          showStampEffect();
-
-        }
-
-      }
-
-      // target5
-      if(this.el.id === "target5"){
-
-        if(!stamp3Get){
-
-          stamp3Get = true;
-
-          document.querySelector("#stamp3").src =
-            "stamp3.jpg";
-
-          showStampEffect();
-
-        }
-
-      }
-
-      // target2
-      if(this.el.id === "target2"){
-
-        document.querySelector("#photoMessage")
-          .style.display = "block";
-
-      }
-
-    });
-
-    this.el.addEventListener("targetLost", () => {
-
-      if(this.el.id === "target2"){
-
-        document.querySelector("#photoMessage")
-          .style.display = "none";
-
-      }
-
-    });
-
-  }
-
-});
-
-
-
-
-
-document
-.querySelector("#photoMessage")
-.addEventListener("click", () => {
-
-  document.querySelector("#photoMessage")
-    .style.display = "none";
-
-});
-
-let stamp1Get = false;
-let stamp2Get = false;
-let stamp3Get = false;
-
-
-function showStampEffect(){
-
-  effect.style.display = "none";
-
-  void effect.offsetWidth;
-
-  effect.innerHTML =
-    "スタンプGET!!";
-
-  effect.style.display = "block";
-
-  setTimeout(() => {
-
-    effect.style.display = "none";
-
-  }, 1000);
-
-  checkComplete();
-
-}
-
-function checkComplete(){
-
-  if(
-    stamp1Get &&
-    stamp2Get &&
-    stamp3Get 
-
-  ){
-
-    setTimeout(() => {
-
-      alert("スタンプラリー コンプリート！！");
-
-    }, 300);
-
-  }
-
-}
-
-</script>
-
-
 
 </body>
 </html>
