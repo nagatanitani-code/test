@@ -304,7 +304,7 @@ display: none;
 </div>
 
 <a-scene
-  mindar-image="imageTargetSrc: targets.mind; maxTrack: 7;"
+  mindar-image="imageTargetSrc: targets.mind; maxTrack: 2;"
   color-space="sRGB"
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: false">
@@ -513,6 +513,8 @@ document
     document.querySelector("#stamp3").src =
       "stamp3.jpg";
 
+    showStampEffect();
+
   }
 
 });
@@ -530,6 +532,8 @@ document
     document.querySelector("#stamp1").src =
       "stamp1.jpg";
 
+    showStampEffect();
+
   }
 
 });
@@ -538,12 +542,19 @@ document
 .querySelector("#target3")
 .addEventListener("targetFound", () => {
 
+  // 撮影メッセージ
+  document.querySelector("#photoMessage")
+    .style.display = "block";
+
+  // スタンプ
   if(!stamp2Get){
 
     stamp2Get = true;
 
     document.querySelector("#stamp2").src =
       "stamp2.jpg";
+
+    showStampEffect();
 
   }
 
@@ -559,6 +570,8 @@ document
 
     document.querySelector("#stamp4").src =
       "stamp_none.jpg";
+
+    showStampEffect();
 
   }
 
@@ -580,16 +593,46 @@ let stamp2Get = false;
 let stamp3Get = false;
 let stamp4Get = false;
 
-effect.innerHTML =
-  "スタンプGET!!";
+function showStampEffect(){
 
-effect.style.display = "block";
+  effect.innerHTML =
+    "スタンプGET!!";
 
-setTimeout(() => {
+  effect.style.display = "block";
 
-  effect.style.display = "none";
+  const audio =
+    new Audio("discover.mp3");
 
-}, 1000);
+  audio.play();
+
+  setTimeout(() => {
+
+    effect.style.display = "none";
+
+  }, 1000);
+
+  checkComplete();
+
+}
+
+function checkComplete(){
+
+  if(
+    stamp1Get &&
+    stamp2Get &&
+    stamp3Get &&
+    stamp4Get
+  ){
+
+    setTimeout(() => {
+
+      alert("スタンプラリー コンプリート！！");
+
+    }, 300);
+
+  }
+
+}
 
 </script>
 
