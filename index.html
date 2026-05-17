@@ -91,7 +91,7 @@ pointer-events: auto;
 #treasureBox{
 
   position: fixed;
-
+display:none;
   top: 20px;
   right: 20px;
 
@@ -136,7 +136,7 @@ pointer-events: auto;
 #treasureEffect{
 
   position: fixed;
-
+display:none;
 
   bottom: 40px;
   left: 50%;
@@ -163,7 +163,7 @@ pointer-events: auto;
 #photoMessage{
 
   position: fixed;
-
+display:none;
   bottom: 30px;
   left: 50%;
 
@@ -691,24 +691,27 @@ let stamp3Get = false;
 
 function showStampEffect(){
 
+  effect.style.display = "none";
+
+  void effect.offsetWidth;
+
   effect.innerHTML =
     "スタンプGET!!";
 
   effect.style.display = "block";
 
-  // 音再生を安全化
   try{
 
-  const audio =
-    new Audio("discover.mp3");
+    const audio =
+      new Audio("discover.mp3");
 
-  audio.play();
+    audio.play();
 
-}catch(e){
+  }catch(e){
 
-  console.log(e);
+    console.log(e);
 
-}
+  }
 
   setTimeout(() => {
 
