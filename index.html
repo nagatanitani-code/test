@@ -357,11 +357,7 @@ display: none;
   id="target3"
   mindar-image-target="targetIndex: 2">
 
-  <a-plane
-    src="#stamp1Img"
-    width="1"
-    height="1">
-  </a-plane>
+
 
 </a-entity>
 
@@ -369,11 +365,7 @@ display: none;
   id="target4"
   mindar-image-target="targetIndex: 3">
 
-  <a-plane
-    src="#stamp2Img"
-    width="1"
-    height="1">
-  </a-plane>
+
 
 </a-entity>
 
@@ -381,11 +373,7 @@ display: none;
   id="target5"
   mindar-image-target="targetIndex: 4">
 
-  <a-plane
-    src="#stamp3Img"
-    width="1"
-    height="1">
-  </a-plane>
+
 
 </a-entity>
 
@@ -591,10 +579,17 @@ function showStampEffect(){
 
   effect.style.display = "block";
 
-  const audio =
-    new Audio("discover.mp3");
+  // 音再生を安全化
+  try{
 
-  audio.play();
+    const audio =
+      new Audio("discover.mp3");
+
+    audio.play().catch(() => {});
+
+  }catch(e){
+    console.log(e);
+  }
 
   setTimeout(() => {
 
