@@ -181,7 +181,13 @@ display: none;
   display: none;
 
 }
+#photoMessage{
 
+  cursor: pointer;
+
+  user-select: none;
+
+}
 
   </style>
 </head>
@@ -231,6 +237,8 @@ display: none;
 
 <div id="photoMessage">
   スクリーンショットで撮影してね！
+<br>
+(タップで閉じる)
 </div>
 
 <a-scene
@@ -509,6 +517,15 @@ document
 document
 .querySelector("#target3")
 .addEventListener("targetLost", () => {
+
+  document.querySelector("#photoMessage")
+    .style.display = "none";
+
+});
+// 撮影メッセージをタップで消す
+document
+.querySelector("#photoMessage")
+.addEventListener("click", () => {
 
   document.querySelector("#photoMessage")
     .style.display = "none";
