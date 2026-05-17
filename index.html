@@ -308,7 +308,12 @@ pointer-events: auto;
 </div>
 
 <a-scene
-  mindar-image="imageTargetSrc: targets.mind; maxTrack: 6;"
+  mindar-image="
+    imageTargetSrc: targets.mind;
+    maxTrack: 6;
+    uiScanning: yes;
+    uiLoading: yes;
+  "
   color-space="sRGB"
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: false">
@@ -431,7 +436,8 @@ let foundTreasure = 0;
 let treasure1Found = false;
 const totalTreasure = 1;
 
-scene.addEventListener("loaded", () => {
+scene.addEventListener("arReady", () => {
+console.log("AR READY");
 
   console.log("scene loaded");
 
