@@ -431,137 +431,156 @@ let foundTreasure = 0;
 let treasure1Found = false;
 const totalTreasure = 1;
 
-document
-.querySelector("#target5")
-.addEventListener("targetFound", () => {
+scene.addEventListener("loaded", () => {
 
-  if(!stamp3Get){
+  console.log("scene loaded");
 
-    stamp3Get = true;
+  document
+  .querySelector("#target5")
+  .addEventListener("targetFound", () => {
 
-    document.querySelector("#stamp3").src =
-      "stamp3.jpg";
+    console.log("stamp3 found");
 
-    showStampEffect();
+    if(!stamp3Get){
 
-  }
+      stamp3Get = true;
 
-});
+      document.querySelector("#stamp3").src =
+        "stamp3.jpg";
 
+      showStampEffect();
 
-document
-.querySelector("#target3")
-.addEventListener("targetFound", () => {
+    }
 
-  if(!stamp1Get){
+  });
 
-    stamp1Get = true;
+  document
+  .querySelector("#target3")
+  .addEventListener("targetFound", () => {
 
-    document.querySelector("#stamp1").src =
-      "stamp1.jpg";
+    console.log("stamp1 found");
 
-    showStampEffect();
+    if(!stamp1Get){
 
-  }
+      stamp1Get = true;
 
-});
+      document.querySelector("#stamp1").src =
+        "stamp1.jpg";
 
-document
-.querySelector("#target4")
-.addEventListener("targetFound", () => {
+      showStampEffect();
 
-  if(!stamp2Get){
+    }
 
-    stamp2Get = true;
+  });
 
-    document.querySelector("#stamp2").src =
-      "stamp2.jpg";
+  document
+  .querySelector("#target4")
+  .addEventListener("targetFound", () => {
 
-    showStampEffect();
+    console.log("stamp2 found");
 
-  }
+    if(!stamp2Get){
 
-});
+      stamp2Get = true;
 
+      document.querySelector("#stamp2").src =
+        "stamp2.jpg";
 
-document
-.querySelector("#target1")
-.addEventListener("targetFound", () => {
+      showStampEffect();
 
-  missionBox.style.display =
-    "block";
+    }
 
-  treasureBox.style.display =
-    "none";
+  });
 
-  missionText.innerHTML =
-    "女の子を探せ！";
+  document
+  .querySelector("#target1")
+  .addEventListener("targetFound", () => {
 
-});
+    console.log("girl found");
 
-document
-.querySelector("#target2")
-.addEventListener("targetFound", () => {
-
-  document.querySelector("#photoMessage")
-    .style.display = "block";
-
-});
-
-document
-.querySelector("#target2")
-.addEventListener("targetLost", () => {
-
-  document.querySelector("#photoMessage")
-    .style.display = "none";
-
-});
-
-document
-.querySelector("#target6")
-.addEventListener("targetFound", () => {
-
-  treasureBox.style.display =
-    "block";
-
-  missionBox.style.display =
-    "none";
-
-  if(treasure1Found){
-
-    treasureEffect.innerHTML =
-      "発見済みのお宝！";
-
-  }else{
-
-    treasure1Found = true;
-
-    foundTreasure++;
-
-    treasureCount.innerHTML =
-      foundTreasure + " / " +
-      totalTreasure;
-
-    treasureImage.src =
-      "treasure.jpg";
-
-    treasureImage.style.display =
+    missionBox.style.display =
       "block";
 
-    treasureEffect.innerHTML =
-      "宝発見！！";
+    stampBox.style.display =
+      "block";
 
-  }
-
-  treasureEffect.style.display =
-    "block";
-
-  setTimeout(() => {
-
-    treasureEffect.style.display =
+    treasureBox.style.display =
       "none";
 
-  }, 1500);
+    missionText.innerHTML =
+      "女の子を探せ！";
+
+  });
+
+  document
+  .querySelector("#target2")
+  .addEventListener("targetFound", () => {
+
+    console.log("photo found");
+
+    document.querySelector("#photoMessage")
+      .style.display = "block";
+
+  });
+
+  document
+  .querySelector("#target2")
+  .addEventListener("targetLost", () => {
+
+    document.querySelector("#photoMessage")
+      .style.display = "none";
+
+  });
+
+  document
+  .querySelector("#target6")
+  .addEventListener("targetFound", () => {
+
+    console.log("treasure found");
+
+    treasureBox.style.display =
+      "block";
+
+    missionBox.style.display =
+      "none";
+
+    if(treasure1Found){
+
+      treasureEffect.innerHTML =
+        "発見済みのお宝！";
+
+    }else{
+
+      treasure1Found = true;
+
+      foundTreasure++;
+
+      treasureCount.innerHTML =
+        foundTreasure + " / " +
+        totalTreasure;
+
+      treasureImage.src =
+        "treasure.jpg";
+
+      treasureImage.style.display =
+        "block";
+
+      treasureEffect.innerHTML =
+        "宝発見！！";
+
+    }
+
+    treasureEffect.style.display =
+      "block";
+
+    setTimeout(() => {
+
+      treasureEffect.style.display =
+        "none";
+
+    }, 1500);
+
+  });
 
 });
 
