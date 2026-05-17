@@ -365,6 +365,15 @@ display: none;
 <a-entity
   id="target5"
   mindar-image-target="targetIndex: 4">
+
+  <a-plane
+    src="#frameImg"
+    width="2"
+    height="2"
+    position="0.8 0 0"
+    material="shader: flat; transparent: true;">
+  </a-plane>
+
 </a-entity>
 
 <a-entity
@@ -559,6 +568,94 @@ document
   }
 
 });
+document
+.querySelector("#target4")
+.addEventListener("targetFound", () => {
+
+  missionBox.style.display =
+    "block";
+
+  treasureBox.style.display =
+    "none";
+
+  missionText.innerHTML =
+    "女の子を探せ！";
+
+});
+
+document
+.querySelector("#target5")
+.addEventListener("targetFound", () => {
+
+  missionBox.style.display =
+    "none";
+
+  treasureBox.style.display =
+    "none";
+
+  document.querySelector("#photoMessage")
+    .style.display = "block";
+
+});
+
+document
+.querySelector("#target5")
+.addEventListener("targetLost", () => {
+
+  document.querySelector("#photoMessage")
+    .style.display = "none";
+
+});
+
+document
+.querySelector("#target6")
+.addEventListener("targetFound", () => {
+
+  treasureBox.style.display =
+    "block";
+
+  missionBox.style.display =
+    "none";
+
+  if(treasure1Found){
+
+    treasureEffect.innerHTML =
+      "発見済みのお宝！";
+
+  }else{
+
+    treasure1Found = true;
+
+    foundTreasure++;
+
+    treasureCount.innerHTML =
+      foundTreasure + " / " +
+      totalTreasure;
+
+    treasureImage.src =
+      "treasure.jpg";
+
+    treasureImage.style.display =
+      "block";
+
+    treasureEffect.innerHTML =
+      "宝発見！！";
+
+  }
+
+  treasureEffect.style.display =
+    "block";
+
+  setTimeout(() => {
+
+    treasureEffect.style.display =
+      "none";
+
+  }, 1500);
+
+});
+
+
 
 document
 .querySelector("#target7")
@@ -569,7 +666,7 @@ document
     stamp4Get = true;
 
     document.querySelector("#stamp4").src =
-      "stamp_none.jpg";
+      "stamp_empty.jpg";
 
     showStampEffect();
 
