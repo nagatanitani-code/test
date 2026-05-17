@@ -529,6 +529,9 @@ let foundTreasure = 0;
 let treasure1Found = false;
 const totalTreasure = 1;
 
+let stamp1Get = false;
+let stamp2Get = false;
+let stamp3Get = false;
 
 
 AFRAME.registerComponent("markerhandler", {
@@ -539,6 +542,63 @@ AFRAME.registerComponent("markerhandler", {
 
       console.log(this.el.id + " found");
 
+// target1
+if(this.el.id === "target1"){
+
+  missionBox.style.display = "block";
+
+  stampBox.style.display = "block";
+
+  treasureBox.style.display = "none";
+
+  missionText.innerHTML =
+    "女の子を探せ！";
+
+}
+
+// target6
+if(this.el.id === "target6"){
+
+  treasureBox.style.display =
+    "block";
+
+  missionBox.style.display =
+    "none";
+
+  if(treasure1Found){
+
+    treasureEffect.innerHTML =
+      "発見済みのお宝！";
+
+  }else{
+
+    treasure1Found = true;
+
+    foundTreasure++;
+
+    treasureCount.innerHTML =
+      foundTreasure + " / " +
+      totalTreasure;
+
+    treasureImage.src =
+      "treasure.jpg";
+
+    treasureEffect.innerHTML =
+      "宝発見！！";
+
+  }
+
+  treasureEffect.style.display =
+    "block";
+
+  setTimeout(() => {
+
+    treasureEffect.style.display =
+      "none";
+
+  }, 1500);
+
+}
       // target3
       if(this.el.id === "target3"){
 
@@ -618,16 +678,14 @@ AFRAME.registerComponent("markerhandler", {
 
 document
 .querySelector("#photoMessage")
-.addEventListener("click", () => {
+.addEventListener("touchstart", () => {
 
   document.querySelector("#photoMessage")
     .style.display = "none";
 
 });
 
-let stamp1Get = false;
-let stamp2Get = false;
-let stamp3Get = false;
+
 
 
 function showStampEffect(){
