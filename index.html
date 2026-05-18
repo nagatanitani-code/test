@@ -413,8 +413,8 @@ pointer-events: auto;
 <!-- ガイド切り抜き -->
 <a-plane
   id="guideCrop"
-  width="0.25"
-  height="0.25"
+  width="0.3"
+  height="0.3"
   position="-0.8 0.6 0.02"
   material="
     src: #girlImg;
@@ -752,39 +752,42 @@ setTimeout(() => {
 
     material.map =
       new THREE.TextureLoader()
-      .load("girl.jpg");
+      .load("girl.jpg", () => {
 
-    material.map.repeat.set(
-      targetData.size,
-      targetData.size
-    );
+        material.map.repeat.set(
+          targetData.size,
+          targetData.size
+        );
 
-    const offsetX =
-      (targetData.x + 0.5)
-      - targetData.size / 2;
+        // X
+        const offsetX =
+          (targetData.x + 0.5)
+          - targetData.size / 2;
 
-    const offsetY =
-      (targetData.y + 0.5)
-      - targetData.size / 2;
+        // Y（超重要）
+        const offsetY =
+          1 - (
+            (targetData.y + 0.5)
+            + targetData.size / 2
+          );
 
-    material.map.offset.set(
-      offsetX,
-      offsetY
-    );
+        material.map.offset.set(
+          offsetX,
+          offsetY
+        );
 
-    material.map.flipY = false;
+        // これ超重要
+        material.map.flipY = false;
 
-    material.map.needsUpdate = true;
+        material.map.needsUpdate = true;
+
+      });
 
   }
 
 }, 0);
-// ←ここ重要！！
-document.querySelector("#guideCrop")
-  .setAttribute("width", 0.3);
 
-document.querySelector("#guideCrop")
-  .setAttribute("height", 0.3);
+// ←ここ重要！！
   }
 
   missionBox.style.display = "block";
