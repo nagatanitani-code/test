@@ -354,6 +354,7 @@ pointer-events: auto;
   src="#girlImg"
   width="1"
   height="1">
+ </a-plane>
 
   <!-- 判定ポイント（ここが核心） -->
   <a-plane
@@ -373,7 +374,9 @@ pointer-events: auto;
     width="0.25"
     height="0.25"
     position="0.2 -0.15 0.02"
-    visible="false">
+    visible="false"
+material="shader: flat; transparent: true; depthTest: false;"
+ >
   </a-plane>
 
 <a-plane
