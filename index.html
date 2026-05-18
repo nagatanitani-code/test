@@ -583,7 +583,9 @@ function handleTouch(event){
   const clickable =
     document.querySelectorAll(".clickable");
 
-  const objects = [];
+ const objects = Array.from(
+  document.querySelectorAll(".clickable")
+).map(el => el.getObject3D("mesh")).filter(Boolean);
 
   clickable.forEach(el => {
 
@@ -614,9 +616,6 @@ if (intersects.length > 0) {
 const hitEl = hit.el;
 const hitPos = intersects[0].point;
 
-  const target =
-    targets.find(t => t.id === hit.id);
-
   if(target && !target.found){
 
     target.found = true;
@@ -638,8 +637,7 @@ document.querySelector(
 
 
 const hitEl = intersects[0].object.el || intersects[0].object.parent?.el;
-
-const target = targets.find(t => t.id === hitEl.id);
+const target = targets.find(t => t.id === hitEl?.id);
 
 if (target && !target.found) {
 
