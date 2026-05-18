@@ -350,14 +350,9 @@ pointer-events: auto;
     material="shader: flat; transparent: true;">
   </a-plane>
 
-<!-- ガイド -->
-<!-- 探す場所 + 判定 -->
+<!-- ガイド画像 -->
 <a-plane
   id="touchGuide"
-
-  class="clickable"
-
-  data-name="ハート"
 
   src="#touchPointImg"
 
@@ -370,6 +365,26 @@ pointer-events: auto;
     shader: flat;
     transparent: true;
     alphaTest: 0.1;
+    depthTest: false;
+  ">
+</a-plane>
+
+<!-- 透明判定 -->
+<a-plane
+  id="touchTarget"
+
+  class="clickable"
+
+  data-name="ハート"
+
+  width="0.35"
+  height="0.35"
+
+  position="0.8 -0.7 0.025"
+
+  material="
+    transparent: true;
+    opacity: 0;
     depthTest: false;
   ">
 </a-plane>
@@ -607,14 +622,11 @@ AFRAME.registerComponent("markerhandler", {
 
 if(this.el.id === "target4"){
 
- document.querySelector("#touchGuide")
-    .setAttribute("visible", true);
+document.querySelector("#touchGuide")
+  .setAttribute("scale", "1 1 1");
 
-  document.querySelector("#touchTarget")
-    .setAttribute("visible", true);
-
-  document.querySelector("#checkMark")
-    .setAttribute("visible", false);
+document.querySelector("#checkMark")
+  .setAttribute("scale", "0 0 0");
 
   missionBox.style.display = "block";
 
