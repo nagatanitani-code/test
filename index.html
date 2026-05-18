@@ -639,6 +639,15 @@ if (guide) {
   guide.remove();
 }
 
+const guide = document.querySelector("#guide_" + target.id);
+
+let pos = "0 0 0";
+
+if (guide) {
+  pos = guide.getAttribute("position").clone || guide.getAttribute("position");
+  guide.remove();
+}
+
 // ③チェック作成
 const check = document.createElement("a-plane");
 
@@ -649,6 +658,8 @@ check.setAttribute("height", target.size);
 check.setAttribute("material", "shader: flat; transparent: true");
 
 document.querySelector("#guideContainer").appendChild(check);
+
+
 // 判定消す
 hit.setAttribute(
   "visible",
