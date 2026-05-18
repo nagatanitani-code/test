@@ -352,12 +352,13 @@ pointer-events: auto;
 
   <!-- 探す場所の表示 -->
   <a-plane
+id="touchGuide"
     src="#touchPointImg"
 
     width="0.35"
     height="0.35"
 
-    position="0.2 0.1 0.04"
+    position="0.35 -0.2 0.04"
 
     material="shader: flat; transparent: true;">
   </a-plane>
@@ -390,7 +391,7 @@ pointer-events: auto;
     width="0.3"
     height="0.3"
 
-    position="0.2 0.1 0.06"
+    position="0.2 0.1 0.2"
 
     visible="false"
 
@@ -553,8 +554,9 @@ effect.innerHTML =
 document.querySelector("#touchTarget")
   .setAttribute("visible", false);
 
-document.querySelector("#checkMark")
-  .setAttribute("visible", true);
+document.querySelector("#touchGuide")
+  .setAttribute("visible", false);
+
 
 document.querySelector("#checkMark")
   .setAttribute("visible", true);
@@ -608,6 +610,15 @@ AFRAME.registerComponent("markerhandler", {
 
 
 if(this.el.id === "target4"){
+
+ document.querySelector("#touchGuide")
+    .setAttribute("visible", true);
+
+  document.querySelector("#touchTarget")
+    .setAttribute("visible", true);
+
+  document.querySelector("#checkMark")
+    .setAttribute("visible", false);
 
   missionBox.style.display = "block";
 
