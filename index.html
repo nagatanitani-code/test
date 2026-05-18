@@ -553,23 +553,32 @@ function handleTouch(event){
   console.log(intersects);
 
   // 当たった
+// 当たった
 if(intersects.length > 0){
-const foundName =
-intersects[0].object.el.dataset.name;
 
-effect.innerHTML =
-  foundName + " 発見!!";
+  const foundName =
+    intersects[0].object.el.dataset.name;
 
+  effect.innerHTML =
+    foundName + " 発見!!";
 
-effect.style.display = "block";
+  // ガイド画像を消す
+  document.querySelector("#touchGuide")
+    .setAttribute("visible", false);
 
+  // 判定を消す
+  document.querySelector("#touchTarget")
+    .setAttribute("visible", false);
 
+  // チェック表示
+  document.querySelector("#checkMark")
+    .setAttribute("visible", true);
 
-setTimeout(() => {
-  effect.style.display = "none";
-}, 1000);
-}
+  effect.style.display = "block";
 
+  setTimeout(() => {
+    effect.style.display = "none";
+  }, 1000);
 
 }
 
