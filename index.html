@@ -531,11 +531,11 @@ function handleTouch(event){
   console.log(intersects);
 
   // 当たった
-if (intersects.length > 0 && !solved) {
+if (intersects.length > 0) {
 
   const hit = intersects[0].object.el;
 
-  if (hit.id === "touchTarget") {
+  if (hit.id === "touchTarget" && !solved) {
 
     solved = true;
 
@@ -547,6 +547,9 @@ if (intersects.length > 0 && !solved) {
 
     document.querySelector("#checkMark")
       .setAttribute("visible", true);
+
+hit.setAttribute("visible", false);
+hit.classList.remove("clickable");
 
     effect.innerHTML = "発見!!";
     effect.style.display = "block";
