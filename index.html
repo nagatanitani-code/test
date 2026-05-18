@@ -634,14 +634,6 @@ document.querySelector(
     }, 1000);
 
 
-let pos = { x: 0, y: 0, z: 0 };
-
-if (guide) {
-  pos = guide.getAttribute("position");
-  guide.remove();
-}
-
-
 if (guide) {
   pos = guide.getAttribute("position") || guide.getAttribute("position");
   guide.remove();
@@ -651,7 +643,13 @@ if (guide) {
 const check = document.createElement("a-plane");
 
 check.setAttribute("src", "#checkImg");
-check.setAttribute("position", pos);
+
+// ❗ ここ重要：target座標を使う
+check.setAttribute(
+  "position",
+  `${target.x} ${target.y} 0.08`
+);
+
 check.setAttribute("width", target.size);
 check.setAttribute("height", target.size);
 check.setAttribute("material", "shader: flat; transparent: true");
