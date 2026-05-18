@@ -420,7 +420,6 @@ pointer-events: auto;
   position="-0.8 0.6 0.02"
 
   material="
-    src: #girlImg;
     shader: flat;
     transparent: true;
   ">
@@ -754,21 +753,28 @@ document.querySelector("#checkMark")
   );
 
 // ガイド切り抜き
-document.querySelector("#guideCrop")
-  .setAttribute(
-    "material",
-`
-src: #girlImg;
-shader: flat;
-transparent: true;
+const guideCrop =
+  document.querySelector("#guideCrop");
 
-repeat: ${targetData.size} ${targetData.size};
+// material取得
+const material =
+  guideCrop.getObject3D("mesh").material;
 
-offset:
-${targetData.offsetX}
-${targetData.offsetY};
-`
-  );
+// texture複製！！
+material.map = new THREE.TextureLoader()
+  .load("girl.jpg");
+
+material.map.repeat.set(
+  targetData.size,
+  targetData.size
+);
+
+material.map.offset.set(
+  targetData.offsetX,
+  targetData.offsetY
+);
+
+material.map.needsUpdate = true;
 
 // ←ここ重要！！
 document.querySelector("#guideCrop")
