@@ -596,8 +596,8 @@ function handleTouch(event){
   // 3Dチェック表示
   const check = document.createElement("a-plane");
   check.setAttribute("src", "#checkImg");
- check.setAttribute("position", {x: hitPos.x,y: hitPos.y,z: hitPos.z});
-  check.setAttribute("width", target.size);
+ check.setAttribute("position",`${hitPos.x} ${hitPos.y} ${hitPos.z}`);
+ check.setAttribute("width", target.size);
   check.setAttribute("height", target.size);
   check.setAttribute("material", "shader: flat; transparent: true");
 
