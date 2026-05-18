@@ -580,11 +580,11 @@ if (intersects.length > 0) {
     }, 1000);
 
     document.querySelector(
-      "#guide_" + target.id
-    ).setAttribute(
-      "material",
-      "color: lime; opacity: 0.5"
-    );
+  "#guide_" + target.id
+).setAttribute(
+  "color",
+  "lime"
+);
 
     hit.classList.remove("clickable");
   }
@@ -592,9 +592,6 @@ if (intersects.length > 0) {
 } // ← intersects閉じる
 
 } // ← handleTouch閉じる
-
-const missionText =
-document.querySelector("#missionText");
 
 const missionText =
 document.querySelector("#missionText");
