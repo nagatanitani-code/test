@@ -40,6 +40,7 @@ pointer-events: auto;
     }
 
 
+
 #guideUI{
 
   position: fixed;
@@ -72,10 +73,16 @@ pointer-events: auto;
 
 }
 
-.guideItem img{
+.guideCrop{
 
   width: 100%;
   height: 100%;
+
+  background-image:
+    url("girl.jpg");
+
+  background-repeat:
+    no-repeat;
 
 }
 
@@ -290,27 +297,39 @@ pointer-events: auto;
 
 <body>
 
+
 <div id="guideUI">
 
-  <div class="guideItem" id="guideUI_heart">
-    <img id="guideCrop_heart">
-    <img class="guideCheck" id="guideCheck_heart"
+  <div class="guideItem">
+    <div class="guideCrop"
+         id="guideCrop_heart"></div>
+
+    <img class="guideCheck"
+         id="guideCheck_heart"
          src="check.png">
   </div>
 
-  <div class="guideItem" id="guideUI_eye">
-    <img id="guideCrop_eye">
-    <img class="guideCheck" id="guideCheck_eye"
+  <div class="guideItem">
+    <div class="guideCrop"
+         id="guideCrop_eye"></div>
+
+    <img class="guideCheck"
+         id="guideCheck_eye"
          src="check.png">
   </div>
 
-  <div class="guideItem" id="guideUI_ribbon">
-    <img id="guideCrop_ribbon">
-    <img class="guideCheck" id="guideCheck_ribbon"
+  <div class="guideItem">
+    <div class="guideCrop"
+         id="guideCrop_ribbon"></div>
+
+    <img class="guideCheck"
+         id="guideCheck_ribbon"
          src="check.png">
   </div>
 
 </div>
+
+
 
 
 <div id="effect">発見!!</div>
@@ -618,15 +637,23 @@ document.querySelector(
   "#guide_" + target.id
 );
 
+
 guide.setAttribute(
   "visible",
   false
 );
+
 // 判定消す
 hit.setAttribute(
   "visible",
   false
 );
+
+// 上部チェック
+document.querySelector(
+  "#guideCheck_" + target.id
+).style.display = "block";
+
 
 const check =
 document.createElement("a-plane");
@@ -966,59 +993,12 @@ function createTargets(){
     // ガイド背景
     // =====================
 
-    const back =
-      document.createElement("a-plane");
-
-    back.setAttribute(
-      "position",
-      `${target.x} ${target.y} 0.01`
-    );
-
-    back.setAttribute(
-      "width",
-      target.size + 0.06
-    );
-
-    back.setAttribute(
-      "height",
-      target.size + 0.06
-    );
-
-    back.setAttribute(
-      "material",
-      "color: black; opacity: 0.45"
-    );
-
-    container.appendChild(back);
-
+    
     // =====================
     // 切り抜き画像
     // =====================
 
-    const crop =
-      document.createElement("a-plane");
-
-    crop.setAttribute(
-      "position",
-      `${target.x} ${target.y} 0.02`
-    );
-
-    crop.setAttribute(
-      "width",
-      target.size
-    );
-
-    crop.setAttribute(
-      "height",
-      target.size
-    );
-
-    crop.setAttribute(
-      "material",
-      "src: #girlImg; shader: flat; transparent: true"
-    );
-
-    container.appendChild(crop);
+    
 
     // テクスチャ設定
    // テクスチャ設定
@@ -1067,7 +1047,7 @@ setTimeout(() => {
       "id",
       "guide_" + target.id
     );
-
+frame.classList.add("guideRing");
     frame.setAttribute(
       "position",
       `${target.x} ${target.y} 0.03`
@@ -1103,35 +1083,36 @@ frame.setAttribute(
 
   });
 
+
 // ======================
 // 上部ガイド生成
 // ======================
 
 targets.forEach(target => {
 
-  const guideImg =
+  const crop =
     document.querySelector(
       "#guideCrop_" + target.id
     );
 
-  guideImg.src = "girl.jpg";
+  const zoom =
+    100 / target.size;
 
-  const bgX =
-    (target.x + 0.5) * 100;
+  const posX =
+    (0.5 + target.x) * 100;
 
-  const bgY =
+  const posY =
     (0.5 - target.y) * 100;
 
-  guideImg.style.objectFit =
-    "none";
+  crop.style.backgroundSize =
+    `${zoom}% ${zoom}%`;
 
-  guideImg.style.objectPosition =
-    `${bgX}% ${bgY}%`;
-
-  guideImg.style.transform =
-    `scale(${1 / target.size})`;
+  crop.style.backgroundPosition =
+    `${posX}% ${posY}%`;
 
 });
+
+
 
 }
 scene.addEventListener("loaded", () => {
