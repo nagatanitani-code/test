@@ -351,45 +351,47 @@ pointer-events: auto;
   </a-plane>
 
 <!-- ガイド -->
+<!-- 探す場所 + 判定 -->
 <a-plane
   id="touchGuide"
+
+  class="clickable"
+
+  data-name="ハート"
+
   src="#touchPointImg"
+
   width="0.35"
   height="0.35"
-  position="0.8 -0.7 0.01"
+
+  position="0.8 -0.7 0.02"
+
   material="
     shader: flat;
     transparent: true;
-    alphaTest: 0.5;
-  ">
-</a-plane>
-
-<!-- タッチ判定 -->
-<a-plane
-  id="touchTarget"
-  class="clickable"
-  data-name="ハート"
-  width="0.35"
-  height="0.35"
-  position="0.8 -0.7 0.02"
-  material="
-    transparent: true;
-    opacity: 0;
+    alphaTest: 0.1;
+    depthTest: false;
   ">
 </a-plane>
 
 <!-- チェック -->
 <a-plane
   id="checkMark"
+
   src="#checkImg"
+
   width="0.3"
   height="0.3"
+
   position="0.8 -0.7 0.03"
-  visible="false"
+
+  scale="0 0 0"
+
   material="
     shader: flat;
     transparent: true;
-    alphaTest: 0.5;
+    alphaTest: 0.1;
+    depthTest: false;
   ">
 </a-plane>
 
@@ -546,8 +548,7 @@ intersects[0].object.el.dataset.name;
 effect.innerHTML =
   foundName + " 発見!!";
 
-document.querySelector("#touchTarget")
-  .setAttribute("visible", false);
+
 
 document.querySelector("#touchGuide")
   .setAttribute("scale", "0 0 0");
