@@ -356,7 +356,7 @@ pointer-events: auto;
   src="#touchPointImg"
   width="0.35"
   height="0.35"
-  position="0.65 -0.45 0.01"
+  position="0.8 -0.7 0.01"
   material="
     shader: flat;
     transparent: true;
@@ -371,7 +371,7 @@ pointer-events: auto;
   data-name="ハート"
   width="0.35"
   height="0.35"
-  position="0.65 -0.45 0.015"
+  position="0.8 -0.7 0.02"
   material="
     transparent: true;
     opacity: 0;
@@ -384,7 +384,7 @@ pointer-events: auto;
   src="#checkImg"
   width="0.3"
   height="0.3"
-  position="0.65 -0.45 0.02"
+  position="0.8 -0.7 0.03"
   visible="false"
   material="
     shader: flat;
@@ -550,11 +550,11 @@ document.querySelector("#touchTarget")
   .setAttribute("visible", false);
 
 document.querySelector("#touchGuide")
-  .setAttribute("visible", false);
+  .setAttribute("scale", "0 0 0");
 
 
 document.querySelector("#checkMark")
-  .setAttribute("visible", true);
+  .setAttribute("scale", "1 1 1");
 
 effect.style.display = "block";
 
