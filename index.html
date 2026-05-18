@@ -542,16 +542,39 @@ const effect = document.querySelector("#effect");
 const treasureEffect =
 document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
-const targets = {
+let currentTargetIndex = 0;
+const targets = [
 
- heart: {
+{
+  name: "ハート",
   x: 0.2,
   y: -0.15,
-  size: 0.25
+  size: 0.25,
+  found: false
+},
+
+{
+  name: "目",
+  x: -0.12,
+  y: 0.18,
+  size: 0.18,
+  found: false
+},
+
+{
+  name: "リボン",
+  x: 0.3,
+  y: 0.3,
+  size: 0.2,
+  found: false
 }
-};
+
+];
+function getCurrentTarget(){
+  return targets[currentTargetIndex];
+}
 // 今使うターゲット
-const targetData = targets.heart;
+const targetData = getCurrentTarget();
 
 document.querySelector("#guideFrame")
   .setAttribute("visible", true);
@@ -629,9 +652,17 @@ if (intersects.length > 0) {
 
   if (hit.id === "touchTarget" && !solved) {
 
-    solved = true;
+    targets[currentTargetIndex].found = true;
+currentTargetIndex++;
+if(currentTargetIndex >= targets.length){
 
+  effect.innerHTML = "完全クリア!!";
 
+}else{
+
+  updateGuide();
+
+}
 
  document.querySelector("#touchTarget")
   .setAttribute(
@@ -650,8 +681,11 @@ document.querySelector("#guideFrame")
 document.querySelector("#guideBack")
   .setAttribute("visible", false);
 
-document.querySelector("#guideCrop")
-  .setAttribute("visible", false);
+document.querySelector("#guideFrame")
+  .setAttribute(
+    "material",
+    "color: lime; opacity: 0.4;"
+  );
 
 document.querySelector("#guideMessage")
   .style.display = "none";
@@ -799,8 +833,11 @@ setTimeout(() => {
 
 }else{
 
-  document.querySelector("#guideCrop")
-    .setAttribute("visible", false);
+  document.querySelector("#guideFrame")
+  .setAttribute(
+    "material",
+    "color: lime; opacity: 0.4;"
+  );
 
   document.querySelector("#guideFrame")
     .setAttribute("visible", false);
@@ -1049,6 +1086,51 @@ document.addEventListener(
   "click",
   handleTouch
 );
+function updateGuide(){
+
+  const targetData =
+    getCurrentTarget();
+
+  // 判定
+  document.querySelector("#touchTarget")
+    .setAttribute(
+      "position",
+      `${targetData.x} ${targetData.y} 0.01`
+    );
+
+  // ガイド更新
+  const guideCrop =
+    document.querySelector("#guideCrop");
+
+  const mesh =
+    guideCrop.getObject3D("mesh");
+
+  if(mesh){
+
+    const material = mesh.material;
+
+    material.map.repeat.set(
+      targetData.size,
+      targetData.size
+    );
+
+    const offsetX =
+      (targetData.x + 0.5)
+      - targetData.size / 2;
+
+    const offsetY =
+      (targetData.y + 0.5)
+      - targetData.size / 2;
+
+    material.map.offset.set(
+      offsetX,
+      offsetY
+    );
+
+    material.map.needsUpdate = true;
+  }
+
+}
 
 </script>
 
