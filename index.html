@@ -776,26 +776,6 @@ ${offsetY};
 `
   );
 
-// material取得
-const material =
-  guideCrop.getObject3D("mesh").material;
-
-// texture複製！！
-material.map = new THREE.TextureLoader()
-  .load("girl.jpg");
-
-material.map.repeat.set(
-  targetData.size,
-  targetData.size
-);
-
-material.map.offset.set(
-  targetData.offsetX,
-  targetData.offsetY
-);
-
-material.map.needsUpdate = true;
-
 // ←ここ重要！！
 document.querySelector("#guideCrop")
   .setAttribute("width", 0.3);
