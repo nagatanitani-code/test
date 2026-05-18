@@ -637,9 +637,17 @@ document.querySelector(
   "#guide_" + target.id
 );
 
-guide.setAttribute("material", "src: #checkImg; color: white;");
+const pos = guide.getAttribute("position");
 guide.parentNode.removeChild(guide);
+const check = document.createElement("a-plane");
 
+check.setAttribute("src", "#checkImg");
+check.setAttribute("position", pos);
+check.setAttribute("width", target.size);
+check.setAttribute("height", target.size);
+check.setAttribute("material", "transparent: true; shader: flat");
+
+document.querySelector("#guideContainer").appendChild(check);
 
 // 判定消す
 hit.setAttribute(
