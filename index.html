@@ -632,10 +632,13 @@ document.querySelector(
     setTimeout(() => {
       effect.style.display = "none";
     }, 1000);
+
 const guide = document.querySelector("#guide_" + target.id);
 
+let pos = {x: 0, y: 0, z: 0};
+
 if (guide) {
-  const pos = guide.getAttribute("position");
+  pos = guide.getAttribute("position");
   guide.remove();
 }
 
@@ -656,7 +659,6 @@ check.setAttribute("height", target.size);
 check.setAttribute("material", "shader: flat; transparent: true");
 
 document.querySelector("#guideContainer").appendChild(check);
-
 
 // 判定消す
 hit.setAttribute(
@@ -690,9 +692,6 @@ check.setAttribute(
   "height",
   target.size + 0.08
 );
-
-guide.parentNode.appendChild(check);
-   
 
     hit.classList.remove("clickable");
   }
