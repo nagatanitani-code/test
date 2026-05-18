@@ -593,16 +593,20 @@ function handleTouch(event){
 
   setTimeout(() => effect.style.display = "none", 1000);
 
-  // 3Dチェック表示
-  const check = document.createElement("a-plane");
-  check.setAttribute("src", "#checkImg");
- check.setAttribute("position",`${hitPos.x} ${hitPos.y} ${hitPos.z}`);
- check.setAttribute("width", target.size);
-  check.setAttribute("height", target.size);
-  check.setAttribute("material", "shader: flat; transparent: true");
+ const hitPos = intersects[0].point;
 
-  document.querySelector("#guideContainer").appendChild(check);
-}
+const check = document.createElement("a-plane");
+check.setAttribute("position", hitPos);
+
+check.setAttribute("src", "#checkImg");
+
+check.setAttribute("position",`${hitPos.x} ${hitPos.y} ${hitPos.z}`);
+
+check.setAttribute("width", target.size);
+check.setAttribute("height", target.size);
+check.setAttribute("material", "shader: flat; transparent: true");
+
+document.querySelector("#guideContainer").appendChild(check);
 
 
 const treasureCount =
