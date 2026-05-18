@@ -547,13 +547,15 @@ document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
 const targets = {
 
-  heart: {
-    x: 0.2,
-    y: -0.15,
-    offsetX: 0.58,
-    offsetY: 0.32,
-    size: 0.25
-  },
+ heart: {
+  x: 0.2,
+  y: -0.15,
+
+  offsetX: 0.58,
+  offsetY: 0.43,
+
+  size: 0.25
+},
 
   eye: {
     x: -0.1,
@@ -771,9 +773,6 @@ document.querySelector("#guideCrop")
 
 document.querySelector("#guideCrop")
   .setAttribute("height", 1);
-
-document.querySelector("#guideCrop")
-  .setAttribute("height", targetData.size);
 
   }
 
