@@ -638,10 +638,9 @@ document.querySelector(
 );
 
 
-guide.setAttribute(
-  "visible",
-  false
-);
+
+guide.parentNode.removeChild(guide);
+
 
 // 判定消す
 hit.setAttribute(
@@ -665,7 +664,7 @@ check.setAttribute(
 
 check.setAttribute(
   "position",
-  `${target.x} ${target.y} 0.04`
+`${target.x} ${target.y} 0.08`
 );
 
 check.setAttribute(
@@ -715,6 +714,19 @@ AFRAME.registerComponent("markerhandler", {
   init: function () {
 
     this.el.addEventListener("targetFound", () => {
+
+
+// デフォルト非表示
+guideUI.style.display = "none";
+
+// 女の子ターゲット時だけ表示
+if(this.el.id === "target4"){
+
+  guideUI.style.display = "flex";
+
+}
+
+
 
       console.log(this.el.id + " found");
 
@@ -849,6 +861,14 @@ stampBox.style.display = "none";
     });
 
     this.el.addEventListener("targetLost", () => {
+
+if(this.el.id === "target4"){
+
+  guideUI.style.display = "none";
+
+}
+
+
 
       if(this.el.id === "target5"){
 
@@ -1130,6 +1150,10 @@ document.querySelector(
   "visible",
   false
 );
+
+const guideUI =
+document.querySelector("#guideUI");
+
 
 </script>
 
