@@ -641,19 +641,6 @@ document.querySelector(
 
 guide.parentNode.removeChild(guide);
 
-// リング削除
-const ring = document.querySelector("#guide_" + target.id);
-if (ring) ring.remove();
-
-// チェック画像追加
-const check = document.createElement("a-image");
-check.setAttribute("src", "#checkImg");
-check.setAttribute("id", "check_" + target.id);
-check.setAttribute("position", `${target.x} ${target.y} 0.03`);
-check.setAttribute("width", target.size);
-check.setAttribute("height", target.size);
-
-document.querySelector("#guideContainer").appendChild(check);
 
 // 判定消す
 hit.setAttribute(
@@ -1098,7 +1085,7 @@ frame.setAttribute(
 
     frame.setAttribute(
   "material",
-  "color: yellow; opacity: 0.85;  side: double"
+  "opacity: 0.85;  side: double"
 );
     frame.setAttribute(
       "animation",
