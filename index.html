@@ -41,7 +41,6 @@ pointer-events: auto;
 
 
 
-
 #guideUI{
 
   position: fixed;
@@ -51,14 +50,55 @@ pointer-events: auto;
 
   transform: translateX(-50%);
 
-  display: none;
-
+  display: flex;
   gap: 14px;
 
   z-index: 999;
 
 }
 
+.guideItem{
+
+  position: relative;
+
+  width: 90px;
+  height: 90px;
+
+  border: 4px solid yellow;
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  background: black;
+
+}
+
+.guideCrop{
+
+  width: 100%;
+  height: 100%;
+
+  background-image:
+    url("girl.jpg");
+
+  background-repeat:
+    no-repeat;
+
+}
+
+.guideCheck{
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: none;
+
+}
 
 
 
@@ -547,7 +587,7 @@ function handleTouch(event){
 
   clickable.forEach(el => {
 
-  if(el.getObject3D("mesh") && el.getAttribute("visible") !== false){
+  if(el.object3D.visible){
 
     const mesh = el.getObject3D("mesh");
 
@@ -571,9 +611,6 @@ function handleTouch(event){
 if (intersects.length > 0) {
 
   const hit = intersects[0].object.el;
-while (hit && !hit.classList.contains("clickable")) {
-  hit = hit.parentEl;
-}
 
   const target =
     targets.find(t => t.id === hit.id);
@@ -595,6 +632,14 @@ document.querySelector(
     setTimeout(() => {
       effect.style.display = "none";
     }, 1000);
+const guide =
+document.querySelector(
+  "#guide_" + target.id
+);
+
+
+
+guide.parentNode.removeChild(guide);
 
 
 // 判定消す
@@ -632,7 +677,9 @@ check.setAttribute(
   target.size + 0.08
 );
 
-container.appendChild(touch);
+guide.parentNode.appendChild(check);
+   
+
     hit.classList.remove("clickable");
   }
 
@@ -666,26 +713,22 @@ AFRAME.registerComponent("markerhandler", {
 
   init: function () {
 
-  
-this.el.addEventListener("targetFound", () => {
+    this.el.addEventListener("targetFound", () => {
 
-  if(this.el.id === "target4"){
-const guideUI = document.querySelector("#guideUI");
-    guideUI.style.display = "flex";
 
-  }else{
+// デフォルト非表示
+guideUI.style.display = "none";
 
-    guideUI.style.display = "none";
+// 女の子ターゲット時だけ表示
+if(this.el.id === "target4"){
 
-  }
+  guideUI.style.display = "flex";
 
-  console.log(this.el.id + " found");
+}
 
-  // ↓↓↓
-  // ここに今ある
-  // target1〜target6 の処理を全部入れる
-  // ↓↓↓
- console.log(this.el.id + " found");
+
+
+      console.log(this.el.id + " found");
 
 
 
@@ -707,8 +750,10 @@ if(this.el.id === "target6"){
 
   treasureBox.style.display =
     "block";
+
 stampBox.style.display = "none";
 
+ 
 
   if(treasure1Found){
 
@@ -977,8 +1022,84 @@ function createTargets(){
 
     // テクスチャ設定
    // テクスチャ設定
+setTimeout(() => {
 
-   
+  const mesh =
+    crop.getObject3D("mesh");
+
+  if(mesh){
+
+    const material =
+      mesh.material;
+
+    // 切り抜きサイズ
+    material.map.repeat.set(
+      target.size,
+      target.size
+    );
+
+    // 中心合わせ
+    const offsetX =
+      target.x + 0.5 - target.size / 2;
+
+    const offsetY =
+      0.5 - target.y - target.size / 2;
+
+    material.map.offset.set(
+      offsetX,
+      offsetY
+    );
+
+    material.map.needsUpdate =
+      true;
+
+  }
+
+}, 100);
+    // =====================
+    // 枠
+    // =====================
+
+    const frame =
+  document.createElement("a-ring");
+
+    frame.setAttribute(
+      "id",
+      "guide_" + target.id
+    );
+frame.classList.add("guideRing");
+    frame.setAttribute(
+      "position",
+      `${target.x} ${target.y} 0.03`
+    );
+
+    frame.setAttribute(
+  "radius-inner",
+  target.size / 2
+);
+
+frame.setAttribute(
+  "radius-outer",
+  target.size / 2 + 0.02
+);
+
+    frame.setAttribute(
+  "material",
+  "color: yellow; opacity: 0.85;  side: double"
+);
+    frame.setAttribute(
+      "animation",
+      `
+      property: scale;
+      from: 1 1 1;
+      to: 1.15 1.15 1;
+      dir: alternate;
+      dur: 700;
+      loop: true;
+      `
+    );
+
+    container.appendChild(frame);
 
   });
 
@@ -1018,7 +1139,17 @@ scene.addEventListener("loaded", () => {
   createTargets();
 });
 
+back.setAttribute(
+  "id",
+  "back_" + target.id
+);
 
+document.querySelector(
+  "#back_" + target.id
+).setAttribute(
+  "visible",
+  false
+);
 
 const guideUI =
 document.querySelector("#guideUI");
@@ -1028,5 +1159,4 @@ document.querySelector("#guideUI");
 
 
 </body>
-</html>
-
+</html> 
