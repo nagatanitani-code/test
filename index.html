@@ -610,7 +610,7 @@ function handleTouch(event){
   // 当たった
 if (intersects.length > 0) {
 
-  const hit = intersects[0].object.el;
+  const hit = intersects[0].object.el || intersects[0].object.parent?.el;
 
   const target =
     targets.find(t => t.id === hit.id);
@@ -632,13 +632,12 @@ document.querySelector(
     setTimeout(() => {
       effect.style.display = "none";
     }, 1000);
-const guide =
-document.querySelector(
-  "#guide_" + target.id
-);
+const guide = document.querySelector("#guide_" + target.id);
 
-const pos = guide.getAttribute("position");
-guide.parentNode.removeChild(guide);
+if (guide) {
+  const pos = guide.getAttribute("position");
+  guide.remove();
+}
 
 // ③チェック作成
 const check = document.createElement("a-plane");
@@ -662,8 +661,6 @@ document.querySelector(
 ).style.display = "block";
 
 
-const check =
-document.createElement("a-plane");
 
 check.setAttribute(
   "src",
@@ -723,6 +720,8 @@ AFRAME.registerComponent("markerhandler", {
 
     this.el.addEventListener("targetFound", () => {
 
+const guideUI = document.querySelector("#guideUI");
+const effect = document.querySelector("#effect");
 
 // デフォルト非表示
 guideUI.style.display = "none";
@@ -1030,40 +1029,7 @@ function createTargets(){
 
     // テクスチャ設定
    // テクスチャ設定
-setTimeout(() => {
 
-  const mesh =
-    crop.getObject3D("mesh");
-
-  if(mesh){
-
-    const material =
-      mesh.material;
-
-    // 切り抜きサイズ
-    material.map.repeat.set(
-      target.size,
-      target.size
-    );
-
-    // 中心合わせ
-    const offsetX =
-      target.x + 0.5 - target.size / 2;
-
-    const offsetY =
-      0.5 - target.y - target.size / 2;
-
-    material.map.offset.set(
-      offsetX,
-      offsetY
-    );
-
-    material.map.needsUpdate =
-      true;
-
-  }
-
-}, 100);
     // =====================
     // 枠
     // =====================
@@ -1147,17 +1113,7 @@ scene.addEventListener("loaded", () => {
   createTargets();
 });
 
-back.setAttribute(
-  "id",
-  "back_" + target.id
-);
 
-document.querySelector(
-  "#back_" + target.id
-).setAttribute(
-  "visible",
-  false
-);
 
 const guideUI =
 document.querySelector("#guideUI");
