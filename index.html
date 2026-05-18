@@ -467,6 +467,8 @@ pointer-events: auto;
 
 </a-entity>
 
+<a-entity id="guideContainer"></a-entity>
+
 <a-entity
   id="target5"
 markerhandler
@@ -650,68 +652,30 @@ if (intersects.length > 0) {
 
   const hit = intersects[0].object.el;
 
-  if (hit.id === "touchTarget" && !solved) {
+  const target =
+  targets.find(t => t.id === hit.id);
 
-    targets[currentTargetIndex].found = true;
+if(target && !target.found){
 
-currentTargetIndex++;
+  target.found = true;
 
-if(currentTargetIndex >= targets.length){
+  effect.innerHTML =
+    target.id + " 発見!!";
 
-  effect.innerHTML = "完全クリア!!";
+  effect.style.display = "block";
 
-  document.querySelector("#touchTarget")
-    .setAttribute("visible", false);
+  setTimeout(() => {
+    effect.style.display = "none";
+  }, 1000);
 
-}else{
-
-  updateGuide();
-
-}
-
- document.querySelector("#touchTarget")
-  .setAttribute(
-    "position",
-    `${targetData.x} ${targetData.y} 0.01`
-  );
-
-    document.querySelector("#checkMark")
-  .setAttribute(
-    "position",
-    `${targetData.x} ${targetData.y} 0.01`
-  );
-document.querySelector("#guideFrame")
-  .setAttribute("visible", false);
-
-document.querySelector("#guideBack")
-  .setAttribute("visible", false);
-
-document.querySelector("#guideFrame")
-  .setAttribute(
+  // ガイド緑化
+  document.querySelector(
+    "#guide_" + target.id
+  ).setAttribute(
     "material",
-    "color: lime; opacity: 0.4;"
+    "color: lime; opacity: 0.5"
   );
 
-document.querySelector("#guideMessage")
-  .style.display = "none";
-
-// チェック表示
-document.querySelector("#checkMark")
-  .setAttribute("visible", true);
-
-// 判定を消す
-document.querySelector("#touchTarget")
-  .setAttribute("visible", false);
-
-updateGuide();
-
-    effect.innerHTML = "発見!!";
-    effect.style.display = "block";
-
-    setTimeout(() => {
-      effect.style.display = "none";
-    }, 1000);
-  }
 }
 
 // ← これを追加！！！！！
@@ -1143,6 +1107,77 @@ function updateGuide(){
   }
 
 }
+function createTargets(){
+
+  const container =
+    document.querySelector("#guideContainer");
+
+  targets.forEach(target => {
+
+    // 判定
+    const touch =
+      document.createElement("a-plane");
+
+    touch.setAttribute("class", "clickable");
+    touch.setAttribute("id", target.id);
+
+    touch.setAttribute(
+      "position",
+      `${target.x} ${target.y} 0.01`
+    );
+
+    touch.setAttribute(
+      "width",
+      target.size
+    );
+
+    touch.setAttribute(
+      "height",
+      target.size
+    );
+
+    touch.setAttribute(
+      "material",
+      "opacity: 0"
+    );
+
+    container.appendChild(touch);
+
+    // ガイド
+    const guide =
+      document.createElement("a-plane");
+
+    guide.setAttribute(
+      "id",
+      "guide_" + target.id
+    );
+
+    guide.setAttribute(
+      "position",
+      `${target.x} ${target.y} 0.02`
+    );
+
+    guide.setAttribute(
+      "width",
+      target.size
+    );
+
+    guide.setAttribute(
+      "height",
+      target.size
+    );
+
+    guide.setAttribute(
+      "material",
+      "color: yellow; opacity: 0.25"
+    );
+
+    container.appendChild(guide);
+
+  });
+
+}
+createTargets();
 
 </script>
 
