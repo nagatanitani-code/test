@@ -276,20 +276,7 @@ pointer-events: auto;
   宝発見！
 </div>
 
-<div id="guideMessage">
-  この部分を見つけてタップ！
-</div>
 
-<div id="missionBox" style="display:none;">
-
-  <div id="missionTitle">
-    お題
-  </div>
-
-  <div id="missionText">
-    読み込み待機中
-  </div>
-</div>
 <div id="treasureBox">
 
   <div id="treasureTitle">
@@ -593,17 +580,12 @@ if (intersects.length > 0) {
 
 } // ← handleTouch閉じる
 
-const missionText =
-document.querySelector("#missionText");
 
 const treasureCount =
 document.querySelector("#treasureCount");
 
 const treasureImage =
 document.querySelector("#treasureImage");
-
-const missionBox =
-document.querySelector("#missionBox");
 
 const treasureBox =
 document.querySelector("#treasureBox");
@@ -629,30 +611,6 @@ AFRAME.registerComponent("markerhandler", {
       console.log(this.el.id + " found");
 
 
-if(this.el.id === "target4"){
-
-  document.querySelector("#guideMessage")
-    .style.display = "block";
-
-  missionBox.style.display = "block";
-
-  stampBox.style.display = "none";
-
-  treasureBox.style.display = "none";
-
-  missionText.innerHTML =
-    "女の子を探せ！";
-
-}else{
-
- 
-
-  
-  document.querySelector("#guideMessage")
-    .style.display = "none";
-
-  
-}
 
 if(this.el.id === "target1"){
 
