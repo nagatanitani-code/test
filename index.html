@@ -664,7 +664,8 @@ AFRAME.registerComponent("markerhandler", {
 
   init: function () {
 
-    this.el.addEventListener("targetFound", () => {
+  
+this.el.addEventListener("targetFound", () => {
 
   if(this.el.id === "target4"){
 
@@ -676,11 +677,13 @@ AFRAME.registerComponent("markerhandler", {
 
   }
 
-});
+  console.log(this.el.id + " found");
 
-
-
-      console.log(this.el.id + " found");
+  // ↓↓↓
+  // ここに今ある
+  // target1〜target6 の処理を全部入れる
+  // ↓↓↓
+ console.log(this.el.id + " found");
 
 
 
@@ -702,8 +705,11 @@ if(this.el.id === "target6"){
 
   treasureBox.style.display =
     "block";
-
 stampBox.style.display = "none";
+
+
+});  
+
 
  
 
