@@ -544,157 +544,65 @@ const targets = [
 
 function handleTouch(event){
 
-  console.log("タッチ検出");
-
-  // camera取得
   const camera = document.querySelector("[camera]");
+  if(!camera) return;
 
-  if(!camera){
-    console.log("camera取得失敗");
-    return;
-  }
-
-  // raycaster
   const raycaster = new THREE.Raycaster();
-
-  // 座標
   const mouse = new THREE.Vector2();
 
-  // タッチ位置
-  const x = event.touches ?
-    event.touches[0].clientX :
-    event.clientX;
+  const x = event.touches ? event.touches[0].clientX : event.clientX;
+  const y = event.touches ? event.touches[0].clientY : event.clientY;
 
-  const y = event.touches ?
-    event.touches[0].clientY :
-    event.clientY;
-
-  // -1〜1変換
   mouse.x = (x / window.innerWidth) * 2 - 1;
   mouse.y = -(y / window.innerHeight) * 2 + 1;
 
-  // ray発射
-  raycaster.setFromCamera(
-    mouse,
-    camera.getObject3D("camera")
-  );
+  raycaster.setFromCamera(mouse, camera.getObject3D("camera"));
 
-  // clickable取得
-  const clickable =
-    document.querySelectorAll(".clickable");
+  const clickables = document.querySelectorAll(".clickable");
 
- const objects = Array.from(
-  document.querySelectorAll(".clickable")
-).map(el => el.getObject3D("mesh")).filter(Boolean);
+  const objects = [];
 
-  clickable.forEach(el => {
-
-  if(el.object3D.visible){
-
-    const mesh = el.getObject3D("mesh");
-
-    if(mesh){
-      objects.push(mesh);
+  clickables.forEach(el => {
+    if (el.object3D && el.object3D.visible) {
+      const mesh = el.getObject3D("mesh");
+      if (mesh) objects.push(mesh);
     }
+  });
 
-  }
+  const intersects = raycaster.intersectObjects(objects, true);
 
-});
+  if (intersects.length === 0) return;
 
-  console.log(objects);
+  const hitEl =
+    intersects[0].object.el ||
+    intersects[0].object.parent?.el;
 
-  // 判定
-  const intersects =
-    raycaster.intersectObjects(objects, true);
+  if (!hitEl) return;
 
-  console.log(intersects);
-
-  // 当たった
-if (intersects.length > 0) {
-
- const hit = intersects[0].object;
-const hitEl = hit.el;
-const hitPos = intersects[0].point;
-
-  if(target && !target.found){
-
-    target.found = true;
-
-    effect.innerHTML =
-      target.id + " 発見!!";
-
-    effect.style.display = "block";
-
-// 上部ガイドにチェック
-document.querySelector(
-  "#guideCheck_" + target.id
-).style.display = "block";
-
-    setTimeout(() => {
-      effect.style.display = "none";
-    }, 1000);
-
-
-
-const hitEl = intersects[0].object.el || intersects[0].object.parent?.el;
-const target = targets.find(t => t.id === hitEl?.id);
-
-if (target && !target.found) {
+  const target = targets.find(t => t.id === hitEl.id);
+  if (!target || target.found) return;
 
   target.found = true;
 
-  const hitPos = intersects[0].point;
+  // UI
+  effect.innerHTML = target.name + " 発見!!";
+  effect.style.display = "block";
 
+  const checkUI = document.querySelector("#guideCheck_" + target.id);
+  if (checkUI) checkUI.style.display = "block";
+
+  setTimeout(() => effect.style.display = "none", 1000);
+
+  // 3Dチェック表示
   const check = document.createElement("a-plane");
   check.setAttribute("src", "#checkImg");
-
-  check.setAttribute("position", hitPos);
+  check.setAttribute("position", `${target.x} ${target.y} 0.08`);
   check.setAttribute("width", target.size);
   check.setAttribute("height", target.size);
   check.setAttribute("material", "shader: flat; transparent: true");
 
   document.querySelector("#guideContainer").appendChild(check);
 }
-
-// 判定消す
-hit.setAttribute(
-  "visible",
-  false
-);
-
-// 上部チェック
-document.querySelector(
-  "#guideCheck_" + target.id
-).style.display = "block";
-
-
-
-check.setAttribute(
-  "src",
-  "#checkImg"
-);
-
-check.setAttribute(
-  "position",
-`${target.x} ${target.y} 0.08`
-);
-
-check.setAttribute(
-  "width",
-  target.size + 0.08
-);
-
-check.setAttribute(
-  "height",
-  target.size + 0.08
-);
-
-    hit.classList.remove("clickable");
-  }
-
-} // ← intersects閉じる
-
-} // ← handleTouch閉じる
 
 
 const treasureCount =
