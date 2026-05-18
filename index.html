@@ -413,13 +413,11 @@ pointer-events: auto;
 <!-- ガイド切り抜き -->
 <a-plane
   id="guideCrop"
-
   width="0.25"
   height="0.25"
-
   position="-0.8 0.6 0.02"
-
   material="
+    src: #girlImg;
     shader: flat;
     transparent: true;
   ">
@@ -550,16 +548,7 @@ const targets = {
   x: 0.2,
   y: -0.15,
   size: 0.25
-},
-
-  eye: {
-    x: -0.1,
-    y: 0.4,
-    offsetX: 0.22,
-    offsetY: 0.61,
-    size: 0.18
-  }
-
+}
 };
 // 今使うターゲット
 const targetData = targets.heart;
@@ -749,33 +738,47 @@ document.querySelector("#checkMark")
   );
 
 
-const offsetX =
-  (targetData.x + 0.5)
-  - targetData.size / 2;
+setTimeout(() => {
 
-const offsetY =
-  (1 - (targetData.y + 0.5))
-  - targetData.size / 2;
+  const guideCrop =
+    document.querySelector("#guideCrop");
 
-// ガイド切り抜き
-document.querySelector("#guideCrop")
-  .setAttribute(
-    "material",
-`
-src: #girlImg;
-shader: flat;
-transparent: true;
+  const mesh =
+    guideCrop.getObject3D("mesh");
 
-repeat:
-${targetData.size}
-${targetData.size};
+  if(mesh){
 
-offset:
-${offsetX}
-${offsetY};
-`
-  );
+    const material = mesh.material;
 
+    material.map =
+      new THREE.TextureLoader()
+      .load("girl.jpg");
+
+    material.map.repeat.set(
+      targetData.size,
+      targetData.size
+    );
+
+    const offsetX =
+      (targetData.x + 0.5)
+      - targetData.size / 2;
+
+    const offsetY =
+      (targetData.y + 0.5)
+      - targetData.size / 2;
+
+    material.map.offset.set(
+      offsetX,
+      offsetY
+    );
+
+    material.map.flipY = false;
+
+    material.map.needsUpdate = true;
+
+  }
+
+}, 0);
 // ←ここ重要！！
 document.querySelector("#guideCrop")
   .setAttribute("width", 0.3);
