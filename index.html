@@ -637,19 +637,26 @@ document.querySelector(
 
 
 
-const hitPos = intersects[0].point;
-// ③チェック作成
-const check = document.createElement("a-plane");
+const hitEl = intersects[0].object.el || intersects[0].object.parent?.el;
 
-check.setAttribute("src", "#checkImg");
+const target = targets.find(t => t.id === hitEl.id);
 
-check.setAttribute("position", hitPos.x + " " + hitPos.y + " " + hitPos.z);
+if (target && !target.found) {
 
-check.setAttribute("width", target.size);
-check.setAttribute("height", target.size);
-check.setAttribute("material", "shader: flat; transparent: true");
+  target.found = true;
 
-document.querySelector("#guideContainer").appendChild(check);
+  const hitPos = intersects[0].point;
+
+  const check = document.createElement("a-plane");
+  check.setAttribute("src", "#checkImg");
+
+  check.setAttribute("position", hitPos);
+  check.setAttribute("width", target.size);
+  check.setAttribute("height", target.size);
+  check.setAttribute("material", "shader: flat; transparent: true");
+
+  document.querySelector("#guideContainer").appendChild(check);
+}
 
 // 判定消す
 hit.setAttribute(
