@@ -557,30 +557,20 @@ function handleTouch(event){
 // 当たった
 if(intersects.length > 0){
 
-  const foundName =
-    intersects[0].object.el.dataset.name;
+  const hit = intersects[0].object.el;
 
-  effect.innerHTML =
-    foundName + " 発見!!";
+  if(hit.id === "touchTarget"){
 
-  // ガイド画像を消す
-  document.querySelector("#touchGuide")
-    .setAttribute("visible", false);
+    document.querySelector("#touchGuide")
+      .setAttribute("visible", false);
 
-  // 判定を消す
-  document.querySelector("#touchTarget")
-    .setAttribute("visible", false);
+    document.querySelector("#touchTarget")
+      .setAttribute("visible", false);
 
-  // チェック表示
-  document.querySelector("#checkMark")
-    .setAttribute("visible", true);
+    document.querySelector("#checkMark")
+      .setAttribute("visible", true);
 
-  effect.style.display = "block";
-
-  setTimeout(() => {
-    effect.style.display = "none";
-  }, 1000);
-
+  }
 }
 
 // ← これを追加！！！！！
