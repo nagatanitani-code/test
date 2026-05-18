@@ -579,8 +579,9 @@ function handleTouch(event){
 
   if (!hitEl) return;
 
-  const target = targets.find(t => t.id === hitEl.id);
-  if (!target || target.found) return;
+const target = targets.find(t =>hitEl?.id?.includes(t.id));  
+
+if (!target || target.found) return;
 
   target.found = true;
 
@@ -596,7 +597,6 @@ function handleTouch(event){
  const hitPos = intersects[0].point;
 
 const check = document.createElement("a-plane");
-check.setAttribute("position", hitPos);
 
 check.setAttribute("src", "#checkImg");
 
@@ -607,8 +607,6 @@ check.setAttribute("height", target.size);
 check.setAttribute("material", "shader: flat; transparent: true");
 
 document.querySelector("#guideContainer").appendChild(check);
-
-
 const treasureCount =
 document.querySelector("#treasureCount");
 
