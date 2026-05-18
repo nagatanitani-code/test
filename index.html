@@ -592,14 +592,6 @@ document.querySelector(
     setTimeout(() => {
       effect.style.display = "none";
     }, 1000);
-const guide =
-document.querySelector(
-  "#guide_" + target.id
-);
-
-
-
-guide.parentNode.removeChild(guide);
 
 
 // 判定消す
@@ -982,40 +974,7 @@ function createTargets(){
 
     // テクスチャ設定
    // テクスチャ設定
-setTimeout(() => {
 
-  const mesh =
-    crop.getObject3D("mesh");
-
-  if(mesh){
-
-    const material =
-      mesh.material;
-
-    // 切り抜きサイズ
-    material.map.repeat.set(
-      target.size,
-      target.size
-    );
-
-    // 中心合わせ
-    const offsetX =
-      target.x + 0.5 - target.size / 2;
-
-    const offsetY =
-      0.5 - target.y - target.size / 2;
-
-    material.map.offset.set(
-      offsetX,
-      offsetY
-    );
-
-    material.map.needsUpdate =
-      true;
-
-  }
-
-}, 100);
    
 
   });
@@ -1056,17 +1015,7 @@ scene.addEventListener("loaded", () => {
   createTargets();
 });
 
-back.setAttribute(
-  "id",
-  "back_" + target.id
-);
 
-document.querySelector(
-  "#back_" + target.id
-).setAttribute(
-  "visible",
-  false
-);
 
 const guideUI =
 document.querySelector("#guideUI");
