@@ -240,6 +240,30 @@ pointer-events: auto;
   background: white;
 
 }
+#guideMessage{
+
+  position: fixed;
+
+  top: 140px;
+  left: 20px;
+
+  background: rgba(0,0,0,0.7);
+
+  color: #ffff66;
+
+  padding: 12px 20px;
+
+  border-radius: 16px;
+
+  font-size: 24px;
+  font-weight: bold;
+
+  z-index: 999;
+
+  display: none;
+
+}
+
 
   </style>
 </head>
@@ -250,6 +274,10 @@ pointer-events: auto;
 
 <div id="treasureEffect">
   宝発見！
+</div>
+
+<div id="guideMessage">
+  この部分を見つけてタップ！
 </div>
 
 <div id="missionBox" style="display:none;">
@@ -382,8 +410,9 @@ pointer-events: auto;
   ">
 </a-plane>
 
+<!-- ガイド切り抜き -->
 <a-plane
-  id="touchGuide"
+  id="guideCrop"
 
   width="0.25"
   height="0.25"
@@ -394,9 +423,6 @@ pointer-events: auto;
     src: #girlImg;
     shader: flat;
     transparent: true;
-
-    repeat: 0.25 0.25;
-    offset: 0.58 0.32;
   ">
 </a-plane>
 
@@ -440,28 +466,6 @@ pointer-events: auto;
     loop: true;
   ">
 </a-plane>
-
-<!-- 説明テキスト -->
-<a-text
-  id="guideText"
-
-  value="この部分を見つけてタップ！"
-
-  color="#ffff66"
-
-  align="center"
-
-  width="2.2"
-
-  position="-0.8 0.32 0.03"
-
-  side="double"
-
-  shader="msdf">
-</a-text>
-
-
-
 
 
 </a-entity>
@@ -560,7 +564,8 @@ const targets = {
   }
 
 };
-
+// 今使うターゲット
+const targetData = targets.heart;
 
 document.querySelector("#guideFrame")
   .setAttribute("visible", true);
@@ -640,30 +645,7 @@ if (intersects.length > 0) {
 
     solved = true;
 
-    document.querySelector("#touchGuide")
-  .setAttribute(
-    "material",
-`
-src: #girlImg;
-shader: flat;
-transparent: true;
 
-repeat: ${targetData.size} ${targetData.size};
-offset: ${targetData.guideOffsetX} ${targetData.guideOffsetY};
-`
-  );
-
-document.querySelector("#touchGuide")
-  .setAttribute(
-    "width",
-    targetData.size
-  );
-
-document.querySelector("#touchGuide")
-  .setAttribute(
-    "height",
-    targetData.size
-  );
 
  document.querySelector("#touchTarget")
   .setAttribute(
@@ -676,14 +658,24 @@ document.querySelector("#touchGuide")
     "position",
     `${targetData.x} ${targetData.y} 0.01`
   );
-
 document.querySelector("#guideFrame")
   .setAttribute("visible", false);
 
 document.querySelector("#guideBack")
   .setAttribute("visible", false);
 
-document.querySelector("#guideText")
+document.querySelector("#guideCrop")
+  .setAttribute("visible", false);
+
+document.querySelector("#guideMessage")
+  .style.display = "none";
+
+// チェック表示
+document.querySelector("#checkMark")
+  .setAttribute("visible", true);
+
+// 判定を消す
+document.querySelector("#touchTarget")
   .setAttribute("visible", false);
 
 hit.setAttribute("visible", false);
@@ -739,27 +731,45 @@ AFRAME.registerComponent("markerhandler", {
 
 if(this.el.id === "target4"){
 
+
   if(!solved){
 
-    document.querySelector("#touchGuide")
-      .setAttribute("visible", true);
+    document.querySelector("#guideMessage")
+  .style.display = "block";
 
-    document.querySelector("#touchTarget")
-      .setAttribute("visible", true);
+  // 判定位置
+document.querySelector("#touchTarget")
+  .setAttribute(
+    "position",
+    `${targetData.x} ${targetData.y} 0.01`
+  );
 
-    document.querySelector("#checkMark")
-      .setAttribute("visible", false);
+// チェック位置
+document.querySelector("#checkMark")
+  .setAttribute(
+    "position",
+    `${targetData.x} ${targetData.y} 0.01`
+  );
 
-  }else{
+// ガイド切り抜き
+document.querySelector("#guideCrop")
+  .setAttribute(
+    "material",
+`
+src: #girlImg;
+shader: flat;
+transparent: true;
 
-    document.querySelector("#touchGuide")
-      .setAttribute("visible", false);
+repeat: ${targetData.size} ${targetData.size};
+offset: ${targetData.offsetX} ${targetData.offsetY};
+`
+  );
 
-    document.querySelector("#touchTarget")
-      .setAttribute("visible", false);
+document.querySelector("#guideCrop")
+  .setAttribute("width", targetData.size);
 
-    document.querySelector("#checkMark")
-      .setAttribute("visible", true);
+document.querySelector("#guideCrop")
+  .setAttribute("height", targetData.size);
 
   }
 
@@ -772,7 +782,28 @@ if(this.el.id === "target4"){
   missionText.innerHTML =
     "女の子を探せ！";
 
+}else{
+
+  document.querySelector("#guideCrop")
+    .setAttribute("visible", false);
+
+  document.querySelector("#guideFrame")
+    .setAttribute("visible", false);
+
+  document.querySelector("#guideBack")
+    .setAttribute("visible", false);
+
+  document.querySelector("#guideMessage")
+    .style.display = "none";
+
+  document.querySelector("#checkMark")
+    .setAttribute("visible", true);
+
+  document.querySelector("#touchTarget")
+    .setAttribute("visible", false);
+
 }
+
 if(this.el.id === "target1"){
 
 }
