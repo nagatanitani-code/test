@@ -610,7 +610,9 @@ function handleTouch(event){
   // 当たった
 if (intersects.length > 0) {
 
-  const hit = intersects[0].object.el || intersects[0].object.parent?.el;
+ const hit = intersects[0].object;
+const hitEl = hit.el;
+const hitPos = intersects[0].point;
 
   const target =
     targets.find(t => t.id === hit.id);
@@ -635,17 +637,13 @@ document.querySelector(
 
 
 
-
+const hitPos = intersects[0].point;
 // ③チェック作成
 const check = document.createElement("a-plane");
 
 check.setAttribute("src", "#checkImg");
 
-// タップしたターゲットの位置に出す
-check.setAttribute(
-  "position",
-  `${target.x} ${target.y} 0.08`
-);
+check.setAttribute("position", hitPos.x + " " + hitPos.y + " " + hitPos.z);
 
 check.setAttribute("width", target.size);
 check.setAttribute("height", target.size);
