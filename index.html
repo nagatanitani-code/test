@@ -400,6 +400,57 @@ pointer-events: auto;
   ">
 </a-plane>
 
+<a-plane
+  id="guideFrame"
+
+  width="0.3"
+  height="0.3"
+
+  position="-0.8 0.6 0.021"
+
+  material="
+    color: yellow;
+    opacity: 0.3;
+    shader: flat;
+  "
+
+  animation="
+    property: material.opacity;
+    from: 0.1;
+    to: 0.6;
+    dir: alternate;
+    dur: 500;
+    loop: true;
+  ">
+</a-plane>
+
+<a-text
+  value="この部分を探せ！"
+
+  color="yellow"
+
+  align="center"
+
+  width="2"
+
+  position="-0.8 0.35 0.03">
+</a-text>
+
+<a-text
+  id="foundText"
+
+  value="FOUND!"
+
+  color="#00ff88"
+
+  align="center"
+
+  width="2"
+
+  position="0.2 -0.35 0.03"
+
+  visible="false">
+</a-text>
 
 </a-entity>
 
@@ -479,6 +530,11 @@ const treasureEffect =
 document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
 
+document.querySelector("#foundText")
+  .setAttribute("visible", false);
+
+document.querySelector("#guideFrame")
+  .setAttribute("visible", true);
 
 
 function handleTouch(event){
@@ -563,6 +619,13 @@ if (intersects.length > 0) {
 
     document.querySelector("#checkMark")
       .setAttribute("visible", true);
+
+document.querySelector("#foundText")
+  .setAttribute("visible", true);
+
+document.querySelector("#guideFrame")
+  .setAttribute("visible", false);
+
 
 hit.setAttribute("visible", false);
 hit.classList.remove("clickable");
