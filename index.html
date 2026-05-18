@@ -760,13 +760,17 @@ src: #girlImg;
 shader: flat;
 transparent: true;
 
-repeat: 1 1;
-offset: 0 0;
+repeat: ${targetData.size} ${targetData.size};
+offset: ${targetData.offsetX} ${targetData.offsetY};
 `
   );
 
+// ←ここ重要！！
 document.querySelector("#guideCrop")
-  .setAttribute("width", targetData.size);
+  .setAttribute("width", 1);
+
+document.querySelector("#guideCrop")
+  .setAttribute("height", 1);
 
 document.querySelector("#guideCrop")
   .setAttribute("height", targetData.size);
