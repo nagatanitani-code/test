@@ -547,7 +547,7 @@ function handleTouch(event){
 
   clickable.forEach(el => {
 
-  if(el.object3D.visible){
+  if(el.getObject3D("mesh") && el.getAttribute("visible") !== false){
 
     const mesh = el.getObject3D("mesh");
 
@@ -629,8 +629,7 @@ check.setAttribute(
   target.size + 0.08
 );
 
-document.querySelector("#guideContainer") .appendChild(check);
-
+document.querySelector("#target4").appendChild(touch);
     hit.classList.remove("clickable");
   }
 
