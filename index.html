@@ -39,43 +39,6 @@ pointer-events: auto;
       100% { transform: translate(-50%, -50%) scale(1); opacity:1; }
     }
 
-
-#missionBox{
-
-  position: fixed;
-
-  top: 20px;
-  left: 20px;
-
-  background:
-    linear-gradient(
-      45deg,
-      #1e3c72,
-      #2a5298
-    );
-
-  color: white;
-
-  padding: 14px 24px;
-
-  border-radius: 18px;
-
-  z-index: 999;
-pointer-events: auto;
-
-  text-align: left;
-
-  min-width: 220px;
-
-  box-shadow:
-    0 0 20px rgba(0,0,0,0.5);
-
-}
-
-
-
-
-
 #missionTitle{
 
   font-size: 16px;
@@ -565,13 +528,41 @@ if (intersects.length > 0) {
     setTimeout(() => {
       effect.style.display = "none";
     }, 1000);
-
-    document.querySelector(
+const guide =
+document.querySelector(
   "#guide_" + target.id
-).setAttribute(
-  "color",
-  "lime"
 );
+
+guide.setAttribute(
+  "visible",
+  false
+);
+
+const check =
+document.createElement("a-plane");
+
+check.setAttribute(
+  "src",
+  "#checkImg"
+);
+
+check.setAttribute(
+  "position",
+  `${target.x} ${target.y} 0.04`
+);
+
+check.setAttribute(
+  "width",
+  target.size + 0.08
+);
+
+check.setAttribute(
+  "height",
+  target.size + 0.08
+);
+
+guide.parentNode.appendChild(check);
+   
 
     hit.classList.remove("clickable");
   }
@@ -617,14 +608,12 @@ if(this.el.id === "target1"){
 }
 if(this.el.id === "target2"){
 stampBox.style.display = "block";
-missionBox.style.display =
-    "none";
+
  treasureBox.style.display = "none";
 }
 if(this.el.id === "target3"){
 stampBox.style.display = "block";
-missionBox.style.display =
-    "none";
+
  treasureBox.style.display = "none";
 }
 // target6
@@ -635,8 +624,7 @@ if(this.el.id === "target6"){
 
 stampBox.style.display = "none";
 
-  missionBox.style.display =
-    "none";
+ 
 
   if(treasure1Found){
 
@@ -684,8 +672,7 @@ stampBox.style.display = "none";
 
           showStampEffect();
 stampBox.style.display = "block";
-missionBox.style.display =
-    "none";
+
  treasureBox.style.display = "none";
 
         }
@@ -704,8 +691,7 @@ missionBox.style.display =
 
           showStampEffect();
 stampBox.style.display = "block";
-missionBox.style.display =
-    "none";
+
  treasureBox.style.display = "none";
 
         }
@@ -724,8 +710,7 @@ missionBox.style.display =
 
           showStampEffect();
 stampBox.style.display = "block";
-missionBox.style.display =
-    "none";
+
  treasureBox.style.display = "none";
 
         }
@@ -738,8 +723,7 @@ missionBox.style.display =
         document.querySelector("#photoMessage")
           .style.display = "block";
 stampBox.style.display = "none";
-missionBox.style.display =
-    "none";
+
  treasureBox.style.display = "none";
 
 
@@ -758,8 +742,7 @@ missionBox.style.display =
 // target6
 if(this.el.id === "target6"){
 stampBox.style.display = "block";
-missionBox.style.display =
-    "none";
+
   treasureBox.style.display =
     "none";
 
@@ -898,7 +881,7 @@ function createTargets(){
 
     back.setAttribute(
       "position",
-      `${target.x} ${target.y} 0.019`
+      `${target.x} ${target.y} 0.01`
     );
 
     back.setAttribute(
@@ -948,43 +931,41 @@ function createTargets(){
     container.appendChild(crop);
 
     // テクスチャ設定
-    setTimeout(() => {
+   // テクスチャ設定
+setTimeout(() => {
 
-      const mesh =
-        crop.getObject3D("mesh");
+  const mesh =
+    crop.getObject3D("mesh");
 
-      if(mesh){
+  if(mesh){
 
-        const material =
-          mesh.material;
+    const material =
+      mesh.material;
 
-        material.map.repeat.set(
-          target.size,
-          target.size
-        );
+    // 切り抜きサイズ
+    material.map.repeat.set(
+      target.size,
+      target.size
+    );
 
-        const offsetX =
-          (target.x + 0.5)
-          - target.size / 2;
+    // 中心合わせ
+    const offsetX =
+      target.x + 0.5 - target.size / 2;
 
-        const offsetY =
-          1 - (
-            (target.y + 0.5)
-            + target.size / 2
-          );
+    const offsetY =
+      0.5 - target.y - target.size / 2;
 
-        material.map.offset.set(
-          offsetX,
-          offsetY
-        );
+    material.map.offset.set(
+      offsetX,
+      offsetY
+    );
 
-        material.map.needsUpdate =
-          true;
+    material.map.needsUpdate =
+      true;
 
-      }
+  }
 
-    }, 0);
-
+}, 100);
     // =====================
     // 枠
     // =====================
@@ -999,7 +980,7 @@ function createTargets(){
 
     frame.setAttribute(
       "position",
-      `${target.x} ${target.y} 0.021`
+      `${target.x} ${target.y} 0.03`
     );
 
     frame.setAttribute(
@@ -1037,8 +1018,17 @@ scene.addEventListener("loaded", () => {
   createTargets();
 });
 
+back.setAttribute(
+  "id",
+  "back_" + target.id
+);
 
-
+document.querySelector(
+  "#back_" + target.id
+).setAttribute(
+  "visible",
+  false
+);
 </script>
 
 
