@@ -634,17 +634,14 @@ document.querySelector(
     }, 1000);
 
 
-if (guide) {
-  pos = guide.getAttribute("position") || guide.getAttribute("position");
-  guide.remove();
-}
+
 
 // ③チェック作成
 const check = document.createElement("a-plane");
 
 check.setAttribute("src", "#checkImg");
 
-// ❗ ここ重要：target座標を使う
+// タップしたターゲットの位置に出す
 check.setAttribute(
   "position",
   `${target.x} ${target.y} 0.08`
