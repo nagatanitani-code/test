@@ -564,33 +564,37 @@ if (intersects.length > 0) {
   const hit = intersects[0].object.el;
 
   const target =
-  targets.find(t => t.id === hit.id);
+    targets.find(t => t.id === hit.id);
 
-if(target && !target.found){
+  if(target && !target.found){
 
-  target.found = true;
+    target.found = true;
 
-  effect.innerHTML =
-    target.id + " 発見!!";
+    effect.innerHTML =
+      target.id + " 発見!!";
 
-  effect.style.display = "block";
+    effect.style.display = "block";
 
-  setTimeout(() => {
-    effect.style.display = "none";
-  }, 1000);
+    setTimeout(() => {
+      effect.style.display = "none";
+    }, 1000);
 
-  // ガイド緑化
-  document.querySelector(
-    "#guide_" + target.id
-  ).setAttribute(
-    "material",
-    "color: lime; opacity: 0.5"
-  );
-hit.classList.remove("clickable");
-}
+    document.querySelector(
+      "#guide_" + target.id
+    ).setAttribute(
+      "material",
+      "color: lime; opacity: 0.5"
+    );
 
-// ← これを追加！！！！！
-}
+    hit.classList.remove("clickable");
+  }
+
+} // ← intersects閉じる
+
+} // ← handleTouch閉じる
+
+const missionText =
+document.querySelector("#missionText");
 
 const missionText =
 document.querySelector("#missionText");
@@ -1055,7 +1059,7 @@ frame.setAttribute(
 
     frame.setAttribute(
   "material",
-  "color: yellow; opacity: 0.15"
+  "color: yellow; opacity: 0.85;  side: double"
 );
     frame.setAttribute(
       "animation",
