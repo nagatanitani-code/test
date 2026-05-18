@@ -549,10 +549,6 @@ const targets = {
  heart: {
   x: 0.2,
   y: -0.15,
-
-  offsetX: 0.58,
-  offsetY: 0.43,
-
   size: 0.25
 },
 
@@ -752,9 +748,33 @@ document.querySelector("#checkMark")
     `${targetData.x} ${targetData.y} 0.01`
   );
 
+
+const offsetX =
+  (targetData.x + 0.5)
+  - targetData.size / 2;
+
+const offsetY =
+  (1 - (targetData.y + 0.5))
+  - targetData.size / 2;
+
 // ガイド切り抜き
-const guideCrop =
-  document.querySelector("#guideCrop");
+document.querySelector("#guideCrop")
+  .setAttribute(
+    "material",
+`
+src: #girlImg;
+shader: flat;
+transparent: true;
+
+repeat:
+${targetData.size}
+${targetData.size};
+
+offset:
+${offsetX}
+${offsetY};
+`
+  );
 
 // material取得
 const material =
