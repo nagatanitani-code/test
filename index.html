@@ -636,11 +636,8 @@ const guide =
 document.querySelector(
   "#guide_" + target.id
 );
-
-
-
 guide.parentNode.removeChild(guide);
-
+guide.setAttribute("material", "src: #checkImg; color: white;");
 
 // 判定消す
 hit.setAttribute(
@@ -1085,7 +1082,7 @@ frame.setAttribute(
 
     frame.setAttribute(
   "material",
-  "color: yellow; opacity: 0.85;  side: double"
+  "color: yellow; opacity: 0; transparent: true; side: double"
 );
     frame.setAttribute(
       "animation",
