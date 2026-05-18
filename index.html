@@ -292,7 +292,7 @@ pointer-events: auto;
 (タップで閉じる)
 </div>
 
-<div id="stampBox">
+<div id="stampBox" style="display:none;">
 
   <div id="stampTitle">
     スタンプラリー
@@ -664,6 +664,13 @@ if(this.el.id === "target6"){
           .style.display = "none";
 
       }
+// target6
+if(this.el.id === "target6"){
+
+  treasureBox.style.display =
+    "none";
+
+}
 
     });
 
