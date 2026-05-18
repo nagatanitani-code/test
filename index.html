@@ -640,12 +640,14 @@ document.querySelector(
 const pos = guide.getAttribute("position");
 guide.parentNode.removeChild(guide);
 
-pos.setAttribute("src", "#checkImg");
-pos.setAttribute("width", target.size);
-pos.setAttribute("height", target.size);
-pos.setAttribute("material", "transparent: true; shader: flat");
+// ③チェック作成
+const check = document.createElement("a-plane");
 
-document.querySelector("#guideContainer").appendChild(check);
+check.setAttribute("src", "#checkImg");
+check.setAttribute("position", pos);
+check.setAttribute("width", target.size);
+check.setAttribute("height", target.size);
+check.setAttribute("material", "shader: flat; transparent: true");
 
 // 判定消す
 hit.setAttribute(
