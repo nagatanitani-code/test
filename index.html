@@ -653,10 +653,15 @@ if (intersects.length > 0) {
   if (hit.id === "touchTarget" && !solved) {
 
     targets[currentTargetIndex].found = true;
+
 currentTargetIndex++;
+
 if(currentTargetIndex >= targets.length){
 
   effect.innerHTML = "完全クリア!!";
+
+  document.querySelector("#touchTarget")
+    .setAttribute("visible", false);
 
 }else{
 
@@ -698,8 +703,7 @@ document.querySelector("#checkMark")
 document.querySelector("#touchTarget")
   .setAttribute("visible", false);
 
-hit.setAttribute("visible", false);
-hit.classList.remove("clickable");
+updateGuide();
 
     effect.innerHTML = "発見!!";
     effect.style.display = "block";
@@ -1091,14 +1095,22 @@ function updateGuide(){
   const targetData =
     getCurrentTarget();
 
-  // 判定
+  if(!targetData) return;
+
+  // 判定位置
   document.querySelector("#touchTarget")
     .setAttribute(
       "position",
       `${targetData.x} ${targetData.y} 0.01`
     );
 
-  // ガイド更新
+  // チェック位置
+  document.querySelector("#checkMark")
+    .setAttribute(
+      "position",
+      `${targetData.x} ${targetData.y} 0.01`
+    );
+
   const guideCrop =
     document.querySelector("#guideCrop");
 
