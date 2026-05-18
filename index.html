@@ -541,7 +541,25 @@ const effect = document.querySelector("#effect");
 const treasureEffect =
 document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
+const targets = {
 
+  heart: {
+    x: 0.2,
+    y: -0.15,
+    offsetX: 0.58,
+    offsetY: 0.32,
+    size: 0.25
+  },
+
+  eye: {
+    x: -0.1,
+    y: 0.4,
+    offsetX: 0.22,
+    offsetY: 0.61,
+    size: 0.18
+  }
+
+};
 
 
 document.querySelector("#guideFrame")
@@ -623,14 +641,41 @@ if (intersects.length > 0) {
     solved = true;
 
     document.querySelector("#touchGuide")
-      .setAttribute("visible", false);
+  .setAttribute(
+    "material",
+`
+src: #girlImg;
+shader: flat;
+transparent: true;
 
-    document.querySelector("#touchTarget")
-      .setAttribute("visible", false);
+repeat: ${targetData.size} ${targetData.size};
+offset: ${targetData.guideOffsetX} ${targetData.guideOffsetY};
+`
+  );
+
+document.querySelector("#touchGuide")
+  .setAttribute(
+    "width",
+    targetData.size
+  );
+
+document.querySelector("#touchGuide")
+  .setAttribute(
+    "height",
+    targetData.size
+  );
+
+ document.querySelector("#touchTarget")
+  .setAttribute(
+    "position",
+    `${targetData.x} ${targetData.y} 0.01`
+  );
 
     document.querySelector("#checkMark")
-      .setAttribute("visible", true);
-
+  .setAttribute(
+    "position",
+    `${targetData.x} ${targetData.y} 0.01`
+  );
 
 document.querySelector("#guideFrame")
   .setAttribute("visible", false);
