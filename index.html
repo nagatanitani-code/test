@@ -489,14 +489,8 @@ const targets = [
 }
 
 ];
-function getCurrentTarget(){
-  return targets[currentTargetIndex];
-}
-// 今使うターゲット
-const targetData = getCurrentTarget();
 
-document.querySelector("#guideFrame")
-  .setAttribute("visible", true);
+// 今使うターゲット
 
 
 function handleTouch(event){
@@ -592,7 +586,7 @@ if(target && !target.found){
     "material",
     "color: lime; opacity: 0.5"
   );
-hit.setAttribute("visible", false);
+hit.classList.remove("clickable");
 }
 
 // ← これを追加！！！！！
@@ -642,29 +636,9 @@ if(this.el.id === "target4"){
     document.querySelector("#guideMessage")
   .style.display = "block";
 
-  // 判定位置
-document.querySelector("#touchTarget")
-  .setAttribute(
-    "position",
-    `${targetData.x} ${targetData.y} 0.01`
-  );
-
-// チェック位置
-document.querySelector("#checkMark")
-  .setAttribute(
-    "position",
-    `${targetData.x} ${targetData.y} 0.01`
-  );
-
-
 setTimeout(() => {
 
-  const guideCrop =
-    document.querySelector("#guideCrop");
-
-  const mesh =
-    guideCrop.getObject3D("mesh");
-
+ 
   if(mesh){
 
     const material = mesh.material;
@@ -718,27 +692,13 @@ setTimeout(() => {
 
 }else{
 
-  document.querySelector("#guideFrame")
-  .setAttribute(
-    "material",
-    "color: lime; opacity: 0.4;"
-  );
+ 
 
-  document.querySelector("#guideFrame")
-    .setAttribute("visible", false);
-
-  document.querySelector("#guideBack")
-    .setAttribute("visible", false);
-
+  
   document.querySelector("#guideMessage")
     .style.display = "none";
 
-  document.querySelector("#checkMark")
-    .setAttribute("visible", true);
-
-  document.querySelector("#touchTarget")
-    .setAttribute("visible", false);
-
+  
 }
 
 if(this.el.id === "target1"){
@@ -971,59 +931,7 @@ document.addEventListener(
   "click",
   handleTouch
 );
-function updateGuide(){
 
-  const targetData =
-    getCurrentTarget();
-
-  if(!targetData) return;
-
-  // 判定位置
-  document.querySelector("#touchTarget")
-    .setAttribute(
-      "position",
-      `${targetData.x} ${targetData.y} 0.01`
-    );
-
-  // チェック位置
-  document.querySelector("#checkMark")
-    .setAttribute(
-      "position",
-      `${targetData.x} ${targetData.y} 0.01`
-    );
-
-  const guideCrop =
-    document.querySelector("#guideCrop");
-
-  const mesh =
-    guideCrop.getObject3D("mesh");
-
-  if(mesh){
-
-    const material = mesh.material;
-
-    material.map.repeat.set(
-      targetData.size,
-      targetData.size
-    );
-
-    const offsetX =
-      (targetData.x + 0.5)
-      - targetData.size / 2;
-
-    const offsetY =
-      (targetData.y + 0.5)
-      - targetData.size / 2;
-
-    material.map.offset.set(
-      offsetX,
-      offsetY
-    );
-
-    material.map.needsUpdate = true;
-  }
-
-}
 function createTargets(){
 
   const container =
@@ -1194,10 +1102,9 @@ function createTargets(){
     );
 
     frame.setAttribute(
-      "material",
-      "color: yellow; opacity: 0.3"
-    );
-
+  "material",
+  "color: yellow; opacity: 0.15"
+);
     frame.setAttribute(
       "animation",
       `
@@ -1215,7 +1122,32 @@ function createTargets(){
   });
 
 }
-createTargets();
+scene.addEventListener("loaded", () => {
+  createTargets();
+});
+
+const frame =
+  document.createElement("a-ring");
+
+frame.setAttribute(
+  "radius-inner",
+  target.size / 2
+);
+
+frame.setAttribute(
+  "radius-outer",
+  target.size / 2 + 0.02
+);
+
+frame.setAttribute(
+  "position",
+  `${target.x} ${target.y} 0.021`
+);
+
+frame.setAttribute(
+  "material",
+  "color: yellow; opacity: 0.8"
+);
 
 </script>
 
