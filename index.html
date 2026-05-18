@@ -1056,52 +1056,7 @@ setTimeout(() => {
   }
 
 }, 100);
-    // =====================
-    // 枠
-    // =====================
-
-    const frame =
-  document.createElement("a-ring");
-
-    frame.setAttribute(
-      "id",
-      "guide_" + target.id
-    );
-frame.classList.add("guideRing");
-    frame.setAttribute(
-      "position",
-      `${target.x} ${target.y} 0.03`
-    );
-
-    frame.setAttribute(
-  "radius-inner",
-  target.size / 2
-);
-
-frame.setAttribute(
-  "radius-outer",
-  target.size / 2 + 0.02
-);
-
-    frame.setAttribute(
-  "material",
-  "color: yellow; opacity: 0.85;  side: double"
-);
-    frame.setAttribute(
-      "animation",
-      `
-      property: scale;
-      from: 1 1 1;
-      to: 1.15 1.15 1;
-      dir: alternate;
-      dur: 700;
-      loop: true;
-      `
-    );
-
-    container.appendChild(frame);
-
-  });
+   
 
 
 // ======================
