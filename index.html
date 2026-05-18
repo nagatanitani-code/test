@@ -370,104 +370,18 @@ pointer-events: auto;
   markerhandler
   mindar-image-target="targetIndex: 3">
 
-  <!-- 女の子 -->
   <a-plane
-  src="#girlImg"
-  width="1"
-  height="1"
-  material="shader: flat; transparent: true;">
-</a-plane>
-
-  <!-- 判定ポイント（ここが核心） -->
-  <a-plane
-    id="touchTarget"
-    class="clickable"
-    data-name="ハート"
-    width="0.25"
-    height="0.25"
-    position="0.2 -0.15 0.01"
-    material="opacity: 0">
+    src="#girlImg"
+    width="1"
+    height="1"
+    material="shader: flat; transparent: true;">
   </a-plane>
 
-  <!-- チェック -->
-<a-plane
-  id="checkMark"
-
-  width="0.25"
-  height="0.25"
-
-  position="0.2 -0.15 0.01"
-
-  visible="false"
-
-  material="
-    src: #checkImg;
-    shader: flat;
-    transparent: true;
-    alphaTest: 0.01;
-    side: double;
-    depthTest: false;
-  ">
-</a-plane>
-
-<!-- ガイド切り抜き -->
-<a-plane
-  id="guideCrop"
-  width="0.3"
-  height="0.3"
-  position="-0.8 0.6 0.02"
-  material="
-    src: #girlImg;
-    shader: flat;
-    transparent: true;
-  ">
-</a-plane>
-
-<!-- ガイド背景 -->
-<a-plane
-  id="guideBack"
-
-  width="0.42"
-  height="0.42"
-
-  position="-0.8 0.6 0.018"
-
-  material="
-    color: black;
-    opacity: 0.45;
-    shader: flat;
-  ">
-</a-plane>
-
-<!-- ガイド枠 -->
-<a-plane
-  id="guideFrame"
-
-  width="0.34"
-  height="0.34"
-
-  position="-0.8 0.6 0.019"
-
-  material="
-    color: yellow;
-    opacity: 0.25;
-    shader: flat;
-  "
-
-  animation="
-    property: scale;
-    from: 1 1 1;
-    to: 1.15 1.15 1;
-    dir: alternate;
-    dur: 700;
-    loop: true;
-  ">
-</a-plane>
-
+  <a-entity id="guideContainer"></a-entity>
 
 </a-entity>
 
-<a-entity id="guideContainer"></a-entity>
+
 
 <a-entity
   id="target5"
@@ -548,6 +462,7 @@ let currentTargetIndex = 0;
 const targets = [
 
 {
+  id: "heart",
   name: "ハート",
   x: 0.2,
   y: -0.15,
@@ -556,6 +471,7 @@ const targets = [
 },
 
 {
+  id: "eye",
   name: "目",
   x: -0.12,
   y: 0.18,
@@ -564,6 +480,7 @@ const targets = [
 },
 
 {
+  id: "ribbon",
   name: "リボン",
   x: 0.3,
   y: 0.3,
@@ -675,7 +592,7 @@ if(target && !target.found){
     "material",
     "color: lime; opacity: 0.5"
   );
-
+hit.setAttribute("visible", false);
 }
 
 // ← これを追加！！！！！
@@ -1114,12 +1031,22 @@ function createTargets(){
 
   targets.forEach(target => {
 
+    // =====================
     // 判定
+    // =====================
+
     const touch =
       document.createElement("a-plane");
 
-    touch.setAttribute("class", "clickable");
-    touch.setAttribute("id", target.id);
+    touch.setAttribute(
+      "class",
+      "clickable"
+    );
+
+    touch.setAttribute(
+      "id",
+      target.id
+    );
 
     touch.setAttribute(
       "position",
@@ -1143,36 +1070,147 @@ function createTargets(){
 
     container.appendChild(touch);
 
-    // ガイド
-    const guide =
+    // =====================
+    // ガイド背景
+    // =====================
+
+    const back =
       document.createElement("a-plane");
 
-    guide.setAttribute(
-      "id",
-      "guide_" + target.id
+    back.setAttribute(
+      "position",
+      `${target.x} ${target.y} 0.019`
     );
 
-    guide.setAttribute(
+    back.setAttribute(
+      "width",
+      target.size + 0.06
+    );
+
+    back.setAttribute(
+      "height",
+      target.size + 0.06
+    );
+
+    back.setAttribute(
+      "material",
+      "color: black; opacity: 0.45"
+    );
+
+    container.appendChild(back);
+
+    // =====================
+    // 切り抜き画像
+    // =====================
+
+    const crop =
+      document.createElement("a-plane");
+
+    crop.setAttribute(
       "position",
       `${target.x} ${target.y} 0.02`
     );
 
-    guide.setAttribute(
+    crop.setAttribute(
       "width",
       target.size
     );
 
-    guide.setAttribute(
+    crop.setAttribute(
       "height",
       target.size
     );
 
-    guide.setAttribute(
+    crop.setAttribute(
       "material",
-      "color: yellow; opacity: 0.25"
+      "src: #girlImg; shader: flat; transparent: true"
     );
 
-    container.appendChild(guide);
+    container.appendChild(crop);
+
+    // テクスチャ設定
+    setTimeout(() => {
+
+      const mesh =
+        crop.getObject3D("mesh");
+
+      if(mesh){
+
+        const material =
+          mesh.material;
+
+        material.map.repeat.set(
+          target.size,
+          target.size
+        );
+
+        const offsetX =
+          (target.x + 0.5)
+          - target.size / 2;
+
+        const offsetY =
+          1 - (
+            (target.y + 0.5)
+            + target.size / 2
+          );
+
+        material.map.offset.set(
+          offsetX,
+          offsetY
+        );
+
+        material.map.needsUpdate =
+          true;
+
+      }
+
+    }, 0);
+
+    // =====================
+    // 枠
+    // =====================
+
+    const frame =
+      document.createElement("a-plane");
+
+    frame.setAttribute(
+      "id",
+      "guide_" + target.id
+    );
+
+    frame.setAttribute(
+      "position",
+      `${target.x} ${target.y} 0.021`
+    );
+
+    frame.setAttribute(
+      "width",
+      target.size + 0.03
+    );
+
+    frame.setAttribute(
+      "height",
+      target.size + 0.03
+    );
+
+    frame.setAttribute(
+      "material",
+      "color: yellow; opacity: 0.3"
+    );
+
+    frame.setAttribute(
+      "animation",
+      `
+      property: scale;
+      from: 1 1 1;
+      to: 1.15 1.15 1;
+      dir: alternate;
+      dur: 700;
+      loop: true;
+      `
+    );
+
+    container.appendChild(frame);
 
   });
 
