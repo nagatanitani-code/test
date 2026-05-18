@@ -41,6 +41,7 @@ pointer-events: auto;
 
 
 
+
 #guideUI{
 
   position: fixed;
@@ -50,55 +51,14 @@ pointer-events: auto;
 
   transform: translateX(-50%);
 
-  display: flex;
+  display: none;
+
   gap: 14px;
 
   z-index: 999;
 
 }
 
-.guideItem{
-
-  position: relative;
-
-  width: 90px;
-  height: 90px;
-
-  border: 4px solid yellow;
-  border-radius: 16px;
-
-  overflow: hidden;
-
-  background: black;
-
-}
-
-.guideCrop{
-
-  width: 100%;
-  height: 100%;
-
-  background-image:
-    url("girl.jpg");
-
-  background-repeat:
-    no-repeat;
-
-}
-
-.guideCheck{
-
-  position: absolute;
-
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-
-  display: none;
-
-}
 
 
 
@@ -677,8 +637,7 @@ check.setAttribute(
   target.size + 0.08
 );
 
-guide.parentNode.appendChild(check);
-   
+document.querySelector("#guideContainer") .appendChild(check);
 
     hit.classList.remove("clickable");
   }
@@ -715,16 +674,17 @@ AFRAME.registerComponent("markerhandler", {
 
     this.el.addEventListener("targetFound", () => {
 
+  if(this.el.id === "target4"){
 
-// デフォルト非表示
-guideUI.style.display = "none";
+    guideUI.style.display = "flex";
 
-// 女の子ターゲット時だけ表示
-if(this.el.id === "target4"){
+  }else{
 
-  guideUI.style.display = "flex";
+    guideUI.style.display = "none";
 
-}
+  }
+
+});
 
 
 
@@ -1056,50 +1016,7 @@ setTimeout(() => {
   }
 
 }, 100);
-    // =====================
-    // 枠
-    // =====================
-
-    const frame =
-  document.createElement("a-ring");
-
-    frame.setAttribute(
-      "id",
-      "guide_" + target.id
-    );
-frame.classList.add("guideRing");
-    frame.setAttribute(
-      "position",
-      `${target.x} ${target.y} 0.03`
-    );
-
-    frame.setAttribute(
-  "radius-inner",
-  target.size / 2
-);
-
-frame.setAttribute(
-  "radius-outer",
-  target.size / 2 + 0.02
-);
-
-    frame.setAttribute(
-  "material",
-  "color: yellow; opacity: 0.85;  side: double"
-);
-    frame.setAttribute(
-      "animation",
-      `
-      property: scale;
-      from: 1 1 1;
-      to: 1.15 1.15 1;
-      dir: alternate;
-      dur: 700;
-      loop: true;
-      `
-    );
-
-    container.appendChild(frame);
+   
 
   });
 
