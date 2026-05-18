@@ -636,8 +636,10 @@ const guide =
 document.querySelector(
   "#guide_" + target.id
 );
-guide.parentNode.removeChild(guide);
+
 guide.setAttribute("material", "src: #checkImg; color: white;");
+guide.parentNode.removeChild(guide);
+
 
 // 判定消す
 hit.setAttribute(
