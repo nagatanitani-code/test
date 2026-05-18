@@ -766,10 +766,8 @@ setTimeout(() => {
 
         // Y（超重要）
         const offsetY =
-          1 - (
-            (targetData.y + 0.5)
-            + targetData.size / 2
-          );
+  (targetData.y + 0.5)
+  - targetData.size / 2;
 
         material.map.offset.set(
           offsetX,
