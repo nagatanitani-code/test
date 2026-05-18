@@ -372,11 +372,16 @@ pointer-events: auto;
 
   <!-- 女の子 -->
   <a-plane
-    src="#girlImg"
-    width="1"
-    height="1"
-    material="shader: flat; transparent: true;">
-  </a-plane>
+  material="
+    src: #girlImg;
+    shader: flat;
+    transparent: true;
+    repeat: 1 1;
+    offset: 0 0;
+  "
+  width="1"
+  height="1">
+</a-plane>
 
   <!-- 判定ポイント（ここが核心） -->
   <a-plane
@@ -763,17 +768,19 @@ shader: flat;
 transparent: true;
 
 repeat: ${targetData.size} ${targetData.size};
-offset: ${targetData.offsetX} ${targetData.offsetY};
+
+offset:
+${targetData.offsetX}
+${targetData.offsetY};
 `
   );
 
 // ←ここ重要！！
 document.querySelector("#guideCrop")
-  .setAttribute("width", 1);
+  .setAttribute("width", 0.3);
 
 document.querySelector("#guideCrop")
-  .setAttribute("height", 1);
-
+  .setAttribute("height", 0.3);
   }
 
   missionBox.style.display = "block";
