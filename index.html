@@ -39,6 +39,62 @@ pointer-events: auto;
       100% { transform: translate(-50%, -50%) scale(1); opacity:1; }
     }
 
+
+#guideUI{
+
+  position: fixed;
+
+  top: 10px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 14px;
+
+  z-index: 999;
+
+}
+
+.guideItem{
+
+  position: relative;
+
+  width: 90px;
+  height: 90px;
+
+  border: 4px solid yellow;
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  background: black;
+
+}
+
+.guideItem img{
+
+  width: 100%;
+  height: 100%;
+
+}
+
+.guideCheck{
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: none;
+
+}
+
+
+
 #missionTitle{
 
   font-size: 16px;
@@ -228,10 +284,34 @@ pointer-events: auto;
 }
 
 
+
   </style>
 </head>
 
 <body>
+
+<div id="guideUI">
+
+  <div class="guideItem" id="guideUI_heart">
+    <img id="guideCrop_heart">
+    <img class="guideCheck" id="guideCheck_heart"
+         src="check.png">
+  </div>
+
+  <div class="guideItem" id="guideUI_eye">
+    <img id="guideCrop_eye">
+    <img class="guideCheck" id="guideCheck_eye"
+         src="check.png">
+  </div>
+
+  <div class="guideItem" id="guideUI_ribbon">
+    <img id="guideCrop_ribbon">
+    <img class="guideCheck" id="guideCheck_ribbon"
+         src="check.png">
+  </div>
+
+</div>
+
 
 <div id="effect">発見!!</div>
 
@@ -525,6 +605,11 @@ if (intersects.length > 0) {
 
     effect.style.display = "block";
 
+// 上部ガイドにチェック
+document.querySelector(
+  "#guideCheck_" + target.id
+).style.display = "block";
+
     setTimeout(() => {
       effect.style.display = "none";
     }, 1000);
@@ -534,6 +619,11 @@ document.querySelector(
 );
 
 guide.setAttribute(
+  "visible",
+  false
+);
+// 判定消す
+hit.setAttribute(
   "visible",
   false
 );
@@ -1013,6 +1103,36 @@ frame.setAttribute(
 
   });
 
+// ======================
+// 上部ガイド生成
+// ======================
+
+targets.forEach(target => {
+
+  const guideImg =
+    document.querySelector(
+      "#guideCrop_" + target.id
+    );
+
+  guideImg.src = "girl.jpg";
+
+  const bgX =
+    (target.x + 0.5) * 100;
+
+  const bgY =
+    (0.5 - target.y) * 100;
+
+  guideImg.style.objectFit =
+    "none";
+
+  guideImg.style.objectPosition =
+    `${bgX}% ${bgY}%`;
+
+  guideImg.style.transform =
+    `scale(${1 / target.size})`;
+
+});
+
 }
 scene.addEventListener("loaded", () => {
   createTargets();
@@ -1029,6 +1149,7 @@ document.querySelector(
   "visible",
   false
 );
+
 </script>
 
 
