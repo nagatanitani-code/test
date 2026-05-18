@@ -350,54 +350,40 @@ pointer-events: auto;
     material="shader: flat; transparent: true;">
   </a-plane>
 
-<!-- ガイド画像 -->
+<a-plane
+  src="#girlImg"
+  width="1"
+  height="1">
+
+  <!-- 判定ポイント（ここが核心） -->
+  <a-plane
+    id="touchTarget"
+    class="clickable"
+    data-name="ハート"
+    width="0.25"
+    height="0.25"
+    position="0.2 -0.15 0.01"
+    material="opacity: 0">
+  </a-plane>
+
+  <!-- チェック -->
+  <a-plane
+    id="checkMark"
+    src="#checkImg"
+    width="0.25"
+    height="0.25"
+    position="0.2 -0.15 0.02"
+    visible="false">
+  </a-plane>
+
 <a-plane
   id="touchGuide"
-
   src="#touchPointImg"
-
   width="0.25"
   height="0.25"
-
-  position="-0.8 0.6 0.02"
-
-  material="
-    shader: flat;
-    transparent: true;
-    depthTest: false;
-  ">
+  position="-0.8 0.6 0.02">
 </a-plane>
 
-<!-- 透明判定 -->
-<a-plane
-  id="touchTarget"
-
-  class="clickable"
-
-  data-name="ハート"
-
-  width="0.18"
-  height="0.18"
-
-  position="0.2 -0.15 0.02"
-
-  material="
-    transparent: true;
-    opacity: 0;
-  ">
-</a-plane>
-
-<!-- チェック -->
-<a-plane
-  id="checkMark"
-  src="#checkImg"
-  width="0.18"
-  height="0.18"
-  position="0.2 -0.15 0.03"
-  visible="true"
-  opacity="0"
-  material="transparent: true; depthTest: false;">
-</a-plane>
 
 </a-entity>
 
@@ -545,13 +531,13 @@ function handleTouch(event){
   console.log(intersects);
 
   // 当たった
-// 当たった
-// 当たった
-if(intersects.length > 0){
+if (intersects.length > 0 && !solved) {
 
   const hit = intersects[0].object.el;
 
-  if(hit.id === "touchTarget"){
+  if (hit.id === "touchTarget") {
+
+    solved = true;
 
     document.querySelector("#touchGuide")
       .setAttribute("visible", false);
@@ -559,9 +545,15 @@ if(intersects.length > 0){
     document.querySelector("#touchTarget")
       .setAttribute("visible", false);
 
-  document.querySelector("#checkMark")
-  .setAttribute("opacity", "1");
+    document.querySelector("#checkMark")
+      .setAttribute("visible", true);
 
+    effect.innerHTML = "発見!!";
+    effect.style.display = "block";
+
+    setTimeout(() => {
+      effect.style.display = "none";
+    }, 1000);
   }
 }
 
@@ -593,7 +585,7 @@ const totalTreasure = 1;
 let stamp1Get = false;
 let stamp2Get = false;
 let stamp3Get = false;
-
+let solved = false;
 
 AFRAME.registerComponent("markerhandler", {
 
