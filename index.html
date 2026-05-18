@@ -502,6 +502,7 @@ markerhandler
 </a-scene>
 
 <script>
+let guideUI = document.querySelector("#guideUI");
 
 const effect = document.querySelector("#effect");
 const treasureEffect =
@@ -811,6 +812,7 @@ stampBox.style.display = "block";
     });
 
   }
+});
 
 
 
@@ -1024,12 +1026,6 @@ targets.forEach(target => {
 scene.addEventListener("loaded", () => {
   createTargets();
 });
-
-
-
-const guideUI =
-document.querySelector("#guideUI");
-
 
 </script>
 
