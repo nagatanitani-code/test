@@ -334,9 +334,9 @@ pointer-events: auto;
 
 
 <a-entity
-  id="target1"
+  id="target4"
 markerhandler
-  mindar-image-target="targetIndex: 0">
+  mindar-image-target="targetIndex: 3">
 
   <a-plane
     src="#girlImg"
@@ -348,9 +348,9 @@ markerhandler
 </a-entity>
 
 <a-entity
-  id="target2"
+  id="target5"
 markerhandler
-  mindar-image-target="targetIndex: 1">
+  mindar-image-target="targetIndex: 4">
 
   <a-plane
     src="#frameImg"
@@ -358,6 +358,19 @@ markerhandler
     height="2"
     material="shader: flat; transparent: true;">
   </a-plane>
+
+</a-entity>
+
+<a-entity
+  id="target2"
+markerhandler
+  mindar-image-target="targetIndex: 1">
+<a-plane
+    width="0.01"
+    height="0.01"
+    visible="false">
+</a-plane>
+
 
 </a-entity>
 
@@ -371,25 +384,12 @@ markerhandler
     visible="false">
 </a-plane>
 
-
 </a-entity>
 
 <a-entity
-  id="target4"
+  id="target1"
 markerhandler
-  mindar-image-target="targetIndex: 3">
-<a-plane
-    width="0.01"
-    height="0.01"
-    visible="false">
-</a-plane>
-
-</a-entity>
-
-<a-entity
-  id="target5"
-markerhandler
-  mindar-image-target="targetIndex: 4">
+  mindar-image-target="targetIndex: 0">
 <a-plane
     width="0.01"
     height="0.01"
@@ -541,8 +541,8 @@ AFRAME.registerComponent("markerhandler", {
 
       console.log(this.el.id + " found");
 
-// target1
-if(this.el.id === "target1"){
+// target4
+if(this.el.id === "target4"){
 
   missionBox.style.display = "block";
 
@@ -599,7 +599,7 @@ if(this.el.id === "target6"){
 
 }
       // target3
-      if(this.el.id === "target3"){
+      if(this.el.id === "target2"){
 
         if(!stamp1Get){
 
@@ -615,7 +615,7 @@ if(this.el.id === "target6"){
       }
 
       // target4
-      if(this.el.id === "target4"){
+      if(this.el.id === "target3"){
 
         if(!stamp2Get){
 
@@ -631,7 +631,7 @@ if(this.el.id === "target6"){
       }
 
       // target5
-      if(this.el.id === "target5"){
+      if(this.el.id === "target1"){
 
         if(!stamp3Get){
 
@@ -647,7 +647,7 @@ if(this.el.id === "target6"){
       }
 
       // target2
-      if(this.el.id === "target2"){
+      if(this.el.id === "target5"){
 
         document.querySelector("#photoMessage")
           .style.display = "block";
