@@ -400,6 +400,62 @@ pointer-events: auto;
   ">
 </a-plane>
 
+<!-- ガイド背景 -->
+<a-plane
+  id="guideBack"
+
+  width="0.42"
+  height="0.42"
+
+  position="-0.8 0.6 0.018"
+
+  material="
+    color: black;
+    opacity: 0.45;
+    shader: flat;
+  ">
+</a-plane>
+
+<!-- ガイド枠 -->
+<a-plane
+  id="guideFrame"
+
+  width="0.34"
+  height="0.34"
+
+  position="-0.8 0.6 0.019"
+
+  material="
+    color: yellow;
+    opacity: 0.25;
+    shader: flat;
+  "
+
+  animation="
+    property: scale;
+    from: 1 1 1;
+    to: 1.15 1.15 1;
+    dir: alternate;
+    dur: 700;
+    loop: true;
+  ">
+</a-plane>
+
+<!-- 説明テキスト -->
+<a-text
+  id="guideText"
+
+  value="この部分を見つけてタップ！"
+
+  color="#ffff66"
+
+  align="center"
+
+  width="2.2"
+
+  position="-0.8 0.32 0.03">
+</a-text>
+
 <a-plane
   id="guideFrame"
 
@@ -436,21 +492,7 @@ pointer-events: auto;
   position="-0.8 0.35 0.03">
 </a-text>
 
-<a-text
-  id="foundText"
 
-  value="FOUND!"
-
-  color="#00ff88"
-
-  align="center"
-
-  width="2"
-
-  position="0.2 -0.35 0.03"
-
-  visible="false">
-</a-text>
 
 </a-entity>
 
@@ -530,8 +572,7 @@ const treasureEffect =
 document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
 
-document.querySelector("#foundText")
-  .setAttribute("visible", false);
+
 
 document.querySelector("#guideFrame")
   .setAttribute("visible", true);
@@ -620,12 +661,15 @@ if (intersects.length > 0) {
     document.querySelector("#checkMark")
       .setAttribute("visible", true);
 
-document.querySelector("#foundText")
-  .setAttribute("visible", true);
 
 document.querySelector("#guideFrame")
   .setAttribute("visible", false);
 
+document.querySelector("#guideBack")
+  .setAttribute("visible", false);
+
+document.querySelector("#guideText")
+  .setAttribute("visible", false);
 
 hit.setAttribute("visible", false);
 hit.classList.remove("clickable");
