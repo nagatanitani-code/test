@@ -571,6 +571,9 @@ function handleTouch(event){
 if (intersects.length > 0) {
 
   const hit = intersects[0].object.el;
+while (hit && !hit.classList.contains("clickable")) {
+  hit = hit.parentEl;
+}
 
   const target =
     targets.find(t => t.id === hit.id);
@@ -629,7 +632,7 @@ check.setAttribute(
   target.size + 0.08
 );
 
-document.querySelector("#target4").appendChild(touch);
+container.appendChild(touch);
     hit.classList.remove("clickable");
   }
 
@@ -667,7 +670,7 @@ AFRAME.registerComponent("markerhandler", {
 this.el.addEventListener("targetFound", () => {
 
   if(this.el.id === "target4"){
-
+const guideUI = document.querySelector("#guideUI");
     guideUI.style.display = "flex";
 
   }else{
