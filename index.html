@@ -541,7 +541,7 @@ AFRAME.registerComponent("markerhandler", {
 
       console.log(this.el.id + " found");
 
-// target4
+
 if(this.el.id === "target4"){
 
   missionBox.style.display = "block";
@@ -614,7 +614,7 @@ if(this.el.id === "target6"){
 
       }
 
-      // target4
+      
       if(this.el.id === "target3"){
 
         if(!stamp2Get){
@@ -630,7 +630,7 @@ if(this.el.id === "target6"){
 
       }
 
-      // target5
+    
       if(this.el.id === "target1"){
 
         if(!stamp3Get){
@@ -646,7 +646,7 @@ if(this.el.id === "target6"){
 
       }
 
-      // target2
+    
       if(this.el.id === "target5"){
 
         document.querySelector("#photoMessage")
@@ -658,7 +658,7 @@ if(this.el.id === "target6"){
 
     this.el.addEventListener("targetLost", () => {
 
-      if(this.el.id === "target2"){
+      if(this.el.id === "target5"){
 
         document.querySelector("#photoMessage")
           .style.display = "none";
