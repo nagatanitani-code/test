@@ -79,7 +79,7 @@ pointer-events: auto;
   background-image: url("girl.jpg");
   background-repeat: no-repeat;
 
-  background-size: 300% 300%; /* ←保険 */
+  background-size: 100% 100%; /* ←保険 */
   background-position: center;
 }
 
@@ -506,6 +506,15 @@ const treasureEffect =
 document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
 let currentTargetIndex = 0;
+let foundTreasure = 0;
+let treasure1Found = false;
+const totalTreasure = 1;
+
+let stamp1Get = false;
+let stamp2Get = false;
+let stamp3Get = false;
+let solved = false;
+
 const targets = [
 
 {
@@ -620,14 +629,7 @@ document.querySelector("#treasureBox");
 const stampBox =
 document.querySelector("#stampBox");
 
-let foundTreasure = 0;
-let treasure1Found = false;
-const totalTreasure = 1;
 
-let stamp1Get = false;
-let stamp2Get = false;
-let stamp3Get = false;
-let solved = false;
 
 });
 
@@ -903,6 +905,10 @@ function createTargets(){
       "clickable"
     );
 
+touch.setAttribute("visible", "true");
+touch.setAttribute("opacity", "0");
+touch.setAttribute("material", "shader: flat; transparent: true; opacity: 0");
+
     touch.setAttribute(
       "id",
       target.id
@@ -1007,13 +1013,10 @@ targets.forEach(target => {
     100 / target.size;
 
   const posX = (target.x + 0.5) * 100;
-const posY = (1 - (target.y + 0.5)) * 100;
+const posY = (target.y + 0.5) * 100;
 
-  crop.style.backgroundSize =
-    `${zoom}% ${zoom}%`;
-
-  crop.style.backgroundPosition =
-    `${posX}% ${posY}%`;
+crop.style.backgroundPosition =
+  `${posX}% ${posY}%`;`;
 
 });
 
