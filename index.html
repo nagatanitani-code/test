@@ -350,53 +350,48 @@ pointer-events: auto;
     material="shader: flat; transparent: true;">
   </a-plane>
 
-  <!-- 探す場所の表示 -->
-  <a-plane
-id="touchGuide"
-    src="#touchPointImg"
+<!-- ガイド -->
+<a-plane
+  id="touchGuide"
+  src="#touchPointImg"
+  width="0.35"
+  height="0.35"
+  position="0.65 -0.45 0.01"
+  material="
+    shader: flat;
+    transparent: true;
+    alphaTest: 0.5;
+  ">
+</a-plane>
 
-    width="0.35"
-    height="0.35"
+<!-- タッチ判定 -->
+<a-plane
+  id="touchTarget"
+  class="clickable"
+  data-name="ハート"
+  width="0.35"
+  height="0.35"
+  position="0.65 -0.45 0.015"
+  material="
+    transparent: true;
+    opacity: 0;
+  ">
+</a-plane>
 
-    position="0.35 -0.2 0.04"
-
-    material="shader: flat; transparent: true;">
-  </a-plane>
-
-  <!-- タッチ判定(透明) -->
-  <a-plane
-    id="touchTarget"
-
-    class="clickable"
-
-    data-name="ハート"
-
-    width="0.5"
-    height="0.5"
-
-    position="0.2 0.1 0.05"
-
-    material="
-      transparent: true;
-      opacity: 0;
-    ">
-  </a-plane>
-
-  <!-- チェックマーク -->
-  <a-plane
-    id="checkMark"
-
-    src="#checkImg"
-
-    width="0.3"
-    height="0.3"
-
-    position="0.2 0.1 0.2"
-
-    visible="false"
-
-    material="shader: flat; transparent: true;">
-  </a-plane>
+<!-- チェック -->
+<a-plane
+  id="checkMark"
+  src="#checkImg"
+  width="0.3"
+  height="0.3"
+  position="0.65 -0.45 0.02"
+  visible="false"
+  material="
+    shader: flat;
+    transparent: true;
+    alphaTest: 0.5;
+  ">
+</a-plane>
 
 </a-entity>
 
