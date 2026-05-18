@@ -390,21 +390,13 @@ pointer-events: auto;
 <!-- チェック -->
 <a-plane
   id="checkMark"
-
   src="#checkImg"
-
   width="0.18"
   height="0.18"
-
   position="0.2 -0.15 0.03"
-
-  visible="false"
-
-  material="
-    shader: flat;
-    transparent: true;
-    depthTest: false;
-  ">
+  visible="true"
+  opacity="0"
+  material="transparent: true; depthTest: false;">
 </a-plane>
 
 </a-entity>
@@ -567,8 +559,8 @@ if(intersects.length > 0){
     document.querySelector("#touchTarget")
       .setAttribute("visible", false);
 
-    document.querySelector("#checkMark")
-      .setAttribute("visible", true);
+  document.querySelector("#checkMark")
+  .setAttribute("opacity", "1");
 
   }
 }
