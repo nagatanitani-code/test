@@ -356,15 +356,14 @@ pointer-events: auto;
 
   src="#touchPointImg"
 
-  width="0.35"
-  height="0.35"
+  width="0.25"
+  height="0.25"
 
-  position="0.8 -0.7 0.02"
+  position="-0.8 0.6 0.02"
 
   material="
     shader: flat;
     transparent: true;
-    alphaTest: 0.1;
     depthTest: false;
   ">
 </a-plane>
@@ -377,15 +376,14 @@ pointer-events: auto;
 
   data-name="ハート"
 
-  width="0.35"
-  height="0.35"
+  width="0.18"
+  height="0.18"
 
-  position="0.8 -0.7 0.025"
+  position="0.2 -0.15 0.02"
 
   material="
     transparent: true;
     opacity: 0;
-    depthTest: false;
   ">
 </a-plane>
 
@@ -395,17 +393,16 @@ pointer-events: auto;
 
   src="#checkImg"
 
-  width="0.3"
-  height="0.3"
+  width="0.18"
+  height="0.18"
 
-  position="0.8 -0.7 0.03"
+  position="0.2 -0.15 0.03"
 
-  scale="0 0 0"
+  visible="false"
 
   material="
     shader: flat;
     transparent: true;
-    alphaTest: 0.1;
     depthTest: false;
   ">
 </a-plane>
@@ -564,14 +561,6 @@ effect.innerHTML =
   foundName + " 発見!!";
 
 
-
-document.querySelector("#touchGuide")
-  .setAttribute("scale", "0 0 0");
-
-
-document.querySelector("#checkMark")
-  .setAttribute("scale", "1 1 1");
-
 effect.style.display = "block";
 
 
@@ -623,10 +612,13 @@ AFRAME.registerComponent("markerhandler", {
 if(this.el.id === "target4"){
 
 document.querySelector("#touchGuide")
-  .setAttribute("scale", "1 1 1");
+  .setAttribute("visible", true);
+
+document.querySelector("#touchTarget")
+  .setAttribute("visible", true);
 
 document.querySelector("#checkMark")
-  .setAttribute("scale", "0 0 0");
+  .setAttribute("visible", false);
 
   missionBox.style.display = "block";
 
