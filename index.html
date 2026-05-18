@@ -617,14 +617,29 @@ AFRAME.registerComponent("markerhandler", {
 
 if(this.el.id === "target4"){
 
-document.querySelector("#touchGuide")
-  .setAttribute("visible", true);
+  if(!solved){
 
-document.querySelector("#touchTarget")
-  .setAttribute("visible", true);
+    document.querySelector("#touchGuide")
+      .setAttribute("visible", true);
 
-document.querySelector("#checkMark")
-  .setAttribute("visible", false);
+    document.querySelector("#touchTarget")
+      .setAttribute("visible", true);
+
+    document.querySelector("#checkMark")
+      .setAttribute("visible", false);
+
+  }else{
+
+    document.querySelector("#touchGuide")
+      .setAttribute("visible", false);
+
+    document.querySelector("#touchTarget")
+      .setAttribute("visible", false);
+
+    document.querySelector("#checkMark")
+      .setAttribute("visible", true);
+
+  }
 
   missionBox.style.display = "block";
 
