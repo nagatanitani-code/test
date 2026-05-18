@@ -639,12 +639,10 @@ if (guide) {
   guide.remove();
 }
 
-const guide = document.querySelector("#guide_" + target.id);
-
 let pos = "0 0 0";
 
 if (guide) {
-  pos = guide.getAttribute("position").clone || guide.getAttribute("position");
+  pos = guide.getAttribute("position") || guide.getAttribute("position");
   guide.remove();
 }
 
