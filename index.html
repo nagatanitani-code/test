@@ -674,6 +674,9 @@ check.setAttribute(
   target.size + 0.08
 );
 
+check.setAttribute("look-at", "[camera]"); // ←超重要
+document.querySelector("#guideContainer").appendChild(check);
+
 guide.parentNode.appendChild(check);
    
 
