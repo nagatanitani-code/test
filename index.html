@@ -78,9 +78,7 @@ pointer-events: auto;
   height: 100%;
   background-image: url("girl.jpg");
   background-repeat: no-repeat;
-
-  background-size: 100% 100%; /* ←保険 */
-  background-position: center;
+  background-size: 100% 100%;
 }
 
 .guideCheck{
@@ -514,6 +512,11 @@ let stamp1Get = false;
 let stamp2Get = false;
 let stamp3Get = false;
 let solved = false;
+let stampBox = document.querySelector("#stampBox");
+let treasureBox = document.querySelector("#treasureBox");
+let treasureCount = document.querySelector("#treasureCount");
+let treasureImage = document.querySelector("#treasureImage");
+
 
 const targets = [
 
@@ -907,9 +910,9 @@ function createTargets(){
 
 touch.setAttribute("visible", "true");
 touch.setAttribute("opacity", "0");
-touch.setAttribute("material", "shader: flat; transparent: true; opacity: 0");
-
-    touch.setAttribute(
+touch.setAttribute("material", {color: "white",opacity: 0,transparent: true});
+   
+ touch.setAttribute(
       "id",
       target.id
     );
@@ -927,11 +930,6 @@ touch.setAttribute("material", "shader: flat; transparent: true; opacity: 0");
     touch.setAttribute(
       "height",
       target.size
-    );
-
-    touch.setAttribute(
-      "material",
-      "opacity: 0"
     );
 
     container.appendChild(touch);
@@ -1009,14 +1007,12 @@ targets.forEach(target => {
       "#guideCrop_" + target.id
     );
 
-  const zoom =
-    100 / target.size;
+  // 3分割ではなく「座標ベース」
+  const bgX = (0.5 - target.x) * 100;
+  const bgY = (0.5 - target.y) * 100;
 
-  const posX = (target.x + 0.5) * 100;
-const posY = (target.y + 0.5) * 100;
-
-crop.style.backgroundPosition =
-  `${posX}% ${posY}%`;`;
+  crop.style.backgroundPosition =
+    `${bgX}% ${bgY}%`;
 
 });
 
