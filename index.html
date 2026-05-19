@@ -573,14 +573,13 @@ function handleTouch(event){
 
   const clickables = document.querySelectorAll(".clickable");
 
-  const objects = [];
+ const objects = [];
 
-  clickables.forEach(el => {
-    if (el.object3D && el.object3D.visible) {
-      const mesh = el.getObject3D("mesh");
-      if (mesh) objects.push(mesh);
-    }
-  });
+document.querySelectorAll(".clickable").forEach(el => {
+  if (el.object3D) {
+    objects.push(el.object3D);
+  }
+});
 
   const intersects = raycaster.intersectObjects(objects, true);
 
@@ -637,6 +636,12 @@ document.querySelector("#stampBox");
 });
 
 AFRAME.registerComponent("markerhandler", {
+
+let stampBox = document.querySelector("#stampBox");
+let treasureBox = document.querySelector("#treasureBox");
+let treasureCount = document.querySelector("#treasureCount");
+let treasureImage = document.querySelector("#treasureImage");
+let treasureEffect = document.querySelector("#treasureEffect");
 
   init: function () {
 
@@ -909,7 +914,6 @@ function createTargets(){
     );
 
 touch.setAttribute("visible", "true");
-touch.setAttribute("opacity", "0");
 touch.setAttribute("material", {color: "white",opacity: 0,transparent: true});
    
  touch.setAttribute(
@@ -1008,12 +1012,17 @@ targets.forEach(target => {
     );
 
   // 3分割ではなく「座標ベース」
-  const bgX = (0.5 - target.x) * 100;
-  const bgY = (0.5 - target.y) * 100;
+  targets.forEach(target => {
 
-  crop.style.backgroundPosition =
-    `${bgX}% ${bgY}%`;
+  const crop = document.querySelector("#guideCrop_" + target.id);
 
+  const scale = 200; // ←固定でOK
+
+  const bgX = 50 + target.x * scale;
+  const bgY = 50 - target.y * scale;
+
+  crop.style.backgroundPosition = `${bgX}% ${bgY}%`;
+});
 });
 
 
