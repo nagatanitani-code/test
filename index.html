@@ -576,9 +576,8 @@ function handleTouch(event){
  const objects = [];
 
 document.querySelectorAll(".clickable").forEach(el => {
-  if (el.object3D) {
-    objects.push(el.object3D);
-  }
+  const mesh = el.getObject3D("mesh");
+  if (mesh) objects.push(mesh);
 });
 
   const intersects = raycaster.intersectObjects(objects, true);
@@ -1006,19 +1005,10 @@ frame.setAttribute(
 
 targets.forEach(target => {
 
-  const crop =
-    document.querySelector(
-      "#guideCrop_" + target.id
-    );
-
-  // 3分割ではなく「座標ベース」
-
   const crop = document.querySelector("#guideCrop_" + target.id);
 
-  const scale = 200; // ←固定でOK
-
-  const bgX = 50 + target.x * scale;
-  const bgY = 50 - target.y * scale;
+  const bgX = (target.x + 0.5) * 100;
+  const bgY = (target.y + 0.5) * 100;
 
   crop.style.backgroundPosition = `${bgX}% ${bgY}%`;
 });
