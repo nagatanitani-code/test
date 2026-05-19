@@ -635,13 +635,13 @@ document.querySelector("#stampBox");
 
 });
 
-AFRAME.registerComponent("markerhandler", {
+const stampBox = document.querySelector("#stampBox");
+const treasureBox = document.querySelector("#treasureBox");
+const treasureCount = document.querySelector("#treasureCount");
+const treasureImage = document.querySelector("#treasureImage");
+const treasureEffect = document.querySelector("#treasureEffect");
 
-let stampBox = document.querySelector("#stampBox");
-let treasureBox = document.querySelector("#treasureBox");
-let treasureCount = document.querySelector("#treasureCount");
-let treasureImage = document.querySelector("#treasureImage");
-let treasureEffect = document.querySelector("#treasureEffect");
+AFRAME.registerComponent("markerhandler", {
 
   init: function () {
 
@@ -1012,7 +1012,6 @@ targets.forEach(target => {
     );
 
   // 3分割ではなく「座標ベース」
-  targets.forEach(target => {
 
   const crop = document.querySelector("#guideCrop_" + target.id);
 
@@ -1022,7 +1021,6 @@ targets.forEach(target => {
   const bgY = 50 - target.y * scale;
 
   crop.style.backgroundPosition = `${bgX}% ${bgY}%`;
-});
 });
 
 
