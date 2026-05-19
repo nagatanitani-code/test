@@ -74,11 +74,16 @@ pointer-events: auto;
 }
 
 .guideCrop{
+
   width: 100%;
   height: 100%;
-  background-image: url("girl.jpg");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+
+  background-image:
+    url("girl.jpg");
+
+  background-repeat:
+    no-repeat;
+
 }
 
 .guideCheck{
@@ -497,27 +502,12 @@ markerhandler
 </a-scene>
 
 <script>
-let guideUI = document.querySelector("#guideUI");
 
 const effect = document.querySelector("#effect");
 const treasureEffect =
 document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
 let currentTargetIndex = 0;
-let foundTreasure = 0;
-let treasure1Found = false;
-const totalTreasure = 1;
-
-let stamp1Get = false;
-let stamp2Get = false;
-let stamp3Get = false;
-let solved = false;
-let stampBox = document.querySelector("#stampBox");
-let treasureBox = document.querySelector("#treasureBox");
-let treasureCount = document.querySelector("#treasureCount");
-let treasureImage = document.querySelector("#treasureImage");
-
-
 const targets = [
 
 {
@@ -549,75 +539,152 @@ const targets = [
 
 ];
 
-const guideMap = {
-  heart: 0,
-  eye: 1,
-  ribbon: 2
-};
+// 今使うターゲット
+
 
 function handleTouch(event){
 
-  const camera = document.querySelector("[camera]");
-  if(!camera) return;
+  console.log("タッチ検出");
 
+  // camera取得
+  const camera = document.querySelector("[camera]");
+
+  if(!camera){
+    console.log("camera取得失敗");
+    return;
+  }
+
+  // raycaster
   const raycaster = new THREE.Raycaster();
+
+  // 座標
   const mouse = new THREE.Vector2();
 
-  const x = event.touches ? event.touches[0].clientX : event.clientX;
-  const y = event.touches ? event.touches[0].clientY : event.clientY;
+  // タッチ位置
+  const x = event.touches ?
+    event.touches[0].clientX :
+    event.clientX;
 
+  const y = event.touches ?
+    event.touches[0].clientY :
+    event.clientY;
+
+  // -1〜1変換
   mouse.x = (x / window.innerWidth) * 2 - 1;
   mouse.y = -(y / window.innerHeight) * 2 + 1;
 
-  raycaster.setFromCamera(mouse, camera.getObject3D("camera"));
+  // ray発射
+  raycaster.setFromCamera(
+    mouse,
+    camera.getObject3D("camera")
+  );
 
-  const clickables = document.querySelectorAll(".clickable");
+  // clickable取得
+  const clickable =
+    document.querySelectorAll(".clickable");
 
- const objects = [];
+  const objects = [];
 
-document.querySelectorAll(".clickable").forEach(el => {
-  const mesh = el.getObject3D("mesh");
-  if (mesh) objects.push(mesh);
+  clickable.forEach(el => {
+
+  if(el.object3D.visible){
+
+    const mesh = el.getObject3D("mesh");
+
+    if(mesh){
+      objects.push(mesh);
+    }
+
+  }
+
 });
 
-  const intersects = raycaster.intersectObjects(objects, true);
+  console.log(objects);
 
-  if (intersects.length === 0) return;
+  // 判定
+  const intersects =
+    raycaster.intersectObjects(objects, true);
 
-  const hitEl =
-    intersects[0].object.el ||
-    intersects[0].object.parent?.el;
+  console.log(intersects);
 
-  if (!hitEl) return;
+  // 当たった
+if (intersects.length > 0) {
 
-const target = targets.find(t =>hitEl?.id?.includes(t.id));  
+  const hit = intersects[0].object.el;
 
-if (!target || target.found) return;
+  const target =
+    targets.find(t => t.id === hit.id);
 
-  target.found = true;
+  if(target && !target.found){
 
-  // UI
-  effect.innerHTML = target.name + " 発見!!";
-  effect.style.display = "block";
+    target.found = true;
 
-  const checkUI = document.querySelector("#guideCheck_" + target.id);
-  if (checkUI) checkUI.style.display = "block";
+    effect.innerHTML =
+      target.id + " 発見!!";
 
-  setTimeout(() => effect.style.display = "none", 1000);
+    effect.style.display = "block";
 
- const hitPos = intersects[0].point;
+// 上部ガイドにチェック
+document.querySelector(
+  "#guideCheck_" + target.id
+).style.display = "block";
 
-const check = document.createElement("a-plane");
+    setTimeout(() => {
+      effect.style.display = "none";
+    }, 1000);
+const guide =
+document.querySelector(
+  "#guide_" + target.id
+);
+guide.parentNode.removeChild(guide);
+guide.setAttribute("material", "src: #checkImg; color: white;");
 
-check.setAttribute("src", "#checkImg");
+// 判定消す
+hit.setAttribute(
+  "visible",
+  false
+);
 
-check.setAttribute("position",`${hitPos.x} ${hitPos.y} ${hitPos.z}`);
+// 上部チェック
+document.querySelector(
+  "#guideCheck_" + target.id
+).style.display = "block";
 
-check.setAttribute("width", target.size);
-check.setAttribute("height", target.size);
-check.setAttribute("material", "shader: flat; transparent: true");
 
-document.querySelector("#guideContainer").appendChild(check);
+const check =
+document.createElement("a-plane");
+
+check.setAttribute(
+  "src",
+  "#checkImg"
+);
+
+check.setAttribute(
+  "position",
+`${target.x} ${target.y} 0.08`
+);
+
+check.setAttribute(
+  "width",
+  target.size + 0.08
+);
+
+check.setAttribute(
+  "height",
+  target.size + 0.08
+);
+
+guide.parentNode.appendChild(check);
+   
+
+    hit.classList.remove("clickable");
+  }
+
+} // ← intersects閉じる
+
+} // ← handleTouch閉じる
+
+
 const treasureCount =
 document.querySelector("#treasureCount");
 
@@ -630,15 +697,14 @@ document.querySelector("#treasureBox");
 const stampBox =
 document.querySelector("#stampBox");
 
+let foundTreasure = 0;
+let treasure1Found = false;
+const totalTreasure = 1;
 
-
-});
-
-const stampBox = document.querySelector("#stampBox");
-const treasureBox = document.querySelector("#treasureBox");
-const treasureCount = document.querySelector("#treasureCount");
-const treasureImage = document.querySelector("#treasureImage");
-const treasureEffect = document.querySelector("#treasureEffect");
+let stamp1Get = false;
+let stamp2Get = false;
+let stamp3Get = false;
+let solved = false;
 
 AFRAME.registerComponent("markerhandler", {
 
@@ -646,8 +712,6 @@ AFRAME.registerComponent("markerhandler", {
 
     this.el.addEventListener("targetFound", () => {
 
-const guideUI = document.querySelector("#guideUI");
-const effect = document.querySelector("#effect");
 
 // デフォルト非表示
 guideUI.style.display = "none";
@@ -821,7 +885,10 @@ stampBox.style.display = "block";
     });
 
   }
+
 });
+
+
 
 
 
@@ -912,10 +979,7 @@ function createTargets(){
       "clickable"
     );
 
-touch.setAttribute("visible", "true");
-touch.setAttribute("material", {color: "white",opacity: 0,transparent: true});
-   
- touch.setAttribute(
+    touch.setAttribute(
       "id",
       target.id
     );
@@ -935,6 +999,11 @@ touch.setAttribute("material", {color: "white",opacity: 0,transparent: true});
       target.size
     );
 
+    touch.setAttribute(
+      "material",
+      "opacity: 0"
+    );
+
     container.appendChild(touch);
 
     // =====================
@@ -950,7 +1019,40 @@ touch.setAttribute("material", {color: "white",opacity: 0,transparent: true});
 
     // テクスチャ設定
    // テクスチャ設定
+setTimeout(() => {
 
+  const mesh =
+    crop.getObject3D("mesh");
+
+  if(mesh){
+
+    const material =
+      mesh.material;
+
+    // 切り抜きサイズ
+    material.map.repeat.set(
+      target.size,
+      target.size
+    );
+
+    // 中心合わせ
+    const offsetX =
+      target.x + 0.5 - target.size / 2;
+
+    const offsetY =
+      0.5 - target.y - target.size / 2;
+
+    material.map.offset.set(
+      offsetX,
+      offsetY
+    );
+
+    material.map.needsUpdate =
+      true;
+
+  }
+
+}, 100);
     // =====================
     // 枠
     // =====================
@@ -1005,22 +1107,50 @@ frame.setAttribute(
 
 targets.forEach(target => {
 
-  const crop = document.querySelector("#guideCrop_" + target.id);
+  const crop =
+    document.querySelector(
+      "#guideCrop_" + target.id
+    );
 
-  const bgX = (target.x + 0.5) * 100;
-  const bgY = (target.y + 0.5) * 100;
+  const zoom =
+    100 / target.size;
 
-  crop.style.backgroundPosition = `${bgX}% ${bgY}%`;
+  const posX =
+    (0.5 + target.x) * 100;
+
+  const posY =
+    (0.5 - target.y) * 100;
+
+  crop.style.backgroundSize =
+    `${zoom}% ${zoom}%`;
+
+  crop.style.backgroundPosition =
+    `${posX}% ${posY}%`;
+
 });
 
 
 
 }
 scene.addEventListener("loaded", () => {
-setTimeout(() => {
-    createTargets();
-  }, 300);
+  createTargets();
 });
+
+back.setAttribute(
+  "id",
+  "back_" + target.id
+);
+
+document.querySelector(
+  "#back_" + target.id
+).setAttribute(
+  "visible",
+  false
+);
+
+const guideUI =
+document.querySelector("#guideUI");
+
 
 </script>
 
