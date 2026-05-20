@@ -100,6 +100,34 @@ pointer-events: auto;
 
 }
 
+#animalGuideUI{
+
+  position: fixed;
+
+  top: 120px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  display: none;
+  gap: 14px;
+
+  z-index: 999;
+
+}
+
+.animalGuideCrop{
+
+  width: 100%;
+  height: 100%;
+
+  background-image:
+    url("animal.jpg");
+
+  background-repeat:
+    no-repeat;
+
+}
 
 
 #missionTitle{
@@ -329,7 +357,36 @@ pointer-events: auto;
 
 </div>
 
+<div id="animalGuideUI">
 
+  <div class="guideItem">
+    <div class="animalGuideCrop"
+         id="animalGuideCrop_ear"></div>
+
+    <img class="guideCheck"
+         id="guideCheck_ear"
+         src="check.png">
+  </div>
+
+  <div class="guideItem">
+    <div class="animalGuideCrop"
+         id="animalGuideCrop_nose"></div>
+
+    <img class="guideCheck"
+         id="guideCheck_nose"
+         src="check.png">
+  </div>
+
+  <div class="guideItem">
+    <div class="animalGuideCrop"
+         id="animalGuideCrop_tail"></div>
+
+    <img class="guideCheck"
+         id="guideCheck_tail"
+         src="check.png">
+  </div>
+
+</div>
 
 
 <div id="effect">発見!!</div>
@@ -680,7 +737,13 @@ const target =
   check.setAttribute("height", target.size);
   check.setAttribute("material", "shader: flat; transparent: true");
 
-  document.querySelector("#guideContainer").appendChild(check);
+const parentContainer =
+  animalTargets.find(t => t.id === target.id)
+  ? "#animalGuideContainer"
+  : "#guideContainer";
+
+document.querySelector(parentContainer)
+  .appendChild(check);
 }
 
 
@@ -843,13 +906,11 @@ if(this.el.id === "targetGirl"){
 
 
 if(this.el.id === "targetAnimal"){
-
-  effect.innerHTML =
-    "動物発見！！";
-
-  effect.style.display = "block";
-
+  document.querySelector("#animalGuideUI")
+    .style.display = "flex";
 }
+
+
 if(this.el.id === "targetMushroom"){
 
   document.querySelector("#photoMessage")
@@ -862,6 +923,13 @@ if(this.el.id === "targetMushroom"){
     });
 
     this.el.addEventListener("targetLost", () => {
+
+if(this.el.id === "targetAnimal"){
+
+  document.querySelector("#animalGuideUI")
+    .style.display = "none";
+
+}
 
 if(this.el.id === "targetGirl"){
   guideUI.style.display = "none";
@@ -1114,7 +1182,7 @@ function createAnimalTargets(){
 
     touch.setAttribute(
       "class",
-      "animalClickable"
+      "clickable"
     );
 
     touch.setAttribute(
@@ -1182,6 +1250,30 @@ function createAnimalTargets(){
     container.appendChild(frame);
 
   });
+animalTargets.forEach(target => {
+
+  const crop =
+    document.querySelector(
+      "#animalGuideCrop_" + target.id
+    );
+
+  const zoom =
+    100 / target.size;
+
+  const posX =
+    (0.5 + target.x) * 100;
+
+  const posY =
+    (0.5 - target.y) * 100;
+
+  crop.style.backgroundSize =
+    `${zoom}% ${zoom}%`;
+
+  crop.style.backgroundPosition =
+    `${posX}% ${posY}%`;
+
+});
+
 
 }
 
