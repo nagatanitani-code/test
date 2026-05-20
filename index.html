@@ -455,9 +455,6 @@ pointer-events: auto;
 
 </a-entity>
 
-
-</a-entity>
-
 <a-entity
   id="targetStamp3"
   markerhandler
@@ -482,8 +479,6 @@ pointer-events: auto;
     height="0.01"
     visible="false">
   </a-plane>
-</a-entity>
-
 </a-entity>
 
 <a-entity
@@ -764,43 +759,6 @@ if(this.el.id === "targetGold"){
   treasureEffect.style.display = "block";
 
 }
-
-
-
-  if(treasure1Found){
-
-    treasureEffect.innerHTML =
-      "発見済みのお宝！";
-
-  }else{
-
-    treasure1Found = true;
-
-    foundTreasure++;
-
-    treasureCount.innerHTML =
-      foundTreasure + " / " +
-      totalTreasure;
-
-    treasureImage.src =
-      "treasure.jpg";
-
-    treasureEffect.innerHTML =
-      "宝発見！！";
-
-  }
-
-  treasureEffect.style.display =
-    "block";
-
-  setTimeout(() => {
-
-    treasureEffect.style.display =
-      "none";
-
-  }, 1500);
-
-}
   
 
     
@@ -808,28 +766,25 @@ if(this.el.id === "targetGold"){
 
     this.el.addEventListener("targetLost", () => {
 
-
-
-if(this.el.id === "target4"){
+if(this.el.id === "targetGirl"){
 
   guideUI.style.display = "none";
 
 }
 
+if(this.el.id === "targetMushroom"){
 
+  document.querySelector("#photoMessage")
+    .style.display = "none";
 
-      if(this.el.id === "target5"){
+}
 
-        document.querySelector("#photoMessage")
-          .style.display = "none";
+if(
+  this.el.id === "targetCoin" ||
+  this.el.id === "targetGold"
+){
 
-      }
-// target6
-if(this.el.id === "target6"){
-stampBox.style.display = "block";
-
-  treasureBox.style.display =
-    "none";
+  treasureBox.style.display = "none";
 
 }
 updateStampVisibility();
