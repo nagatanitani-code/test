@@ -842,7 +842,10 @@ setTimeout(() => { treasureEffect.style.display = "none"; }, 1500);
 
 
 
+
 if(this.el.id === "targetStamp1"){
+
+  stampBox.style.display = "block";
 
   if(!stamp1Get){
 
@@ -851,13 +854,18 @@ if(this.el.id === "targetStamp1"){
     document.querySelector("#stamp1").src =
       "stamp1.jpg";
 
+    showStampEffect("スタンプGET!!");
 
-    showStampEffect();
+  } else {
 
+    showStampEffect("スタンプ1 発見済み！");
   }
 
 }
+
 if(this.el.id === "targetStamp2"){
+
+  stampBox.style.display = "block";
 
   if(!stamp2Get){
 
@@ -866,13 +874,18 @@ if(this.el.id === "targetStamp2"){
     document.querySelector("#stamp2").src =
       "stamp2.jpg";
 
+    showStampEffect("スタンプGET!!");
 
-    showStampEffect();
+  } else {
 
+    showStampEffect("スタンプ2 発見済み！");
   }
 
 }
+
 if(this.el.id === "targetStamp3"){
+
+  stampBox.style.display = "block";
 
   if(!stamp3Get){
 
@@ -881,12 +894,16 @@ if(this.el.id === "targetStamp3"){
     document.querySelector("#stamp3").src =
       "stamp3.jpg";
 
+    showStampEffect("スタンプGET!!");
 
-    showStampEffect();
+  } else {
 
+    showStampEffect("スタンプ3 発見済み！");
   }
 
 }
+
+
 
 if(this.el.id === "targetGold"){
 
@@ -941,7 +958,9 @@ if(this.el.id === "targetMushroom"){
 
 }
   
-
+if( this.el.id !== "targetStamp1" && this.el.id !== "targetStamp2" && this.el.id !== "targetStamp3" )
+{ stampBox.style.display = "none"; 
+}
     
     });
 
@@ -1014,7 +1033,7 @@ function showStampEffect(){
   setTimeout(() => {
 
     effect.style.display = "none";
-stampBox.style.display = "none";
+
 
   }, 1000);
 
