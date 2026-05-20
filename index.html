@@ -386,7 +386,7 @@ pointer-events: auto;
 </div>
 
 <a-scene
-  mindar-image="imageTargetSrc: targets.mind;maxTrack: 6;"
+  mindar-image="imageTargetSrc: targets.mind;maxTrack: 2;"
   color-space="sRGB"
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: false">
@@ -396,7 +396,7 @@ pointer-events: auto;
   <img id="stamp1Img" src="stamp1.jpg" />
   <img id="stamp2Img" src="stamp2.jpg" />
   <img id="stamp3Img" src="stamp3.jpg" />
-
+  <img id="animalImg" src="animal.png" />
 
   <img id="girlImg" src="girl.jpg" />
   <img id="frameImg" src="frame.png" />
@@ -415,9 +415,81 @@ pointer-events: auto;
 
 
 <a-entity
-  id="target4"
+  id="targetStamp1"
   markerhandler
   mindar-image-target="targetIndex: 3">
+
+  <a-plane
+    width="0.01"
+    height="0.01"
+    visible="false">
+  </a-plane>
+
+</a-entity>
+
+
+
+<a-entity
+  id="targetStamp2"
+  markerhandler
+  mindar-image-target="targetIndex: 4">
+
+  <a-plane
+    width="0.01"
+    height="0.01"
+    visible="false">
+  </a-plane>
+
+</a-entity>
+
+<a-entity
+  id="targetGold"
+  markerhandler
+  mindar-image-target="targetIndex: 1">
+
+  <a-plane
+    width="0.01"
+    height="0.01"
+    visible="false">
+  </a-plane>
+
+</a-entity>
+
+
+</a-entity>
+
+<a-entity
+  id="targetStamp3"
+  markerhandler
+  mindar-image-target="targetIndex: 2">
+
+  <a-plane
+    width="0.01"
+    height="0.01"
+    visible="false">
+  </a-plane>
+
+</a-entity>
+
+</a-entity>
+
+<a-entity
+  id="targetCoin"
+  markerhandler
+  mindar-image-target="targetIndex: 0">
+  <a-plane
+    width="0.01"
+    height="0.01"
+    visible="false">
+  </a-plane>
+</a-entity>
+
+</a-entity>
+
+<a-entity
+  id="targetGirl"
+  markerhandler
+  mindar-image-target="targetIndex: 5">
 
   <a-plane
     src="#girlImg"
@@ -430,74 +502,35 @@ pointer-events: auto;
 
 </a-entity>
 
-
-
 <a-entity
-  id="target5"
-markerhandler
-  mindar-image-target="targetIndex: 4">
+  id="targetAnimal"
+  markerhandler
+  mindar-image-target="targetIndex: 6">
 
   <a-plane
-    src="#frameImg"
-    position="0 1 0"
-    width="2"
-    height="3.0"
-    material="shader: flat; transparent: true;">
-  </a-plane>
-
-</a-entity>
-
-<a-entity
-  id="target2"
-markerhandler
-  mindar-image-target="targetIndex: 1">
-<a-plane
-    width="0.01"
-    height="0.01"
-    visible="false">
-</a-plane>
-
-
-</a-entity>
-
-<a-entity
-  id="target3"
-markerhandler
-  mindar-image-target="targetIndex: 2">
-<a-plane
-    width="0.01"
-    height="0.01"
-    visible="false">
-</a-plane>
-
-</a-entity>
-
-<a-entity
-  id="target1"
-markerhandler
-  mindar-image-target="targetIndex: 0">
-<a-plane
-    width="0.01"
-    height="0.01"
-    visible="false">
-</a-plane>
-
-
-</a-entity>
-
-<a-entity
-  id="target6"
-markerhandler
-  mindar-image-target="targetIndex: 5">
-
-  <a-plane
-    src="#treasureImg"
+    src="#animalImg"
     width="1"
     height="1"
     material="shader: flat; transparent: true;">
   </a-plane>
 
 </a-entity>
+
+<a-entity
+  id="targetMushroom"
+  markerhandler
+  mindar-image-target="targetIndex: 7">
+
+  <a-plane
+    src="#frameImg"
+    position="0 1 0"
+    width="2"
+    height="3"
+    material="shader: flat; transparent: true;">
+  </a-plane>
+
+</a-entity>
+
 
 
 </a-scene>
@@ -640,32 +673,99 @@ const effect = document.querySelector("#effect");
 guideUI.style.display = "none";
 
 // 女の子ターゲット時だけ表示
-if(this.el.id === "target4"){
+
+
+stampBox.style.display = "none";
+
+ if(this.el.id === "targetCoin"){
+
+  treasureBox.style.display = "block";
+
+  treasureImage.src = "coin.jpg";
+
+  treasureEffect.innerHTML =
+    "はずれのお宝！";
+
+  treasureEffect.style.display = "block";
+
+}
+if(this.el.id === "targetStamp1"){
+
+  if(!stamp1Get){
+
+    stamp1Get = true;
+
+    document.querySelector("#stamp1").src =
+      "stamp1.jpg";
+
+    showStampEffect();
+
+  }
+
+}
+if(this.el.id === "targetStamp2"){
+
+  if(!stamp2Get){
+
+    stamp2Get = true;
+
+    document.querySelector("#stamp2").src =
+      "stamp2.jpg";
+
+    showStampEffect();
+
+  }
+
+}
+if(this.el.id === "targetStamp3"){
+
+  if(!stamp3Get){
+
+    stamp3Get = true;
+
+    document.querySelector("#stamp3").src =
+      "stamp3.jpg";
+
+    showStampEffect();
+
+  }
+
+}
+if(this.el.id === "targetGirl"){
+
   guideUI.style.display = "flex";
-stampBox.style.display = "none";
-}
-      console.log(this.el.id + " found");
-if(this.el.id === "target1"){
-stampBox.style.display = "block";
-treasureBox.style.display = "none";
-}
-if(this.el.id === "target2"){
-stampBox.style.display = "block";
-treasureBox.style.display = "none";
-}
-if(this.el.id === "target3"){
-stampBox.style.display = "block";
-treasureBox.style.display = "none";
-}
-// target6
-if(this.el.id === "target6"){
 
-  treasureBox.style.display =
-    "block";
+}
+if(this.el.id === "targetAnimal"){
 
-stampBox.style.display = "none";
+  effect.innerHTML =
+    "動物発見！！";
 
- 
+  effect.style.display = "block";
+
+}
+if(this.el.id === "targetMushroom"){
+
+  document.querySelector("#photoMessage")
+    .style.display = "block";
+
+}
+
+
+if(this.el.id === "targetGold"){
+
+  treasureBox.style.display = "block";
+
+  treasureImage.src = "gold.jpg";
+
+  treasureEffect.innerHTML =
+    "大当たり！！";
+
+  treasureEffect.style.display = "block";
+
+}
+
+
 
   if(treasure1Found){
 
@@ -701,75 +801,9 @@ stampBox.style.display = "none";
   }, 1500);
 
 }
-      // target3
-      if(this.el.id === "target2"){
-
-        if(!stamp1Get){
-
-          stamp1Get = true;
-
-          document.querySelector("#stamp1").src =
-            "stamp1.jpg";
-
-          showStampEffect();
-stampBox.style.display = "block";
-
- treasureBox.style.display = "none";
-
-        }
-
-      }
-
-      
-      if(this.el.id === "target3"){
-
-        if(!stamp2Get){
-
-          stamp2Get = true;
-
-          document.querySelector("#stamp2").src =
-            "stamp2.jpg";
-
-          showStampEffect();
-stampBox.style.display = "block";
-
- treasureBox.style.display = "none";
-
-        }
-
-      }
+  
 
     
-      if(this.el.id === "target1"){
-
-        if(!stamp3Get){
-
-          stamp3Get = true;
-
-          document.querySelector("#stamp3").src =
-            "stamp3.jpg";
-
-          showStampEffect();
-stampBox.style.display = "block";
-
- treasureBox.style.display = "none";
-
-        }
-
-      }
-
-    
-      if(this.el.id === "target5"){
-
-        document.querySelector("#photoMessage")
-          .style.display = "block";
-stampBox.style.display = "none";
-
- treasureBox.style.display = "none";
-
-
-      }
-
     });
 
     this.el.addEventListener("targetLost", () => {
