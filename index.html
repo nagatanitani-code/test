@@ -346,7 +346,7 @@ pointer-events: auto;
   </div>
 
   <div id="treasureCount">
-    0 / 1
+    0 / 2
   </div>
 
 
@@ -674,14 +674,21 @@ AFRAME.registerComponent("markerhandler", {
 
     this.el.addEventListener("targetFound", () => {
 
+
 const guideUI = document.querySelector("#guideUI");
 const effect = document.querySelector("#effect");
+
+effect.style.display = "none";
+
+treasureEffect.style.display = "none";
+
+document.querySelector("#photoMessage")
+  .style.display = "none";
 
 // デフォルト非表示
 guideUI.style.display = "none";
 
 // 女の子ターゲット時だけ表示
-
 
 stampBox.style.display = "none";
 
@@ -695,6 +702,16 @@ stampBox.style.display = "none";
     "はずれのお宝！";
 
   treasureEffect.style.display = "block";
+
+  if(!coinFound){
+
+    coinFound = true;
+    foundTreasure++;
+
+    treasureCount.innerHTML =
+      `${foundTreasure} / ${totalTreasure}`;
+
+  }
 
 }
 if(this.el.id === "targetStamp1"){
@@ -739,9 +756,26 @@ if(this.el.id === "targetStamp3"){
   }
 
 }
-if(this.el.id === "targetGirl"){
+if(this.el.id === "targetGold"){
 
-  guideUI.style.display = "flex";
+  treasureBox.style.display = "block";
+
+  treasureImage.src = "gold.jpg";
+
+  treasureEffect.innerHTML =
+    "大当たり！！";
+
+  treasureEffect.style.display = "block";
+
+  if(!goldFound){
+
+    goldFound = true;
+    foundTreasure++;
+
+    treasureCount.innerHTML =
+      `${foundTreasure} / ${totalTreasure}`;
+
+  }
 
 }
 if(this.el.id === "targetAnimal"){
