@@ -414,11 +414,11 @@ pointer-events: auto;
 </a-camera>
 
 
-<!-- 1 キノコ フォトフレーム -->
+<!-- 5 キノコ フォトフレーム -->
 <a-entity
   id="targetMushroom"
   markerhandler
-  mindar-image-target="targetIndex: 0">
+  mindar-image-target="targetIndex: 4">
 
   <a-plane
     src="#frameImg"
@@ -431,11 +431,11 @@ pointer-events: auto;
 </a-entity>
 
 
-<!-- 2 女の子 絵柄探し -->
+<!-- 3 女の子 絵柄探し -->
 <a-entity
   id="targetGirl"
   markerhandler
-  mindar-image-target="targetIndex: 1">
+  mindar-image-target="targetIndex: 2">
 
   <a-plane
     src="#girlImg"
@@ -449,11 +449,11 @@ pointer-events: auto;
 </a-entity>
 
 
-<!-- 3 動物 -->
+<!-- 1 動物 -->
 <a-entity
   id="targetAnimal"
   markerhandler
-  mindar-image-target="targetIndex: 2">
+  mindar-image-target="targetIndex: 0">
 
   <a-plane
     src="#animalImg"
@@ -465,39 +465,9 @@ pointer-events: auto;
 </a-entity>
 
 
-<!-- 4 スタンプ1 -->
+<!-- 6 スタンプ1 -->
 <a-entity
   id="targetStamp1"
-  markerhandler
-  mindar-image-target="targetIndex: 3">
-
-  <a-plane
-    width="0.01"
-    height="0.01"
-    visible="false">
-  </a-plane>
-
-</a-entity>
-
-
-<!-- 5 スタンプ2 -->
-<a-entity
-  id="targetStamp2"
-  markerhandler
-  mindar-image-target="targetIndex: 4">
-
-  <a-plane
-    width="0.01"
-    height="0.01"
-    visible="false">
-  </a-plane>
-
-</a-entity>
-
-
-<!-- 6 スタンプ3 -->
-<a-entity
-  id="targetStamp3"
   markerhandler
   mindar-image-target="targetIndex: 5">
 
@@ -510,9 +480,9 @@ pointer-events: auto;
 </a-entity>
 
 
-<!-- 7 コイン はずれ -->
+<!-- 7 スタンプ2 -->
 <a-entity
-  id="targetCoin"
+  id="targetStamp2"
   markerhandler
   mindar-image-target="targetIndex: 6">
 
@@ -525,11 +495,41 @@ pointer-events: auto;
 </a-entity>
 
 
-<!-- 8 大当たり -->
+<!-- 8 スタンプ3 -->
+<a-entity
+  id="targetStamp3"
+  markerhandler
+  mindar-image-target="targetIndex: 7">
+
+  <a-plane
+    width="0.01"
+    height="0.01"
+    visible="false">
+  </a-plane>
+
+</a-entity>
+
+
+<!-- 2 コイン はずれ -->
+<a-entity
+  id="targetCoin"
+  markerhandler
+  mindar-image-target="targetIndex: 1">
+
+  <a-plane
+    width="0.01"
+    height="0.01"
+    visible="false">
+  </a-plane>
+
+</a-entity>
+
+
+<!-- 4 大当たり -->
 <a-entity
   id="targetGold"
   markerhandler
-  mindar-image-target="targetIndex: 7">
+  mindar-image-target="targetIndex: 3">
 
   <a-plane
     width="0.01"
