@@ -690,26 +690,36 @@ guideUI.style.display = "none";
 
 stampBox.style.display = "none";
 
- if(this.el.id === "targetCoin"){
+
+if(this.el.id === "targetCoin"){
 
   treasureBox.style.display = "block";
 
   treasureImage.src = "coin.jpg";
 
-  treasureEffect.innerHTML =
-    "はずれのお宝！";
-
-  treasureEffect.style.display = "block";
-
   if(!coinFound){
 
     coinFound = true;
+
     foundTreasure++;
 
     treasureCount.innerHTML =
       `${foundTreasure} / ${totalTreasure}`;
 
+    treasureEffect.innerHTML =
+      "はずれのお宝！";
+
+  } else {
+
+    treasureEffect.innerHTML =
+      "発見済みのお宝！";
+
   }
+
+  treasureEffect.style.display = "block";
+
+}
+
 
 }
 if(this.el.id === "targetStamp1"){
@@ -754,28 +764,37 @@ if(this.el.id === "targetStamp3"){
   }
 
 }
+
 if(this.el.id === "targetGold"){
 
   treasureBox.style.display = "block";
 
   treasureImage.src = "gold.jpg";
 
-  treasureEffect.innerHTML =
-    "大当たり！！";
-
-  treasureEffect.style.display = "block";
-
   if(!goldFound){
 
     goldFound = true;
+
     foundTreasure++;
 
     treasureCount.innerHTML =
       `${foundTreasure} / ${totalTreasure}`;
 
+    treasureEffect.innerHTML =
+      "大当たり！！";
+
+  } else {
+
+    treasureEffect.innerHTML =
+      "発見済みの大当たり！";
+
   }
 
+  treasureEffect.style.display = "block";
+
 }
+
+
 
 if(this.el.id === "targetGirl"){
 
