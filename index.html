@@ -203,11 +203,11 @@ display:none;
 
   color: black;
 
-  font-size: 42px;
+  font-size: 24px;
 
   font-weight: bold;
 
-  padding: 20px 40px;
+  padding: 12px 24px;
 
   border-radius: 20px;
 
@@ -514,8 +514,8 @@ pointer-events: auto;
 
   <a-plane
     src="#animalImg"
-    width="1"
-    height="1"
+    width="2"
+    height="2.5"
     material="shader: flat; transparent: true;">
   </a-plane>
  <a-entity id="animalGuideContainer"></a-entity>
@@ -670,6 +670,9 @@ const animalTargets = [
 
 ];
 
+const animalScaleX = 2;
+const animalScaleY = 2.5;
+
 
 // 今使うターゲット
 
@@ -732,7 +735,24 @@ const target =
   // 3Dチェック表示
   const check = document.createElement("a-plane");
   check.setAttribute("src", "#checkImg");
-  check.setAttribute("position", `${target.x} ${target.y} 0.08`);
+ const isAnimal =
+  animalTargets.find(t => t.id === target.id);
+
+const posX =
+  isAnimal
+  ? target.x * animalScaleX
+  : target.x;
+
+const posY =
+  isAnimal
+  ? target.y * animalScaleY
+  : target.y;
+
+check.setAttribute(
+  "position",
+  `${posX} ${posY} 0.08`
+);
+
   check.setAttribute("width", target.size);
   check.setAttribute("height", target.size);
   check.setAttribute("material", "shader: flat; transparent: true");
@@ -1191,9 +1211,11 @@ function createAnimalTargets(){
     );
 
     touch.setAttribute(
-      "position",
-      `${target.x} ${target.y} 0.01`
-    );
+  "position",
+  `${target.x * animalScaleX}
+   ${target.y * animalScaleY}
+   0.01`
+);
 
     touch.setAttribute(
       "width",
@@ -1216,9 +1238,11 @@ function createAnimalTargets(){
       document.createElement("a-ring");
 
     frame.setAttribute(
-      "position",
-      `${target.x} ${target.y} 0.03`
-    );
+  "position",
+  `${target.x * animalScaleX}
+   ${target.y * animalScaleY}
+   0.03`
+);
 
     frame.setAttribute(
       "radius-inner",
