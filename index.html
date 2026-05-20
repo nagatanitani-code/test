@@ -660,8 +660,9 @@ const stampBox =
 document.querySelector("#stampBox");
 
 let foundTreasure = 0;
-let treasure1Found = false;
-const totalTreasure = 1;
+let coinFound = false; 
+let goldFound = false;
+const totalTreasure = 2;
 
 let stamp1Get = false;
 let stamp2Get = false;
@@ -685,10 +686,7 @@ treasureEffect.style.display = "none";
 document.querySelector("#photoMessage")
   .style.display = "none";
 
-// デフォルト非表示
 guideUI.style.display = "none";
-
-// 女の子ターゲット時だけ表示
 
 stampBox.style.display = "none";
 
@@ -778,6 +776,14 @@ if(this.el.id === "targetGold"){
   }
 
 }
+
+if(this.el.id === "targetGirl"){
+
+  guideUI.style.display = "flex";
+
+}
+
+
 if(this.el.id === "targetAnimal"){
 
   effect.innerHTML =
@@ -792,20 +798,6 @@ if(this.el.id === "targetMushroom"){
     .style.display = "block";
 
 }
-
-
-if(this.el.id === "targetGold"){
-
-  treasureBox.style.display = "block";
-
-  treasureImage.src = "gold.jpg";
-
-  treasureEffect.innerHTML =
-    "大当たり！！";
-
-  treasureEffect.style.display = "block";
-
-}
   
 
     
@@ -814,15 +806,14 @@ if(this.el.id === "targetGold"){
     this.el.addEventListener("targetLost", () => {
 
 if(this.el.id === "targetGirl"){
-
   guideUI.style.display = "none";
-
 }
 
 if(this.el.id === "targetMushroom"){
 
   document.querySelector("#photoMessage")
     .style.display = "none";
+
 
 }
 
@@ -832,6 +823,7 @@ if(
 ){
 
   treasureBox.style.display = "none";
+treasureEffect.style.display = "none";
 
 }
 updateStampVisibility();
