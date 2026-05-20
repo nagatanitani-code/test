@@ -713,7 +713,7 @@ if(this.el.id === "targetCoin"){
 
     treasureEffect.innerHTML =
       "発見済みのお宝！";
-
+setTimeout(() => { treasureEffect.style.display = "none"; }, 1500);
   }
 
   treasureEffect.style.display = "block";
@@ -791,6 +791,8 @@ if(this.el.id === "targetGold"){
   }
 
   treasureEffect.style.display = "block";
+setTimeout(() => { treasureEffect.style.display = "none"; }, 1500);
+
 
 }
 
