@@ -89,11 +89,10 @@ pointer-events: auto;
 
 .guideCrop,
 .animalGuideCrop{
-
-  background-repeat: no-repeat;
   background-position: center;
-background-color: black;
-  image-rendering: auto;
+  background-color: black;
+  background-origin: content-box;
+  background-clip: content-box;
 
 }
 
@@ -1231,22 +1230,22 @@ targets.forEach(target => {
       "#guideCrop_" + target.id
     );
 
-  const zoom = 100 / target.size;
+  const zoom =
+    1 / target.size;
 
   crop.style.backgroundSize =
-    `${zoom}% ${zoom}%`;
+    `${100 * zoom}% auto`;
 
   const posX =
-    50 - (target.x * girlScaleX * zoom);
+    50 - (target.x * 100 * zoom);
 
   const posY =
-    50 + (target.y * girlScaleY * zoom);
+    50 + (target.y * 100 * zoom);
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
 
 });
-
 
 
 
@@ -1356,16 +1355,17 @@ animalTargets.forEach(target => {
       "#animalGuideCrop_" + target.id
     );
 
-  const zoom = 100 / target.size;
+  const zoom =
+    1 / target.size;
 
   crop.style.backgroundSize =
-    `${zoom}% ${zoom}%`;
+    `${100 * zoom}% auto`;
 
   const posX =
-    50 - (target.x * animalScaleX * zoom);
+    50 - (target.x * 100 * zoom);
 
   const posY =
-    50 + (target.y * animalScaleY * zoom);
+    50 + (target.y * 100 * zoom);
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
