@@ -96,8 +96,6 @@ pointer-events: auto;
 
   background-repeat: no-repeat;
   background-color: black;
-
-  background-position: center;
 }
 
 
@@ -1230,6 +1228,7 @@ frame.setAttribute(
 
 
 
+
 targets.forEach(target => {
 
   const crop =
@@ -1239,11 +1238,10 @@ targets.forEach(target => {
 
   const boxSize = 90;
 
-  // 画像全体サイズ
-  const imageWidth = 90;
-  const imageHeight = 50;
+  // 実画像サイズ
+  const imageWidth = 900;
+  const imageHeight = 500;
 
-  // 切り抜き倍率
   const zoom =
     1 / target.size;
 
@@ -1256,14 +1254,13 @@ targets.forEach(target => {
   crop.style.backgroundSize =
     `${bgWidth}px ${bgHeight}px`;
 
-  // 中心座標へ変換
   const posX =
     boxSize / 2 -
-    (target.x * imageWidth * zoom);
+    ((target.x + 0.5) * bgWidth);
 
   const posY =
-    boxSize / 2 +
-    (target.y * imageHeight * zoom);
+    boxSize / 2 -
+    ((0.5 - target.y) * bgHeight);
 
   crop.style.backgroundPosition =
     `${posX}px ${posY}px`;
@@ -1374,6 +1371,7 @@ touch.setAttribute(
 
 
 
+
 animalTargets.forEach(target => {
 
   const crop =
@@ -1383,8 +1381,9 @@ animalTargets.forEach(target => {
 
   const boxSize = 90;
 
-  const imageWidth = 90;
-  const imageHeight = 112;
+  // 実画像サイズ
+  const imageWidth = 800;
+  const imageHeight = 1000;
 
   const zoom =
     1 / target.size;
@@ -1400,17 +1399,16 @@ animalTargets.forEach(target => {
 
   const posX =
     boxSize / 2 -
-    (target.x * imageWidth * zoom);
+    ((target.x + 0.5) * bgWidth);
 
   const posY =
-    boxSize / 2 +
-    (target.y * imageHeight * zoom);
+    boxSize / 2 -
+    ((0.5 - target.y) * bgHeight);
 
   crop.style.backgroundPosition =
     `${posX}px ${posY}px`;
 
 });
-
 
 
 
