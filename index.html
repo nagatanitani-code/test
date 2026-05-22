@@ -496,7 +496,7 @@ pointer-events: auto;
 
   <a-plane
     src="#girlImg"
-    width="1"
+    width="1.8"
     height="1"
     material="shader: flat; transparent: true;">
   </a-plane>
@@ -608,6 +608,9 @@ const treasureEffect =
 document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
 let currentTargetIndex = 0;
+const girlScaleX = 1.8;
+const girlScaleY = 1;
+
 const targets = [
 
 {
@@ -741,12 +744,12 @@ const target =
 const posX =
   isAnimal
   ? target.x * animalScaleX
-  : target.x;
+  : target.x * girlScaleX;
 
 const posY =
   isAnimal
   ? target.y * animalScaleY
-  : target.y;
+  : target.y * girlScaleY;
 
 check.setAttribute(
   "position",
@@ -1099,11 +1102,14 @@ function createTargets(){
       target.id
     );
 
-    touch.setAttribute(
-      "position",
-      `${target.x} ${target.y} 0.01`
-    );
-
+touch.setAttribute(
+  "position",
+  `
+  ${target.x * girlScaleX}
+  ${target.y * girlScaleY}
+  0.01
+  `
+);
     touch.setAttribute(
       "width",
       target.size
@@ -1147,10 +1153,15 @@ function createTargets(){
       "guide_" + target.id
     );
 frame.classList.add("guideRing");
-    frame.setAttribute(
-      "position",
-      `${target.x} ${target.y} 0.03`
-    );
+
+frame.setAttribute(
+  "position",
+  `
+  ${target.x * girlScaleX}
+  ${target.y * girlScaleY}
+  0.03
+  `
+);
 
     frame.setAttribute(
   "radius-inner",
