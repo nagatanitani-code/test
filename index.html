@@ -1224,12 +1224,6 @@ frame.setAttribute(
 // ======================
 
 
-
-
-
-
-
-
 targets.forEach(target => {
 
   const crop =
@@ -1239,23 +1233,19 @@ targets.forEach(target => {
 
   const boxSize = 90;
 
-  // 実画像サイズ
-  const imageWidth = 900;
-  const imageHeight = 500;
-
-  // 判定サイズと合わせる
+  // 判定サイズ
   const visibleArea =
     target.size * 1.6;
 
-  // 拡大倍率
+  // 拡大率
   const zoom =
-    1 / visibleArea;
+    boxSize / (visibleArea * 100);
 
   const bgWidth =
-    imageWidth * zoom;
+    180 * zoom;
 
   const bgHeight =
-    imageHeight * zoom;
+    100 * zoom;
 
   crop.style.backgroundSize =
     `${bgWidth}px ${bgHeight}px`;
@@ -1272,6 +1262,8 @@ targets.forEach(target => {
     `${posX}px ${posY}px`;
 
 });
+
+
 
 
 
@@ -1381,6 +1373,7 @@ touch.setAttribute(
 
 
 
+
 animalTargets.forEach(target => {
 
   const crop =
@@ -1390,21 +1383,17 @@ animalTargets.forEach(target => {
 
   const boxSize = 90;
 
-  const imageWidth = 800;
-  const imageHeight = 1000;
-
-  // 判定と同じ
   const visibleArea =
     target.size * 1.6;
 
   const zoom =
-    1 / visibleArea;
+    boxSize / (visibleArea * 100);
 
   const bgWidth =
-    imageWidth * zoom;
+    180 * zoom;
 
   const bgHeight =
-    imageHeight * zoom;
+    225 * zoom;
 
   crop.style.backgroundSize =
     `${bgWidth}px ${bgHeight}px`;
