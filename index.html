@@ -86,6 +86,18 @@ pointer-events: auto;
 
 }
 
+
+.guideCrop,
+.animalGuideCrop{
+
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: auto;
+
+}
+
+
+
 .guideCheck{
 
   position: absolute;
@@ -1208,6 +1220,7 @@ frame.setAttribute(
 // ======================
 
 
+
 targets.forEach(target => {
 
   const crop =
@@ -1215,24 +1228,29 @@ targets.forEach(target => {
       "#guideCrop_" + target.id
     );
 
-  // 拡大率
-const zoom =
-  40 / target.size;
+  // ガイド枠サイズ
+  const boxSize = 90;
 
+  // 切り抜き倍率
+  const zoom = 1 / target.size;
+
+  // 背景画像サイズ
   crop.style.backgroundSize =
-    `${zoom}% ${zoom}%`;
+    `${100 * zoom}% auto`;
 
-  // 位置補正
+  // 中央座標補正
   const posX =
-    50 - (target.x * zoom);
+    50 - (target.x * 100 * zoom);
 
   const posY =
-    50 - (target.y * zoom);
+    50 - (target.y * 100 * zoom);
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
 
 });
+
+
 
 
 
@@ -1329,6 +1347,7 @@ touch.setAttribute(
 
   });
 
+
 animalTargets.forEach(target => {
 
   const crop =
@@ -1336,22 +1355,23 @@ animalTargets.forEach(target => {
       "#animalGuideCrop_" + target.id
     );
 
- const zoom =
-  40 / target.size;
+  const zoom = 1 / target.size;
 
   crop.style.backgroundSize =
-    `${zoom}% ${zoom}%`;
+    `${100 * zoom}% auto`;
 
   const posX =
-    50 - (target.x * zoom);
+    50 - (target.x * 100 * zoom);
 
   const posY =
-    50 - (target.y * zoom);
+    50 - (target.y * 100 * zoom);
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
 
 });
+
+
 
 
 
