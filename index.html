@@ -756,8 +756,12 @@ check.setAttribute(
   `${posX} ${posY} 0.08`
 );
 
-  check.setAttribute("width", target.size);
-  check.setAttribute("height", target.size);
+
+const checkSize = target.size * 1.6;
+
+check.setAttribute("width", checkSize);
+check.setAttribute("height", checkSize);
+
   check.setAttribute("material", "shader: flat; transparent: true");
 
 const parentContainer =
@@ -1210,23 +1214,17 @@ targets.forEach(target => {
       "#guideCrop_" + target.id
     );
 
+  const posX =
+    (0.5 + target.x) * 100;
 
-const zoom =
-  100 / target.size;
+  const posY =
+    (0.5 - target.y) * 100;
 
-const posX =
-  50 - (target.x * zoom);
+  crop.style.backgroundSize =
+    `${100 * girlScaleX}% ${100 * girlScaleY}%`;
 
-const posY =
-  50 + (target.y * zoom);
-
-crop.style.backgroundSize =
-  `${zoom}% ${zoom}%`;
-
-crop.style.backgroundPosition =
-  `${posX}% ${posY}%`;
-
-
+  crop.style.backgroundPosition =
+    `${posX}% ${posY}%`;
 
 });
 
@@ -1330,23 +1328,17 @@ animalTargets.forEach(target => {
       "#animalGuideCrop_" + target.id
     );
 
+  const posX =
+    (0.5 + target.x) * 100;
 
-const zoom =
-  100 / target.size;
+  const posY =
+    (0.5 - target.y) * 100;
 
-const posX =
-  50 - (target.x * zoom);
+  crop.style.backgroundSize =
+    `100% 100%`;
 
-const posY =
-  50 + (target.y * zoom);
-
-crop.style.backgroundSize =
-  `${zoom}% ${zoom}%`;
-
-crop.style.backgroundPosition =
-  `${posX}% ${posY}%`;
-
-
+  crop.style.backgroundPosition =
+    `${posX}% ${posY}%`;
 
 });
 
