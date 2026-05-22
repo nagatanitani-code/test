@@ -334,6 +334,69 @@ pointer-events: auto;
 
 }
 
+#completeButton{
+
+  position: fixed;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  background:
+    linear-gradient(
+      45deg,
+      #ffcc00,
+      #ff8800
+    );
+
+  color: white;
+
+  font-size: 28px;
+  font-weight: bold;
+
+  padding: 20px 40px;
+
+  border-radius: 24px;
+
+  z-index: 9999;
+
+  display: none;
+
+  box-shadow:
+    0 0 30px rgba(255,180,0,0.8);
+
+  animation: pop 0.6s ease;
+
+  cursor: pointer;
+
+animation:
+  pop 0.6s ease,
+  floaty 1.2s ease-in-out infinite;
+
+}
+@keyframes floaty {
+
+  0% {
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+  }
+
+  50% {
+    transform:
+      translate(-50%, -54%)
+      scale(1.05);
+  }
+
+  100% {
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+  }
+
+}
+
 
 
   </style>
@@ -341,6 +404,9 @@ pointer-events: auto;
 
 <body>
 
+<div id="completeButton">
+  プレゼントを受け取る！
+</div>
 
 <div id="guideUI">
 
@@ -820,6 +886,7 @@ AFRAME.registerComponent("markerhandler", {
 
 
 const guideUI = document.querySelector("#guideUI");
+
 const effect = document.querySelector("#effect");
 
 effect.style.display = "none";
@@ -1082,6 +1149,9 @@ function checkComplete(){
     setTimeout(() => {
 
       effect.style.display = "none";
+
+document.querySelector("#completeButton")
+  .style.display = "block";
 
     }, 2000);
 
@@ -1434,6 +1504,15 @@ createAnimalTargets();
 
 const guideUI =
 document.querySelector("#guideUI");
+
+document
+.querySelector("#completeButton")
+.addEventListener("click", () => {
+
+  window.location.href =
+    "https://nagatanitani-code.github.io/test/";
+
+});
 
 
 
