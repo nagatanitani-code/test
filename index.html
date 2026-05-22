@@ -89,11 +89,7 @@ pointer-events: auto;
 
 .guideCrop,
 .animalGuideCrop{
-  background-position: center;
   background-color: black;
-  background-origin: content-box;
-  background-clip: content-box;
-
 }
 
 
@@ -1230,20 +1226,27 @@ targets.forEach(target => {
       "#guideCrop_" + target.id
     );
 
-  const zoom =
-    1 / target.size;
+  // ガイド枠サイズ
+  const boxSize = 90;
+
+  // 実際の切り抜きサイズ
+  const cropSize =
+    boxSize / target.size;
 
   crop.style.backgroundSize =
-    `${100 * zoom}% auto`;
+    `${cropSize}px auto`;
 
+  // A-Frameの座標と完全一致
   const posX =
-    50 - (target.x * 100 * zoom);
+    boxSize / 2 -
+    (target.x * girlScaleX * cropSize);
 
   const posY =
-    50 + (target.y * 100 * zoom);
+    boxSize / 2 +
+    (target.y * girlScaleY * cropSize);
 
   crop.style.backgroundPosition =
-    `${posX}% ${posY}%`;
+    `${posX}px ${posY}px`;
 
 });
 
@@ -1355,20 +1358,24 @@ animalTargets.forEach(target => {
       "#animalGuideCrop_" + target.id
     );
 
-  const zoom =
-    1 / target.size;
+  const boxSize = 90;
+
+  const cropSize =
+    boxSize / target.size;
 
   crop.style.backgroundSize =
-    `${100 * zoom}% auto`;
+    `${cropSize}px auto`;
 
   const posX =
-    50 - (target.x * 100 * zoom);
+    boxSize / 2 -
+    (target.x * animalScaleX * cropSize);
 
   const posY =
-    50 + (target.y * 100 * zoom);
+    boxSize / 2 +
+    (target.y * animalScaleY * cropSize);
 
   crop.style.backgroundPosition =
-    `${posX}% ${posY}%`;
+    `${posX}px ${posY}px`;
 
 });
 
