@@ -1228,7 +1228,7 @@ targets.forEach(target => {
 
   const crop =
     document.querySelector(
-      "#animalGuideCrop_" + target.id
+      "#guideCrop_" + target.id
     );
 
   const zoom =
@@ -1238,10 +1238,10 @@ targets.forEach(target => {
     `${100 * zoom}% auto`;
 
   const posX =
-    50 + (target.x * 100 * zoom);
+  50 - (target.x * 100 * zoom);
 
-  const posY =
-    50 - (target.y * 100 * zoom);
+const posY =
+  50 + (target.y * 100 * zoom);
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
@@ -1354,7 +1354,7 @@ animalTargets.forEach(target => {
   
 const crop =
     document.querySelector(
-      "#guideCrop_" + target.id
+      "#animalGuideCrop_" + target.id
     );
 
   const zoom =
@@ -1364,10 +1364,10 @@ const crop =
     `${100 * zoom}% auto`;
 
   const posX =
-    50 + (target.x * 100 * zoom);
+  50 - (target.x * 100 * zoom);
 
-  const posY =
-    50 - (target.y * 100 * zoom);
+const posY =
+  50 + (target.y * 100 * zoom);
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
