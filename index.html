@@ -1205,25 +1205,23 @@ targets.forEach(target => {
       "#guideCrop_" + target.id
     );
 
+  const zoom =
+    100 / target.size;
 
-const posX =
-  (0.5 + target.x) * 100;
+  const posX =
+    (0.5 + target.x) * 100;
 
-const posY =
-  (0.5 - target.y) * 100;
+  const posY =
+    (0.5 - target.y) * 100;
 
-crop.style.backgroundSize =
-  `${100 * girlScaleX}% ${100 * girlScaleY}%`;
-
-crop.style.backgroundPosition =
-  `${posX}% ${posY}%`;
-
-
+  crop.style.backgroundSize =
+    `${zoom}% ${zoom}%`;
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
 
 });
+
 
 }
 
@@ -1311,6 +1309,7 @@ function createAnimalTargets(){
     container.appendChild(frame);
 
   });
+
 animalTargets.forEach(target => {
 
   const crop =
@@ -1318,22 +1317,23 @@ animalTargets.forEach(target => {
       "#animalGuideCrop_" + target.id
     );
 
+  const zoom =
+    100 / target.size;
 
+  const posX =
+    (0.5 + target.x) * 100;
 
-const posX =
-  (0.5 + target.x) * 100;
+  const posY =
+    (0.5 - target.y) * 100;
 
-const posY =
-  (0.5 - target.y) * 100;
+  crop.style.backgroundSize =
+    `${zoom}% ${zoom}%`;
 
-crop.style.backgroundSize =
-  `100% 100%`;
-
-crop.style.backgroundPosition =
-  `${posX}% ${posY}%`;
-
+  crop.style.backgroundPosition =
+    `${posX}% ${posY}%`;
 
 });
+
 
 
 }
