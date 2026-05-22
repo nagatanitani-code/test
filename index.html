@@ -1210,20 +1210,23 @@ targets.forEach(target => {
       "#guideCrop_" + target.id
     );
 
-  const zoom =
-    100 / target.size;
 
-  const posX =
-    (0.5 + target.x) * 100;
+const zoom =
+  100 / target.size;
 
-  const posY =
-    (0.5 - target.y) * 100;
+const posX =
+  50 - (target.x * zoom);
 
-  crop.style.backgroundSize =
-    `${zoom}% ${zoom}%`;
+const posY =
+  50 + (target.y * zoom);
 
-  crop.style.backgroundPosition =
-    `${posX}% ${posY}%`;
+crop.style.backgroundSize =
+  `${zoom}% ${zoom}%`;
+
+crop.style.backgroundPosition =
+  `${posX}% ${posY}%`;
+
+
 
 });
 
@@ -1327,20 +1330,23 @@ animalTargets.forEach(target => {
       "#animalGuideCrop_" + target.id
     );
 
-  const zoom =
-    100 / target.size;
 
-  const posX =
-    (0.5 + target.x) * 100;
+const zoom =
+  100 / target.size;
 
-  const posY =
-    (0.5 - target.y) * 100;
+const posX =
+  50 - (target.x * zoom);
 
-  crop.style.backgroundSize =
-    `${zoom}% ${zoom}%`;
+const posY =
+  50 + (target.y * zoom);
 
-  crop.style.backgroundPosition =
-    `${posX}% ${posY}%`;
+crop.style.backgroundSize =
+  `${zoom}% ${zoom}%`;
+
+crop.style.backgroundPosition =
+  `${posX}% ${posY}%`;
+
+
 
 });
 
