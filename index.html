@@ -1223,29 +1223,32 @@ frame.setAttribute(
 
 
 
+
 targets.forEach(target => {
 
   const crop =
     document.querySelector(
-      "#guideCrop_" + target.id
+      "#animalGuideCrop_" + target.id
     );
 
   const zoom =
-    40 / target.size;
+    1 / target.size;
 
   crop.style.backgroundSize =
-    `${zoom}% ${zoom}%`;
+    `${100 * zoom}% auto`;
 
   const posX =
-    50 - (target.x * zoom);
+    50 + (target.x * 100 * zoom);
 
   const posY =
-    50 - (target.y * zoom);
+    50 - (target.y * 100 * zoom);
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
 
 });
+
+
 
 
 
@@ -1348,26 +1351,29 @@ touch.setAttribute(
 
 
 animalTargets.forEach(target => {
-
-  const crop =
+  
+const crop =
     document.querySelector(
-      "#animalGuideCrop_" + target.id
+      "#guideCrop_" + target.id
     );
 
   const zoom =
-    40 / target.size;
+    1 / target.size;
 
   crop.style.backgroundSize =
-    `${zoom}% ${zoom}%`;
+    `${100 * zoom}% auto`;
 
   const posX =
-    50 - (target.x * zoom);
+    50 + (target.x * 100 * zoom);
 
   const posY =
-    50 - (target.y * zoom);
+    50 - (target.y * 100 * zoom);
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
+
+
+
 
 });
 
