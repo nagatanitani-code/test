@@ -92,6 +92,7 @@ pointer-events: auto;
 
   background-repeat: no-repeat;
   background-position: center;
+background-color: black;
   image-rendering: auto;
 
 }
@@ -1221,6 +1222,7 @@ frame.setAttribute(
 
 
 
+```javascript
 targets.forEach(target => {
 
   const crop =
@@ -1228,27 +1230,24 @@ targets.forEach(target => {
       "#guideCrop_" + target.id
     );
 
-  // ガイド枠サイズ
-  const boxSize = 90;
+  const zoom =
+    40 / target.size;
 
-  // 切り抜き倍率
-  const zoom = 1 / target.size;
-
-  // 背景画像サイズ
   crop.style.backgroundSize =
-    `${100 * zoom}% auto`;
+    `${zoom}% ${zoom}%`;
 
-  // 中央座標補正
   const posX =
-    50 - (target.x * 100 * zoom);
+    50 - (target.x * zoom);
 
   const posY =
-    50 - (target.y * 100 * zoom);
+    50 - (target.y * zoom);
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
 
 });
+```
+
 
 
 
@@ -1355,21 +1354,24 @@ animalTargets.forEach(target => {
       "#animalGuideCrop_" + target.id
     );
 
-  const zoom = 1 / target.size;
+  const zoom =
+    40 / target.size;
 
   crop.style.backgroundSize =
-    `${100 * zoom}% auto`;
+    `${zoom}% ${zoom}%`;
 
   const posX =
-    50 - (target.x * 100 * zoom);
+    50 - (target.x * zoom);
 
   const posY =
-    50 - (target.y * 100 * zoom);
+    50 - (target.y * zoom);
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
 
 });
+
+
 
 
 
