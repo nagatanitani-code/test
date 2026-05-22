@@ -1207,6 +1207,7 @@ frame.setAttribute(
 // 上部ガイド生成
 // ======================
 
+
 targets.forEach(target => {
 
   const crop =
@@ -1214,19 +1215,26 @@ targets.forEach(target => {
       "#guideCrop_" + target.id
     );
 
-  const posX =
-    (0.5 + target.x) * 100;
-
-  const posY =
-    (0.5 - target.y) * 100;
+  // 拡大率
+  const zoom =
+    100 / target.size;
 
   crop.style.backgroundSize =
-    `${100 * girlScaleX}% ${100 * girlScaleY}%`;
+    `${zoom}% ${zoom}%`;
+
+  // 位置補正
+  const posX =
+    50 - (target.x * zoom);
+
+  const posY =
+    50 - (target.y * zoom);
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
 
 });
+
+
 
 
 }
@@ -1321,6 +1329,7 @@ touch.setAttribute(
 
   });
 
+```javascript
 animalTargets.forEach(target => {
 
   const crop =
@@ -1328,19 +1337,24 @@ animalTargets.forEach(target => {
       "#animalGuideCrop_" + target.id
     );
 
-  const posX =
-    (0.5 + target.x) * 100;
-
-  const posY =
-    (0.5 - target.y) * 100;
+  const zoom =
+    100 / target.size;
 
   crop.style.backgroundSize =
-    `100% 100%`;
+    `${zoom}% ${zoom}%`;
+
+  const posX =
+    50 - (target.x * zoom);
+
+  const posY =
+    50 - (target.y * zoom);
 
   crop.style.backgroundPosition =
     `${posX}% ${posY}%`;
 
 });
+```
+
 
 
 
