@@ -87,10 +87,20 @@ pointer-events: auto;
 }
 
 
+
 .guideCrop,
 .animalGuideCrop{
+
+  width: 100%;
+  height: 100%;
+
+  background-repeat: no-repeat;
   background-color: black;
+
+  background-position: center;
 }
+
+
 
 
 
@@ -1219,6 +1229,7 @@ frame.setAttribute(
 
 
 
+
 targets.forEach(target => {
 
   const crop =
@@ -1226,29 +1237,40 @@ targets.forEach(target => {
       "#guideCrop_" + target.id
     );
 
-  // ガイド枠サイズ
   const boxSize = 90;
 
-  // 実際の切り抜きサイズ
-  const cropSize =
-    boxSize / target.size;
+  // 画像全体サイズ
+  const imageWidth = 90;
+  const imageHeight = 50;
+
+  // 切り抜き倍率
+  const zoom =
+    1 / target.size;
+
+  const bgWidth =
+    imageWidth * zoom;
+
+  const bgHeight =
+    imageHeight * zoom;
 
   crop.style.backgroundSize =
-    `${cropSize}px auto`;
+    `${bgWidth}px ${bgHeight}px`;
 
-  // A-Frameの座標と完全一致
+  // 中心座標へ変換
   const posX =
     boxSize / 2 -
-    (target.x * girlScaleX * cropSize);
+    (target.x * imageWidth * zoom);
 
   const posY =
     boxSize / 2 +
-    (target.y * girlScaleY * cropSize);
+    (target.y * imageHeight * zoom);
 
   crop.style.backgroundPosition =
     `${posX}px ${posY}px`;
 
 });
+
+
 
 
 
@@ -1351,6 +1373,7 @@ touch.setAttribute(
   });
 
 
+```javascript
 animalTargets.forEach(target => {
 
   const crop =
@@ -1360,24 +1383,35 @@ animalTargets.forEach(target => {
 
   const boxSize = 90;
 
-  const cropSize =
-    boxSize / target.size;
+  const imageWidth = 90;
+  const imageHeight = 112;
+
+  const zoom =
+    1 / target.size;
+
+  const bgWidth =
+    imageWidth * zoom;
+
+  const bgHeight =
+    imageHeight * zoom;
 
   crop.style.backgroundSize =
-    `${cropSize}px auto`;
+    `${bgWidth}px ${bgHeight}px`;
 
   const posX =
     boxSize / 2 -
-    (target.x * animalScaleX * cropSize);
+    (target.x * imageWidth * zoom);
 
   const posY =
     boxSize / 2 +
-    (target.y * animalScaleY * cropSize);
+    (target.y * imageHeight * zoom);
 
   crop.style.backgroundPosition =
     `${posX}px ${posY}px`;
 
 });
+```
+
 
 
 
