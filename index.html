@@ -777,6 +777,8 @@ function saveGame(){
     stamp2Get,
     stamp3Get,
 
+ solved,
+
     // 絵探し
     targets: targets.map(t => ({
       id: t.id,
@@ -881,6 +883,18 @@ function loadGame(){
     }
 
   });
+
+solved = saveData.solved || false;
+
+if(solved){
+
+  document.querySelector("#completeButton")
+    .style.display = "block";
+
+}
+
+
+
 
   // コンプ判定
   checkComplete();
@@ -1267,13 +1281,19 @@ function showStampEffect(message){
   checkComplete();
 
 }
+
 function checkComplete(){
 
   if(
     stamp1Get &&
     stamp2Get &&
-    stamp3Get
+    stamp3Get &&
+    !solved
   ){
+
+    solved = true;
+
+    saveGame();
 
     effect.style.display = "none";
 
@@ -1288,14 +1308,16 @@ function checkComplete(){
 
       effect.style.display = "none";
 
-document.querySelector("#completeButton")
-  .style.display = "block";
+      document.querySelector("#completeButton")
+        .style.display = "block";
 
     }, 2000);
 
   }
 
 }
+
+
 document.addEventListener(
   "touchstart",
   handleTouch
