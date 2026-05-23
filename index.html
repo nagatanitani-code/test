@@ -375,6 +375,52 @@ animation:
   floaty 1.2s ease-in-out infinite;
 
 }
+#completeWrap{
+
+  position: fixed;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  z-index: 9999;
+
+  display: none;
+
+}
+
+#closeComplete{
+
+  position: absolute;
+
+  top: -14px;
+  right: -14px;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  background: black;
+
+  color: white;
+
+  font-size: 28px;
+  font-weight: bold;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+}
+
+
+
+
 @keyframes floaty {
 
   0% {
@@ -404,9 +450,18 @@ animation:
 
 <body>
 
-<div id="completeButton">
-  この子達の日常をもっとのぞいてみる！
+
+<div id="completeWrap">
+  <div id="closeComplete">
+    ×
+  </div>
+
+  <div id="completeButton">
+    この子達の日常をもっとのぞいてみる！
+  </div>
 </div>
+
+
 
 <div id="guideUI">
 
@@ -759,6 +814,143 @@ const animalScaleX = 2;
 const animalScaleY = 2.5;
 
 
+// =======================
+// セーブ
+// =======================
+
+function saveGame(){
+
+  const saveData = {
+
+    coinFound,
+    goldFound,
+    foundTreasure,
+
+    stamp1Get,
+    stamp2Get,
+    stamp3Get,
+
+    solved,
+
+    targets: targets.map(t => ({
+      id: t.id,
+      found: t.found
+    })),
+
+    animalTargets: animalTargets.map(t => ({
+      id: t.id,
+      found: t.found
+    }))
+
+  };
+
+  localStorage.setItem(
+    "arGameSave",
+    JSON.stringify(saveData)
+  );
+
+}
+
+
+
+// =======================
+// ロード
+// =======================
+
+function loadGame(){
+
+  const saveData =
+    JSON.parse(
+      localStorage.getItem("arGameSave")
+    );
+
+  if(!saveData) return;
+
+  coinFound =
+    saveData.coinFound || false;
+
+  goldFound =
+    saveData.goldFound || false;
+
+  foundTreasure =
+    saveData.foundTreasure || 0;
+
+  stamp1Get =
+    saveData.stamp1Get || false;
+
+  stamp2Get =
+    saveData.stamp2Get || false;
+
+  stamp3Get =
+    saveData.stamp3Get || false;
+
+  solved =
+    saveData.solved || false;
+
+  treasureCount.innerHTML =
+    `${foundTreasure} / ${totalTreasure}`;
+
+  if(stamp1Get){
+    document.querySelector("#stamp1").src =
+      "stamp1.jpg";
+  }
+
+  if(stamp2Get){
+    document.querySelector("#stamp2").src =
+      "stamp2.jpg";
+  }
+
+  if(stamp3Get){
+    document.querySelector("#stamp3").src =
+      "stamp3.jpg";
+  }
+
+  saveData.targets?.forEach(saved => {
+
+    const target =
+      targets.find(t => t.id === saved.id);
+
+    if(target){
+
+      target.found = saved.found;
+
+      if(saved.found){
+
+        document.querySelector(
+          "#guideCheck_" + target.id
+        ).style.display = "block";
+
+      }
+
+    }
+
+  });
+
+  saveData.animalTargets?.forEach(saved => {
+
+    const target =
+      animalTargets.find(t => t.id === saved.id);
+
+    if(target){
+
+      target.found = saved.found;
+
+      if(saved.found){
+
+        document.querySelector(
+          "#guideCheck_" + target.id
+        ).style.display = "block";
+
+      }
+
+    }
+
+  });
+
+}
+
+
+
 // 今使うターゲット
 
 
@@ -807,6 +999,7 @@ const target =
   if (!target || target.found) return;
 
   target.found = true;
+saveGame();
 
   // UI
   effect.innerHTML = target.name + " 発見!!";
@@ -910,6 +1103,7 @@ if(this.el.id === "targetCoin"){
   if(!coinFound){
 
     coinFound = true;
+saveGame();
 
     foundTreasure++;
 
@@ -940,6 +1134,7 @@ if(this.el.id === "targetStamp1"){
   if(!stamp1Get){
 
     stamp1Get = true;
+saveGame();
 
     document.querySelector("#stamp1").src =
       "stamp1.jpg";
@@ -960,6 +1155,7 @@ if(this.el.id === "targetStamp2"){
   if(!stamp2Get){
 
     stamp2Get = true;
+saveGame();
 
     document.querySelector("#stamp2").src =
       "stamp2.jpg";
@@ -980,6 +1176,7 @@ if(this.el.id === "targetStamp3"){
   if(!stamp3Get){
 
     stamp3Get = true;
+saveGame();
 
     document.querySelector("#stamp3").src =
       "stamp3.jpg";
@@ -1004,6 +1201,7 @@ if(this.el.id === "targetGold"){
   if(!goldFound){
 
     goldFound = true;
+saveGame();
 
     foundTreasure++;
 
@@ -1150,8 +1348,11 @@ function checkComplete(){
 
       effect.style.display = "none";
 
-document.querySelector("#completeButton")
+
+document.querySelector("#completeWrap")
   .style.display = "block";
+
+
 
     }, 2000);
 
@@ -1496,10 +1697,18 @@ animalTargets.forEach(target => {
 
 
 
+
 scene.addEventListener("loaded", () => {
+
   createTargets();
-createAnimalTargets();
+
+  createAnimalTargets();
+
+  loadGame();
+
 });
+
+
 
 
 const guideUI =
@@ -1513,6 +1722,16 @@ document
     "https://nagatanitani-code.github.io/test/";
 
 });
+
+document
+.querySelector("#closeComplete")
+.addEventListener("click", () => {
+
+  document.querySelector("#completeWrap")
+    .style.display = "none";
+
+});
+
 
 
 
