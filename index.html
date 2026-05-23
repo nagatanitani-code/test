@@ -886,12 +886,7 @@ function loadGame(){
 
 solved = saveData.solved || false;
 
-if(solved){
 
-  document.querySelector("#completeButton")
-    .style.display = "block";
-
-}
 
 
 
@@ -900,6 +895,7 @@ if(solved){
   checkComplete();
 
 }
+
 
 
 
@@ -1666,6 +1662,18 @@ loadGame();
 
 const guideUI =
 document.querySelector("#guideUI");
+
+
+document
+.querySelector("#completeButton")
+.addEventListener("touchstart", () => {
+
+  document.querySelector("#completeButton")
+    .style.display = "none";
+
+});
+
+
 
 document
 .querySelector("#completeButton")
