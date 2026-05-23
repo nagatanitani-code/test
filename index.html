@@ -759,6 +759,136 @@ const animalScaleX = 2;
 const animalScaleY = 2.5;
 
 
+// =======================
+// ローカルストレージ保存
+// =======================
+
+function saveGame(){
+
+  const saveData = {
+
+    // 宝
+    coinFound,
+    goldFound,
+    foundTreasure,
+
+    // スタンプ
+    stamp1Get,
+    stamp2Get,
+    stamp3Get,
+
+    // 絵探し
+    targets: targets.map(t => ({
+      id: t.id,
+      found: t.found
+    })),
+
+    // 動物探し
+    animalTargets: animalTargets.map(t => ({
+      id: t.id,
+      found: t.found
+    }))
+
+  };
+
+  localStorage.setItem(
+    "arGameSave",
+    JSON.stringify(saveData)
+  );
+
+}
+
+
+// =======================
+// ロード
+// =======================
+
+function loadGame(){
+
+  const saveData =
+    JSON.parse(
+      localStorage.getItem("arGameSave")
+    );
+
+  if(!saveData) return;
+
+  // 宝
+  coinFound = saveData.coinFound;
+  goldFound = saveData.goldFound;
+  foundTreasure = saveData.foundTreasure || 0;
+
+  treasureCount.innerHTML =
+    `${foundTreasure} / ${totalTreasure}`;
+
+  // スタンプ
+  stamp1Get = saveData.stamp1Get;
+  stamp2Get = saveData.stamp2Get;
+  stamp3Get = saveData.stamp3Get;
+
+  if(stamp1Get){
+    document.querySelector("#stamp1").src =
+      "stamp1.jpg";
+  }
+
+  if(stamp2Get){
+    document.querySelector("#stamp2").src =
+      "stamp2.jpg";
+  }
+
+  if(stamp3Get){
+    document.querySelector("#stamp3").src =
+      "stamp3.jpg";
+  }
+
+  // 絵探し
+  saveData.targets?.forEach(saved => {
+
+    const target =
+      targets.find(t => t.id === saved.id);
+
+    if(target){
+      target.found = saved.found;
+
+      if(saved.found){
+
+        document.querySelector(
+          "#guideCheck_" + target.id
+        ).style.display = "block";
+
+      }
+    }
+
+  });
+
+  // 動物探し
+  saveData.animalTargets?.forEach(saved => {
+
+    const target =
+      animalTargets.find(t => t.id === saved.id);
+
+    if(target){
+
+      target.found = saved.found;
+
+      if(saved.found){
+
+        document.querySelector(
+          "#guideCheck_" + target.id
+        ).style.display = "block";
+
+      }
+
+    }
+
+  });
+
+  // コンプ判定
+  checkComplete();
+
+}
+
+
+
 // 今使うターゲット
 
 
@@ -807,6 +937,7 @@ const target =
   if (!target || target.found) return;
 
   target.found = true;
+  saveGame();
 
   // UI
   effect.innerHTML = target.name + " 発見!!";
@@ -911,6 +1042,9 @@ if(this.el.id === "targetCoin"){
 
     coinFound = true;
 
+    saveGame();
+
+
     foundTreasure++;
 
     treasureCount.innerHTML =
@@ -940,6 +1074,7 @@ if(this.el.id === "targetStamp1"){
   if(!stamp1Get){
 
     stamp1Get = true;
+    saveGame();
 
     document.querySelector("#stamp1").src =
       "stamp1.jpg";
@@ -960,6 +1095,7 @@ if(this.el.id === "targetStamp2"){
   if(!stamp2Get){
 
     stamp2Get = true;
+    saveGame();
 
     document.querySelector("#stamp2").src =
       "stamp2.jpg";
@@ -980,6 +1116,7 @@ if(this.el.id === "targetStamp3"){
   if(!stamp3Get){
 
     stamp3Get = true;
+    saveGame();
 
     document.querySelector("#stamp3").src =
       "stamp3.jpg";
@@ -1004,6 +1141,7 @@ if(this.el.id === "targetGold"){
   if(!goldFound){
 
     goldFound = true;
+    saveGame();
 
     foundTreasure++;
 
@@ -1499,6 +1637,8 @@ animalTargets.forEach(target => {
 scene.addEventListener("loaded", () => {
   createTargets();
 createAnimalTargets();
+loadGame();
+
 });
 
 
