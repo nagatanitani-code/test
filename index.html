@@ -334,14 +334,8 @@ pointer-events: auto;
 
 }
 
+
 #completeButton{
-
-  position: fixed;
-
-  top: 50%;
-  left: 50%;
-
-  transform: translate(-50%, -50%);
 
   background:
     linear-gradient(
@@ -359,27 +353,27 @@ pointer-events: auto;
 
   border-radius: 24px;
 
-  z-index: 9999;
-
-
-
   box-shadow:
     0 0 30px rgba(255,180,0,0.8);
 
-  animation: pop 0.6s ease;
-
   cursor: pointer;
 
-animation:
-  pop 0.6s ease,
-  floaty 1.2s ease-in-out infinite;
+  white-space: nowrap;
+
+  animation:
+    pop 0.6s ease,
+    floaty 1.2s ease-in-out infinite;
 
 }
+
+
+
+
 #completeWrap{
 
   position: fixed;
 
-  top: 50%;
+  top: 60%;
   left: 50%;
 
   transform: translate(-50%, -50%);
@@ -389,6 +383,8 @@ animation:
   display: none;
 
 }
+
+
 
 #closeComplete{
 
@@ -1085,6 +1081,10 @@ const effect = document.querySelector("#effect");
 effect.style.display = "none";
 
 treasureEffect.style.display = "none";
+
+document.querySelector("#completeWrap")
+  .style.display = "none";
+
 
 document.querySelector("#photoMessage")
   .style.display = "none";
