@@ -352,11 +352,12 @@ pointer-events: auto;
 }
 
 
-
 /* ボタン本体 */
 #completeButton{
 
   position: relative;
+
+  display: inline-block;
 
   background:
     linear-gradient(
@@ -370,8 +371,7 @@ pointer-events: auto;
   font-size: 28px;
   font-weight: bold;
 
-  padding:
-    40px 40px 24px 40px;
+  padding: 28px 40px;
 
   border-radius: 24px;
 
@@ -380,7 +380,7 @@ pointer-events: auto;
 
   cursor: pointer;
 
-  white-space: nowrap;
+  text-align: center;
 
   animation:
     buttonFloat 1.2s ease-in-out infinite;
@@ -388,17 +388,16 @@ pointer-events: auto;
 }
 
 
-
 /* ×ボタン */
 #closeComplete{
 
   position: absolute;
 
-  top: -22px;
-  right: -22px;
+  top: -18px;
+  right: -18px;
 
-  width: 54px;
-  height: 54px;
+  width: 48px;
+  height: 48px;
 
   border-radius: 50%;
 
@@ -406,7 +405,7 @@ pointer-events: auto;
 
   color: white;
 
-  font-size: 34px;
+  font-size: 30px;
   font-weight: bold;
 
   display: flex;
@@ -414,15 +413,11 @@ pointer-events: auto;
   align-items: center;
   justify-content: center;
 
-  cursor: pointer;
+  border: 3px solid white;
 
-  z-index: 10001;
-
-  border: 4px solid white;
+  z-index: 10000;
 
 }
-
-
 
 
 
@@ -451,13 +446,17 @@ pointer-events: auto;
 
 
 <div id="completeWrap">
-  <div id="closeComplete">
-    ×
-  </div>
 
   <div id="completeButton">
+
+    <div id="closeComplete">
+      ×
+    </div>
+
     この子達の日常をもっとのぞいてみる！
+
   </div>
+
 </div>
 
 
@@ -1255,6 +1254,9 @@ if( this.el.id !== "targetStamp1" && this.el.id !== "targetStamp2" && this.el.id
     });
 
     this.el.addEventListener("targetLost", () => {
+
+document.querySelector("#completeWrap")
+  .style.display = "none";
 
 if(this.el.id === "targetAnimal"){
 
