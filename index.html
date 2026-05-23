@@ -692,6 +692,7 @@ const scene = document.querySelector("a-scene");
 let currentTargetIndex = 0;
 const girlScaleX = 1.8;
 const girlScaleY = 1;
+let completeShown = false;
 
 const targets = [
 
@@ -778,6 +779,7 @@ function saveGame(){
     stamp3Get,
 
  solved,
+completeShown,
 
     // 絵探し
     targets: targets.map(t => ({
@@ -886,7 +888,8 @@ function loadGame(){
 
 solved = saveData.solved || false;
 
-
+completeShown =
+  saveData.completeShown || false;
 
 
 
@@ -1284,10 +1287,11 @@ function checkComplete(){
     stamp1Get &&
     stamp2Get &&
     stamp3Get &&
-    !solved
+    !completeShown
   ){
 
     solved = true;
+    completeShown = true;
 
     saveGame();
 
@@ -1312,7 +1316,6 @@ function checkComplete(){
   }
 
 }
-
 
 document.addEventListener(
   "touchstart",
