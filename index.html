@@ -360,13 +360,12 @@ pointer-events: auto;
 
   white-space: nowrap;
 
+  position: relative;
+
   animation:
-    pop 0.6s ease,
-    floaty 1.2s ease-in-out infinite;
+    buttonFloat 1.2s ease-in-out infinite;
 
 }
-
-
 
 
 #completeWrap{
@@ -390,11 +389,11 @@ pointer-events: auto;
 
   position: absolute;
 
-  top: -14px;
-  right: -14px;
+  top: -18px;
+  right: -18px;
 
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
 
   border-radius: 50%;
 
@@ -402,7 +401,7 @@ pointer-events: auto;
 
   color: white;
 
-  font-size: 28px;
+  font-size: 30px;
   font-weight: bold;
 
   display: flex;
@@ -412,29 +411,25 @@ pointer-events: auto;
 
   cursor: pointer;
 
+  z-index: 10000;
+
 }
 
 
 
 
-@keyframes floaty {
+@keyframes buttonFloat {
 
   0% {
-    transform:
-      translate(-50%, -50%)
-      scale(1);
+    transform: translateY(0px);
   }
 
   50% {
-    transform:
-      translate(-50%, -54%)
-      scale(1.05);
+    transform: translateY(-8px);
   }
 
   100% {
-    transform:
-      translate(-50%, -50%)
-      scale(1);
+    transform: translateY(0px);
   }
 
 }
@@ -1079,7 +1074,6 @@ const guideUI = document.querySelector("#guideUI");
 const effect = document.querySelector("#effect");
 
 effect.style.display = "none";
-
 treasureEffect.style.display = "none";
 
 document.querySelector("#completeWrap")
