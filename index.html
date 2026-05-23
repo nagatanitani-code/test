@@ -335,7 +335,6 @@ pointer-events: auto;
 }
 
 
-
 #completeWrap{
 
   position: fixed;
@@ -357,7 +356,10 @@ pointer-events: auto;
 
   position: relative;
 
-  display: inline-block;
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
 
   background:
     linear-gradient(
@@ -393,11 +395,11 @@ pointer-events: auto;
 
   position: absolute;
 
-  top: -18px;
-  right: -18px;
+  top: -16px;
+  right: -16px;
 
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
 
   border-radius: 50%;
 
@@ -405,7 +407,7 @@ pointer-events: auto;
 
   color: white;
 
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
 
   display: flex;
@@ -415,7 +417,9 @@ pointer-events: auto;
 
   border: 3px solid white;
 
-  z-index: 10000;
+  z-index: 10001;
+
+  line-height: 1;
 
 }
 
@@ -1068,6 +1072,9 @@ let stamp1Get = false;
 let stamp2Get = false;
 let stamp3Get = false;
 let solved = false;
+let completeTimer = null;
+
+
 
 AFRAME.registerComponent("markerhandler", {
 
@@ -1331,6 +1338,7 @@ function showStampEffect(message){
   checkComplete();
 
 }
+
 function checkComplete(){
 
   if(
@@ -1348,21 +1356,22 @@ function checkComplete(){
 
     effect.style.display = "block";
 
-    setTimeout(() => {
+    clearTimeout(completeTimer);
+
+    completeTimer = setTimeout(() => {
 
       effect.style.display = "none";
 
-
-document.querySelector("#completeWrap")
-  .style.display = "block";
-
-
+      document.querySelector("#completeWrap")
+        .style.display = "block";
 
     }, 2000);
 
   }
 
 }
+
+
 document.addEventListener(
   "touchstart",
   handleTouch
