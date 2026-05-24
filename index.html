@@ -1708,14 +1708,21 @@ scene.addEventListener("loaded", () => {
 const guideUI =
 document.querySelector("#guideUI");
 
-document
-.querySelector("#completeButton")
-.addEventListener("click", () => {
+const closeBtn =
+  document.querySelector("#closeComplete");
 
-  window.location.href =
-    "https://nagatanitani-code.github.io/test/";
+if(closeBtn){
 
-});
+  closeBtn.addEventListener("click", (e) => {
+
+    e.stopPropagation();
+
+    document.querySelector("#completeWrap")
+      .style.display = "none";
+
+  });
+
+}
 
 document
 .querySelector("#closeComplete")
