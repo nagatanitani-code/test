@@ -335,11 +335,12 @@ pointer-events: auto;
 }
 
 
+
 #completeWrap{
 
   position: fixed;
 
-  top: 60%;
+  top: 50%;
   left: 50%;
 
   transform: translate(-50%, -50%);
@@ -350,63 +351,40 @@ pointer-events: auto;
 
 }
 
+/* 画像ボタン */
+#completeImage{
 
-/* ボタン本体 */
-#completeButton{
-
-  position: relative;
-
-  display: inline-block;
-
-  background:
-    linear-gradient(
-      45deg,
-      #ffcc00,
-      #ff8800
-    );
-
-  color: white;
-
-  font-size: 28px;
-  font-weight: bold;
-
-  padding: 28px 40px;
+  width: 320px;
+  max-width: 85vw;
 
   border-radius: 24px;
 
   box-shadow:
     0 0 30px rgba(255,180,0,0.8);
 
-  cursor: pointer;
-
-  text-align: center;
-
   animation:
     buttonFloat 1.2s ease-in-out infinite;
 
 }
 
-
-
-
-/* ×ボタン */
+/* ×ボタンを画面左上へ */
 #closeComplete{
 
-  position: absolute;
+  position: fixed;
 
-  top: -16px;
-  right: -16px;
+  top: 20px;
+  left: 20px;
 
-  width: 46px;
-  height: 46px;
+  width: 52px;
+  height: 52px;
 
   border-radius: 50%;
 
-  background: black;
+  background: rgba(0,0,0,0.8);
 
   color: white;
 
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
 
   display: flex;
@@ -416,11 +394,12 @@ pointer-events: auto;
 
   border: 3px solid white;
 
-  z-index: 10001;
+  z-index: 10000;
 
-  line-height: 1;
+  cursor: pointer;
 
 }
+
 
 
 
@@ -450,17 +429,20 @@ pointer-events: auto;
 
 <div id="completeWrap">
 
-  <div id="completeButton">
-
-    <div id="closeComplete">
-      ×
-    </div>
-
-    この子達の日常をもっとのぞいてみる！
-
+  <!-- 閉じるボタンを外へ -->
+  <div id="closeComplete">
+    ×
   </div>
 
+  <!-- 画像ボタン -->
+  <img
+    id="completeImage"
+    src="banner.jpg"
+  >
+
 </div>
+
+
 
 
 
@@ -1737,12 +1719,25 @@ document
 
 document
 .querySelector("#closeComplete")
-.addEventListener("click", () => {
+.addEventListener("click", (e) => {
+
+  // 親ボタンへのクリック伝播を止める
+  e.stopPropagation();
 
   document.querySelector("#completeWrap")
     .style.display = "none";
 
 });
+
+document
+.querySelector("#completeImage")
+.addEventListener("click", () => {
+
+  window.location.href =
+    "https://nagatanitani-code.github.io/test/";
+
+});
+
 
 
 
