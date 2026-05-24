@@ -855,8 +855,10 @@ function loadGame(){
   goldFound =
     saveData.goldFound || false;
 
-  foundTreasure =
-    saveData.foundTreasure || 0;
+ foundTreasure = 0;
+
+if(coinFound) foundTreasure++;
+if(goldFound) foundTreasure++;
 
   stamp1Get =
     saveData.stamp1Get || false;
@@ -1091,18 +1093,19 @@ if(this.el.id === "targetCoin"){
 
   if(!coinFound){
 
-    coinFound = true;
-saveGame();
+  coinFound = true;
 
-    foundTreasure++;
+  foundTreasure++;
 
-    treasureCount.innerHTML =
-      `${foundTreasure} / ${totalTreasure}`;
+  saveGame();
 
-    treasureEffect.innerHTML =
-      "はずれのお宝！";
+  treasureCount.innerHTML =
+    `${foundTreasure} / ${totalTreasure}`;
 
-  } else {
+  treasureEffect.innerHTML =
+    "はずれのお宝！";
+
+} else {
 
     treasureEffect.innerHTML =
       "発見済みのお宝！";
@@ -1189,18 +1192,19 @@ if(this.el.id === "targetGold"){
 
   if(!goldFound){
 
-    goldFound = true;
-saveGame();
+  goldFound = true;
 
-    foundTreasure++;
+  foundTreasure++;
 
-    treasureCount.innerHTML =
-      `${foundTreasure} / ${totalTreasure}`;
+  saveGame();
 
-    treasureEffect.innerHTML =
-      "大当たり！！";
+  treasureCount.innerHTML =
+    `${foundTreasure} / ${totalTreasure}`;
 
-  } else {
+  treasureEffect.innerHTML =
+    "大当たり！！";
+
+} else {
 
     treasureEffect.innerHTML =
       "発見済みの大当たり！";
