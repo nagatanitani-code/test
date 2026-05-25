@@ -145,6 +145,37 @@ pointer-events: auto;
 
 }
 
+#alienGuideUI{
+
+  position: fixed;
+
+  top: 230px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  display: none;
+  gap: 14px;
+
+  z-index: 999;
+
+}
+
+.alienGuideCrop{
+
+  width: 100%;
+  height: 100%;
+
+  background-image:
+    url("alien.jpg");
+
+  background-repeat:
+    no-repeat;
+
+  background-color: black;
+
+}
+
 
 #missionTitle{
 
@@ -508,6 +539,28 @@ pointer-events: auto;
 
 </div>
 
+<div id="alienGuideUI">
+
+  <div class="guideItem">
+    <div class="alienGuideCrop"
+         id="alienGuideCrop_eye"></div>
+
+    <img class="guideCheck"
+         id="guideCheck_alien_eye"
+         src="check.png">
+  </div>
+
+  <div class="guideItem">
+    <div class="alienGuideCrop"
+         id="alienGuideCrop_mouth"></div>
+
+    <img class="guideCheck"
+         id="guideCheck_alien_mouth"
+         src="check.png">
+  </div>
+
+</div>
+
 
 <div id="effect">発見!!</div>
 
@@ -574,6 +627,7 @@ pointer-events: auto;
   <img id="stamp2Img" src="stamp2.jpg" />
   <img id="stamp3Img" src="stamp3.jpg" />
   <img id="animalImg" src="animal.jpg" />
+<img id="alienImg" src="alien.jpg" />
 
   <img id="girlImg" src="girl.jpg" />
   <img id="frameImg" src="frame.png" />
@@ -591,11 +645,28 @@ pointer-events: auto;
 </a-camera>
 
 
+<!--   tuika -->
+<a-entity
+  id="targetAlien"
+  markerhandler
+  mindar-image-target="targetIndex: 7">
+
+  <a-plane
+    src="#alienImg"
+    width="2"
+    height="2"
+    material="shader: flat; transparent: true;">
+  </a-plane>
+
+  <a-entity id="alienGuideContainer"></a-entity>
+
+</a-entity>
+
 <!-- 5 キノコ フォトフレーム -->
 <a-entity
   id="targetMushroom"
   markerhandler
-  mindar-image-target="targetIndex: 4">
+  mindar-image-target="targetIndex: 8">
 
   <a-plane
     src="#frameImg"
@@ -612,7 +683,7 @@ pointer-events: auto;
 <a-entity
   id="targetGirl"
   markerhandler
-  mindar-image-target="targetIndex: 2">
+  mindar-image-target="targetIndex: 5">
 
   <a-plane
     src="#girlImg"
@@ -626,11 +697,11 @@ pointer-events: auto;
 </a-entity>
 
 
-<!-- 1 動物 -->
+<!--  動物 -->
 <a-entity
   id="targetAnimal"
   markerhandler
-  mindar-image-target="targetIndex: 0">
+  mindar-image-target="targetIndex: 6">
 
   <a-plane
     src="#animalImg"
@@ -643,11 +714,11 @@ pointer-events: auto;
 </a-entity>
 
 
-<!-- 6 スタンプ1 -->
+<!--  スタンプ1 -->
 <a-entity
   id="targetStamp1"
   markerhandler
-  mindar-image-target="targetIndex: 5">
+  mindar-image-target="targetIndex: 0">
 
   <a-plane
     width="0.01"
@@ -658,39 +729,9 @@ pointer-events: auto;
 </a-entity>
 
 
-<!-- 7 スタンプ2 -->
+<!--  スタンプ2 -->
 <a-entity
   id="targetStamp2"
-  markerhandler
-  mindar-image-target="targetIndex: 6">
-
-  <a-plane
-    width="0.01"
-    height="0.01"
-    visible="false">
-  </a-plane>
-
-</a-entity>
-
-
-<!-- 8 スタンプ3 -->
-<a-entity
-  id="targetStamp3"
-  markerhandler
-  mindar-image-target="targetIndex: 7">
-
-  <a-plane
-    width="0.01"
-    height="0.01"
-    visible="false">
-  </a-plane>
-
-</a-entity>
-
-
-<!-- 2 コイン はずれ -->
-<a-entity
-  id="targetCoin"
   markerhandler
   mindar-image-target="targetIndex: 1">
 
@@ -703,11 +744,41 @@ pointer-events: auto;
 </a-entity>
 
 
-<!-- 4 大当たり -->
+<!-- スタンプ3 -->
+<a-entity
+  id="targetStamp3"
+  markerhandler
+  mindar-image-target="targetIndex: 2">
+
+  <a-plane
+    width="0.01"
+    height="0.01"
+    visible="false">
+  </a-plane>
+
+</a-entity>
+
+
+<!--  コイン はずれ -->
+<a-entity
+  id="targetCoin"
+  markerhandler
+  mindar-image-target="targetIndex: 3">
+
+  <a-plane
+    width="0.01"
+    height="0.01"
+    visible="false">
+  </a-plane>
+
+</a-entity>
+
+
+<!--  大当たり -->
 <a-entity
   id="targetGold"
   markerhandler
-  mindar-image-target="targetIndex: 3">
+  mindar-image-target="targetIndex: 4">
 
   <a-plane
     width="0.01"
@@ -796,6 +867,31 @@ const animalTargets = [
 const animalScaleX = 2;
 const animalScaleY = 2.5;
 
+const alienScaleX = 2;
+const alienScaleY = 2;
+
+const alienTargets = [
+
+{
+  id: "alienGuideCrop_alien_eye",
+  name: "宇宙人の目",
+  x: -0.2,
+  y: 0.2,
+  size: 0.2,
+  found: false
+},
+
+{
+  id: "alienGuideCrop_alien_mouth",
+  name: "宇宙人の口",
+  x: 0.15,
+  y: -0.1,
+  size: 0.2,
+  found: false
+}
+
+];
+
 
 // =======================
 // セーブ
@@ -823,7 +919,11 @@ function saveGame(){
     animalTargets: animalTargets.map(t => ({
       id: t.id,
       found: t.found
-    }))
+    })),
+alienTargets: alienTargets.map(t => ({
+  id: t.id,
+  found: t.found
+}))
 
   };
 
@@ -932,6 +1032,27 @@ if(goldFound) foundTreasure++;
 
   });
 
+saveData.alienTargets?.forEach(saved => {
+
+  const target =
+    alienTargets.find(t => t.id === saved.id);
+
+  if(target){
+
+    target.found = saved.found;
+
+    if(saved.found){
+
+      document.querySelector(
+        "#guideCheck_" + target.id
+      ).style.display = "block";
+
+    }
+
+  }
+
+});
+
 }
 
 
@@ -977,9 +1098,9 @@ function handleTouch(event){
   if (!hitEl) return;
 
 const target =
-  targets.find(t => t.id === hitEl.id) ||
-  animalTargets.find(t => t.id === hitEl.id);
-
+ targets.find(t => t.id === hitEl.id) ||
+  animalTargets.find(t => t.id === hitEl.id) ||
+  alienTargets.find(t => t.id === hitEl.id);
 
   if (!target || target.found) return;
 
@@ -998,18 +1119,27 @@ saveGame();
   // 3Dチェック表示
   const check = document.createElement("a-plane");
   check.setAttribute("src", "#checkImg");
- const isAnimal =
+const isAnimal =
   animalTargets.find(t => t.id === target.id);
+
+const isAlien =
+  alienTargets.find(t => t.id === target.id);
+
 
 const posX =
   isAnimal
   ? target.x * animalScaleX
+  : isAlien
+  ? target.x * alienScaleX
   : target.x * girlScaleX;
 
 const posY =
   isAnimal
   ? target.y * animalScaleY
+  : isAlien
+  ? target.y * alienScaleY
   : target.y * girlScaleY;
+
 
 check.setAttribute(
   "position",
@@ -1024,10 +1154,16 @@ check.setAttribute("height", checkSize);
 
   check.setAttribute("material", "shader: flat; transparent: true");
 
-const parentContainer =
-  animalTargets.find(t => t.id === target.id)
-  ? "#animalGuideContainer"
-  : "#guideContainer";
+let parentContainer = "#guideContainer";
+
+if(animalTargets.find(t => t.id === target.id)){
+  parentContainer = "#animalGuideContainer";
+}
+
+if(alienTargets.find(t => t.id === target.id)){
+  parentContainer = "#alienGuideContainer";
+}
+
 
 document.querySelector(parentContainer)
   .appendChild(check);
@@ -1082,7 +1218,12 @@ document.querySelector("#photoMessage")
 
 guideUI.style.display = "none";
 
+if(this.el.id === "targetAlien"){
 
+  document.querySelector("#alienGuideUI")
+    .style.display = "flex";
+
+}
 
 
 if(this.el.id === "targetCoin"){
@@ -1253,6 +1394,12 @@ document.querySelector("#completeWrap")
 if(this.el.id === "targetAnimal"){
 
   document.querySelector("#animalGuideUI")
+    .style.display = "none";
+
+}
+if(this.el.id === "targetAlien"){
+
+  document.querySelector("#alienGuideUI")
     .style.display = "none";
 
 }
@@ -1533,19 +1680,6 @@ targets.forEach(target => {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 function createAnimalTargets(){
@@ -1679,18 +1813,139 @@ animalTargets.forEach(target => {
     `${posX}px ${posY}px`;
 
 });
+}
+
+function createAlienTargets(){
+
+  const container =
+    document.querySelector("#alienGuideContainer");
+
+  alienTargets.forEach(target => {
+
+    const touch =
+      document.createElement("a-plane");
+
+    touch.setAttribute(
+      "class",
+      "clickable"
+    );
+
+    touch.setAttribute(
+      "id",
+      target.id
+    );
+
+    touch.setAttribute(
+  "position",
+  `${target.x * animalScaleX}
+   ${target.y * animalScaleY}
+   0.01`
+);
+
+
+const hitSize = target.size * 1.6;
+
+touch.setAttribute(
+  "width",
+  hitSize
+);
+
+touch.setAttribute(
+  "height",
+  hitSize
+);
+
+
+
+    touch.setAttribute(
+      "material",
+      "opacity: 0"
+    );
+
+    container.appendChild(touch);
+
+    const frame =
+      document.createElement("a-ring");
+
+    frame.setAttribute(
+  "position",
+  `${target.x * animalScaleX}
+   ${target.y * animalScaleY}
+   0.03`
+);
+
+    frame.setAttribute(
+      "radius-inner",
+      target.size / 2
+    );
+
+    frame.setAttribute(
+      "radius-outer",
+      target.size / 2 + 0.02
+    );
+
+    frame.setAttribute(
+      "material",
+      "color: cyan; opacity: 0; transparent: true;"
+    );
+
+    frame.setAttribute(
+      "animation",
+      `
+      property: scale;
+      from: 1 1 1;
+      to: 1.15 1.15 1;
+      dir: alternate;
+      dur: 700;
+      loop: true;
+      `
+    );
+
+    container.appendChild(frame);
+
+  });
 
 
 
 
 
 
+alienTargets.forEach(target => {
 
+  const crop =
+    document.querySelector(
+      "#alienGuideCrop_" + target.id
+    );
 
+  const boxSize = 90;
 
+  const visibleArea =
+    target.size * 1.6;
 
+  const zoom =
+    boxSize / (visibleArea * 100);
 
+  const bgWidth =
+    180 * zoom;
 
+  const bgHeight =
+    225 * zoom;
+
+  crop.style.backgroundSize =
+    `${bgWidth}px ${bgHeight}px`;
+
+  const posX =
+    boxSize / 2 -
+    ((target.x + 0.5) * bgWidth);
+
+  const posY =
+    boxSize / 2 -
+    ((0.5 - target.y) * bgHeight);
+
+  crop.style.backgroundPosition =
+    `${posX}px ${posY}px`;
+
+});
 }
 
 
@@ -1701,6 +1956,8 @@ scene.addEventListener("loaded", () => {
   createTargets();
 
   createAnimalTargets();
+
+  createAlienTargets();
 
   loadGame();
 
@@ -1727,6 +1984,8 @@ if(closeBtn){
   });
 
 }
+
+
 
 document
 .querySelector("#closeComplete")
