@@ -543,7 +543,7 @@ pointer-events: auto;
 
   <div class="guideItem">
     <div class="alienGuideCrop"
-         id="alienGuideCrop_eye"></div>
+         id="alienGuideCrop_alienEye"></div>
 
     <img class="guideCheck"
          id="guideCheck_alienEye"
@@ -552,7 +552,7 @@ pointer-events: auto;
 
   <div class="guideItem">
     <div class="alienGuideCrop"
-         id="alienGuideCrop_mouth"></div>
+         id="alienGuideCrop_alienMouth"></div>
 
     <img class="guideCheck"
          id="guideCheck_alienMouth"
@@ -1652,44 +1652,6 @@ frame.setAttribute(
 // ======================
 
 
-targets.forEach(target => {
-
-  const crop =
-    document.querySelector(
-      "#guideCrop_" + target.id
-    );
-
-  const boxSize = 90;
-
-  // 判定サイズ
-  const visibleArea =
-    target.size * 1.6;
-
-  // 拡大率
-  const zoom =
-    boxSize / (visibleArea * 100);
-
-  const bgWidth =
-    180 * zoom;
-
-  const bgHeight =
-    100 * zoom;
-
-  crop.style.backgroundSize =
-    `${bgWidth}px ${bgHeight}px`;
-
-  const posX =
-    boxSize / 2 -
-    ((target.x + 0.5) * bgWidth);
-
-  const posY =
-    boxSize / 2 -
-    ((0.5 - target.y) * bgHeight);
-
-  crop.style.backgroundPosition =
-    `${posX}px ${posY}px`;
-
-});
 
 
 }
@@ -1789,42 +1751,7 @@ touch.setAttribute(
 
 
 
-animalTargets.forEach(target => {
 
-  const crop =
-    document.querySelector(
-      "#animalGuideCrop_" + target.id
-    );
-
-  const boxSize = 90;
-
-  const visibleArea =
-    target.size * 1.6;
-
-  const zoom =
-    boxSize / (visibleArea * 100);
-
-  const bgWidth =
-    180 * zoom;
-
-  const bgHeight =
-    225 * zoom;
-
-  crop.style.backgroundSize =
-    `${bgWidth}px ${bgHeight}px`;
-
-  const posX =
-    boxSize / 2 -
-    ((target.x + 0.5) * bgWidth);
-
-  const posY =
-    boxSize / 2 -
-    ((0.5 - target.y) * bgHeight);
-
-  crop.style.backgroundPosition =
-    `${posX}px ${posY}px`;
-
-});
 }
 
 function createAlienTargets(){
@@ -1922,39 +1849,7 @@ touch.setAttribute(
 
 
 
-alienTargets.forEach(target => {
 
-  const crop =
-    document.querySelector(
-      "#alienGuideCrop_" + target.id
-    );
-
-  const boxSize = 90;
-
-  const visibleArea =
-    target.size * 1.6;
-
-  const zoom =
-    boxSize / (visibleArea * 100);
-
-const bgWidth = 180 * zoom; 
-const bgHeight = 180 * zoom;
-
-  crop.style.backgroundSize =
-    `${bgWidth}px ${bgHeight}px`;
-
-  const posX =
-    boxSize / 2 -
-    ((target.x + 0.5) * bgWidth);
-
-  const posY =
-    boxSize / 2 -
-    ((0.5 - target.y) * bgHeight);
-
-  crop.style.backgroundPosition =
-    `${posX}px ${posY}px`;
-
-});
 }
 
 
