@@ -942,10 +942,22 @@ alienTargets: alienTargets.map(t => ({
 
 function loadGame(){
 
-  const saveData =
-    JSON.parse(
-      localStorage.getItem("arGameSave")
-    );
+   let saveData = null;
+
+  try{
+
+    saveData =
+      JSON.parse(
+        localStorage.getItem("arGameSave")
+      );
+
+  }catch(e){
+
+    console.log("save load error");
+
+    return;
+  }
+
 
   if(!saveData) return;
 
@@ -1925,8 +1937,8 @@ alienTargets.forEach(target => {
   const zoom =
     boxSize / (visibleArea * 100);
 
- const bgWidth = 200 * zoom;
-const bgHeight = 200 * zoom;
+const bgWidth = 180 * zoom; 
+const bgHeight = 180 * zoom;
 
   crop.style.backgroundSize =
     `${bgWidth}px ${bgHeight}px`;
@@ -2006,6 +2018,84 @@ document
 });
 
 
+function setupGuideCropAuto({
+
+  cropSelector,
+  targets,
+  imageUrl
+
+}){
+
+  const img = new Image();
+
+  img.onload = () => {
+
+    const imageWidth = img.width;
+    const imageHeight = img.height;
+
+    targets.forEach(target => {
+
+      const crop =
+        document.querySelector(
+          cropSelector + target.id
+        );
+
+      const boxSize = 90;
+
+      const visibleArea =
+        target.size * 1.6;
+
+      const zoom =
+        boxSize / (visibleArea * 100);
+
+      const bgWidth =
+        imageWidth * zoom;
+
+      const bgHeight =
+        imageHeight * zoom;
+
+      crop.style.backgroundImage =
+        `url("${imageUrl}")`;
+
+      crop.style.backgroundSize =
+        `${bgWidth}px ${bgHeight}px`;
+
+      const posX =
+        boxSize / 2 -
+        ((target.x + 0.5) * bgWidth);
+
+      const posY =
+        boxSize / 2 -
+        ((0.5 - target.y) * bgHeight);
+
+      crop.style.backgroundPosition =
+        `${posX}px ${posY}px`;
+
+    });
+
+  };
+
+  img.src = imageUrl;
+
+}
+
+setupGuideCropAuto({
+  cropSelector: "#guideCrop_",
+  targets: targets,
+  imageUrl: "girl.jpg"
+});
+
+setupGuideCropAuto({
+  cropSelector: "#animalGuideCrop_",
+  targets: animalTargets,
+  imageUrl: "animal.jpg"
+});
+
+setupGuideCropAuto({
+  cropSelector: "#alienGuideCrop_",
+  targets: alienTargets,
+  imageUrl: "alien.jpg"
+});
 
 
 
