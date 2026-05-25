@@ -662,7 +662,7 @@ pointer-events: auto;
 
 </a-entity>
 
-<!-- 5 キノコ フォトフレーム -->
+<!--  キノコ フォトフレーム -->
 <a-entity
   id="targetMushroom"
   markerhandler
@@ -679,7 +679,7 @@ pointer-events: auto;
 </a-entity>
 
 
-<!-- 3 女の子 絵柄探し -->
+<!--  女の子 絵柄探し -->
 <a-entity
   id="targetGirl"
   markerhandler
@@ -873,7 +873,7 @@ const alienScaleY = 2;
 const alienTargets = [
 
 {
-  id: "alienGuideCrop_alien_eye",
+  id: "alienGuideCrop_eye",
   name: "宇宙人の目",
   x: -0.2,
   y: 0.2,
@@ -1837,8 +1837,8 @@ function createAlienTargets(){
 
     touch.setAttribute(
   "position",
-  `${target.x * animalScaleX}
-   ${target.y * animalScaleY}
+  `${target.x * alienScaleX}
+ ${target.y * alienScaleY}
    0.01`
 );
 
@@ -1869,8 +1869,8 @@ touch.setAttribute(
 
     frame.setAttribute(
   "position",
-  `${target.x * animalScaleX}
-   ${target.y * animalScaleY}
+`${target.x * alienScaleX}
+ ${target.y * alienScaleY}
    0.03`
 );
 
@@ -1925,11 +1925,8 @@ alienTargets.forEach(target => {
   const zoom =
     boxSize / (visibleArea * 100);
 
-  const bgWidth =
-    180 * zoom;
-
-  const bgHeight =
-    225 * zoom;
+ const bgWidth = 200 * zoom;
+const bgHeight = 200 * zoom;
 
   crop.style.backgroundSize =
     `${bgWidth}px ${bgHeight}px`;
