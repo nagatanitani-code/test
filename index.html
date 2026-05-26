@@ -797,7 +797,7 @@ id="girlPlane"
 
 <script>
 
-function autoFitPlane(imagePath, planeId, baseHeight = 1){
+function autoFitPlane(imagePath, planeId, maxSize = 1){
 
   const img = new Image();
 
@@ -811,21 +811,34 @@ function autoFitPlane(imagePath, planeId, baseHeight = 1){
 
     if(!plane) return;
 
-    plane.setAttribute(
-      "height",
-      baseHeight
-    );
+    let width;
+    let height;
 
-    plane.setAttribute(
-      "width",
-      baseHeight * aspect
-    );
+    // 横長画像
+    if(aspect >= 1){
+
+      width = maxSize;
+      height = maxSize / aspect;
+
+    }
+    // 縦長画像
+    else{
+
+      height = maxSize;
+      width = maxSize * aspect;
+
+    }
+
+    plane.setAttribute("width", width);
+    plane.setAttribute("height", height);
 
   };
 
   img.src = imagePath;
 
 }
+
+
 
 autoFitPlane(
   "girl.jpg",
