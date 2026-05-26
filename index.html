@@ -898,7 +898,8 @@ const targets = [
   name: "ハート",
   x: 0.2,
   y: -0.15,
-  size: 0.3,
+   guideSize: 0.3,
+  hitSize: 0.45,
   found: false
 },
 
@@ -907,7 +908,8 @@ const targets = [
   name: "目",
   x: -0.12,
   y: 0.18,
-  size: 0.3,
+   guideSize: 0.3,
+  hitSize: 0.45,
   found: false
 },
 
@@ -916,7 +918,8 @@ const targets = [
   name: "リボン",
   x: 0.3,
   y: 0.3,
-  size: 0.3,
+ guideSize: 0.3,
+  hitSize: 0.45,
   found: false
 }
 
@@ -929,7 +932,8 @@ const animalTargets = [
   name: "耳",
   x: -0.2,
   y: 0.25,
-  size: 0.2,
+    guideSize: 0.2,
+  hitSize: 0.35,
   found: false
 },
 
@@ -938,7 +942,8 @@ const animalTargets = [
   name: "鼻",
   x: 0.1,
   y: 0.0,
-  size: 0.2,
+  guideSize: 0.2,
+  hitSize: 0.35,
   found: false
 },
 
@@ -947,7 +952,8 @@ const animalTargets = [
   name: "しっぽ",
   x: 0.3,
   y: -0.25,
-  size: 0.2,
+   guideSize: 0.2,
+  hitSize: 0.35,
   found: false
 }
 
@@ -962,7 +968,8 @@ const alienTargets = [
   name: "宇宙人の目",
   x: -0.2,
   y: 0.2,
-  size: 0.25,
+  guideSize: 0.25,
+  hitSize: 0.4,
   found: false
 },
 
@@ -971,7 +978,8 @@ const alienTargets = [
   name: "宇宙人の口",
   x: 0.15,
   y: -0.1,
-  size: 0.25,
+ guideSize: 0.25,
+  hitSize: 0.4,
   found: false
 }
 
@@ -1644,7 +1652,7 @@ touch.setAttribute(
   `
 );
 
-const hitSize = target.size * 1.6;
+const hitSize = target.hitSize;
 
 touch.setAttribute(
   "width",
@@ -1703,12 +1711,12 @@ frame.setAttribute(
 
     frame.setAttribute(
   "radius-inner",
-  target.size / 2
+  target.guideSize / 2
 );
 
 frame.setAttribute(
   "radius-outer",
-  target.size / 2 + 0.02
+  target.guideSize / 2 + 0.02
 );
 
     frame.setAttribute(
@@ -1769,7 +1777,7 @@ function createAnimalTargets(){
 );
 
 
-const hitSize = target.size * 1.6;
+const hitSize = target.hitSize;
 
 touch.setAttribute(
   "width",
@@ -1802,12 +1810,12 @@ touch.setAttribute(
 
     frame.setAttribute(
       "radius-inner",
-      target.size / 2
+      target.guideSize / 2
     );
 
     frame.setAttribute(
       "radius-outer",
-      target.size / 2 + 0.02
+      target.guideSize / 2 + 0.02
     );
 
     frame.setAttribute(
@@ -1868,10 +1876,9 @@ function createAlienTargets(){
 
 
 
-const HIT_SCALE = 1.6;
 
-const hitSize =
-  target.size * HIT_SCALE;
+
+const hitSize = target.hitSize;
 
 touch.setAttribute(
   "width",
@@ -1904,12 +1911,12 @@ touch.setAttribute(
 
     frame.setAttribute(
       "radius-inner",
-      target.size / 2
+      target.guideSize / 2
     );
 
     frame.setAttribute(
       "radius-outer",
-      target.size / 2 + 0.02
+      target.guideSize / 2 + 0.02
     );
 
     frame.setAttribute(
@@ -2097,10 +2104,10 @@ const imageY =
       // =====================
 
      const cropWidth =
-  (target.size / scaleX) * imageWidth;
+  (target.guideSize / scaleX) * imageWidth;
 
 const cropHeight =
-  (target.size / scaleY) * imageHeight;
+  (target.guideSize / scaleY) * imageHeight;
 
       // =====================
       // 背景サイズ
