@@ -2081,12 +2081,16 @@ function setupGuideCropAuto({
       // =====================
 
 const imageX =
-  (target.x + 0.5)
+  ((target.x * scaleX) + scaleX / 2)
+  / scaleX
   * imageWidth;
 
 const imageY =
-  (0.5 - target.y)
+  ((scaleY / 2) - (target.y * scaleY))
+  / scaleY
   * imageHeight;
+
+
 
       // =====================
       // 切り抜きサイズ
