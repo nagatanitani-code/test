@@ -1782,7 +1782,11 @@ function createAlienTargets(){
 );
 
 
-const hitSize = target.size * 1.6;
+
+const HIT_SCALE = 1.6;
+
+const hitSize =
+  target.size * HIT_SCALE;
 
 touch.setAttribute(
   "width",
@@ -1940,8 +1944,14 @@ function setupGuideCropAuto({
       const boxSize = 90;
 
       // ← scale考慮
-      const visibleArea =
-        target.size * scaleX;
+     
+
+const visibleArea =
+  target.size * HIT_SCALE * scaleX;
+
+
+
+
 
       const zoom =
         boxSize / (visibleArea * 100);
