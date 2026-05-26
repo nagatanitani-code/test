@@ -1954,6 +1954,30 @@ scene.addEventListener("loaded", () => {
 
     loadGame();
 
+setupGuideCropAuto({
+  cropSelector: "#guideCrop_",
+  targets: targets,
+  imageUrl: "girl.jpg",
+  scaleX: girlScaleX,
+  scaleY: girlScaleY
+});
+
+setupGuideCropAuto({
+  cropSelector: "#animalGuideCrop_",
+  targets: animalTargets,
+  imageUrl: "animal.jpg",
+  scaleX: animalScaleX,
+  scaleY: animalScaleY
+});
+
+setupGuideCropAuto({
+  cropSelector: "#alienGuideCrop_",
+  targets: alienTargets,
+  imageUrl: "alien.jpg",
+  scaleX: alienScaleX,
+  scaleY: alienScaleY
+});
+
   }, 300);
 
 });
@@ -2037,13 +2061,13 @@ function setupGuideCropAuto({
       // AR座標 → 画像ピクセル座標
       // =====================
 
-      const imageX =
-        ((target.x * scaleX) / scaleX + 0.5)
-        * imageWidth;
+    const imageX =
+  (target.x + 0.5)
+  * imageWidth;
 
-      const imageY =
-        (0.5 - ((target.y * scaleY) / scaleY))
-        * imageHeight;
+const imageY =
+  (0.5 - target.y)
+  * imageHeight;
 
       // =====================
       // 切り抜きサイズ
@@ -2101,29 +2125,7 @@ function setupGuideCropAuto({
 
 
 
-setupGuideCropAuto({
-  cropSelector: "#guideCrop_",
-  targets: targets,
-  imageUrl: "girl.jpg",
-  scaleX: girlScaleX,
-  scaleY: girlScaleY
-});
 
-setupGuideCropAuto({
-  cropSelector: "#animalGuideCrop_",
-  targets: animalTargets,
-  imageUrl: "animal.jpg",
-  scaleX: animalScaleX,
-  scaleY: animalScaleY
-});
-
-setupGuideCropAuto({
-  cropSelector: "#alienGuideCrop_",
-  targets: alienTargets,
-  imageUrl: "alien.jpg",
-  scaleX: alienScaleX,
-  scaleY: alienScaleY
-});
 
 
 
