@@ -1667,8 +1667,8 @@ touch.setAttribute(
 
 
     touch.setAttribute(
-      "material",
-  "color: red; opacity: 0.4"
+     "material",
+ "color: red; opacity: 0.6; transparent: true; side: double;"
     );
 
     container.appendChild(touch);
@@ -1792,8 +1792,8 @@ touch.setAttribute(
 
 
     touch.setAttribute(
-      "material",
-  "color: red; opacity: 0.4"
+    "material",
+ "color: red; opacity: 0.6; transparent: true; side: double;"
     );
 
     container.appendChild(touch);
@@ -1893,8 +1893,8 @@ touch.setAttribute(
 
 
   touch.setAttribute(
-      "material",
-  "color: red; opacity: 0.4"
+     "material",
+ "color: red; opacity: 0.6; transparent: true; side: double;"
     );
 
     container.appendChild(touch);
@@ -1952,6 +1952,7 @@ touch.setAttribute(
 
 
 
+
 Promise.all([
 
   waitImageLoad("girl.jpg"),
@@ -1960,37 +1961,44 @@ Promise.all([
 
 ]).then(() => {
 
-  createTargets();
-  createAnimalTargets();
-  createAlienTargets();
+  // autoFitPlane反映待ち
+  setTimeout(() => {
 
-  loadGame();
+    createTargets();
+    createAnimalTargets();
+    createAlienTargets();
 
-  setupGuideCropAuto({
-    cropSelector: "#guideCrop_",
-    targets: targets,
-    imageUrl: "girl.jpg",
-    scaleX: girlScaleX,
-    scaleY: girlScaleY
-  });
+    loadGame();
 
-  setupGuideCropAuto({
-    cropSelector: "#animalGuideCrop_",
-    targets: animalTargets,
-    imageUrl: "animal.jpg",
-    scaleX: animalScaleX,
-    scaleY: animalScaleY
-  });
+    setupGuideCropAuto({
+      cropSelector: "#guideCrop_",
+      targets: targets,
+      imageUrl: "girl.jpg",
+      scaleX: girlScaleX,
+      scaleY: girlScaleY
+    });
 
-  setupGuideCropAuto({
-    cropSelector: "#alienGuideCrop_",
-    targets: alienTargets,
-    imageUrl: "alien.jpg",
-    scaleX: alienScaleX,
-    scaleY: alienScaleY
-  });
+    setupGuideCropAuto({
+      cropSelector: "#animalGuideCrop_",
+      targets: animalTargets,
+      imageUrl: "animal.jpg",
+      scaleX: animalScaleX,
+      scaleY: animalScaleY
+    });
+
+    setupGuideCropAuto({
+      cropSelector: "#alienGuideCrop_",
+      targets: alienTargets,
+      imageUrl: "alien.jpg",
+      scaleX: alienScaleX,
+      scaleY: alienScaleY
+    });
+
+  }, 300);
 
 });
+
+
 
 
 function waitImageLoad(src){
