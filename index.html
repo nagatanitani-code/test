@@ -1183,14 +1183,26 @@ function handleTouch(event){
 
   const clickables = document.querySelectorAll(".clickable");
 
-  const objects = [];
+ 
+const objects = [];
 
-  clickables.forEach(el => {
-    if (el.object3D && el.object3D.visible) {
-      const mesh = el.getObject3D("mesh");
-      if (mesh) objects.push(mesh);
+clickables.forEach(el => {
+
+  if(!el.object3D.visible) return;
+
+  el.object3D.traverse(obj => {
+
+    if(obj.isMesh){
+
+      objects.push(obj);
+
     }
+
   });
+
+});
+
+
 
   const intersects = raycaster.intersectObjects(objects, true);
 
@@ -1668,7 +1680,7 @@ touch.setAttribute(
 
     touch.setAttribute(
      "material",
- "color: red; opacity: 0.6; transparent: true; side: double;"
+ "color: red; opacity: 0.6; transparent: true; side: double; depthTest: false;"
     );
 
     container.appendChild(touch);
@@ -1793,7 +1805,7 @@ touch.setAttribute(
 
     touch.setAttribute(
     "material",
- "color: red; opacity: 0.6; transparent: true; side: double;"
+ "color: red; opacity: 0.6; transparent: true; side: double; depthTest: false;"
     );
 
     container.appendChild(touch);
@@ -1894,7 +1906,7 @@ touch.setAttribute(
 
   touch.setAttribute(
      "material",
- "color: red; opacity: 0.6; transparent: true; side: double;"
+ "color: red; opacity: 0.6; transparent: true; side: double; depthTest: false;"
     );
 
     container.appendChild(touch);
