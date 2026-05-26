@@ -1917,6 +1917,7 @@ document
 });
 
 
+
 function setupGuideCropAuto({
 
   cropSelector,
@@ -1943,15 +1944,9 @@ function setupGuideCropAuto({
 
       const boxSize = 90;
 
-      // ← scale考慮
-     
-
-const visibleArea =
-  target.size * HIT_SCALE * scaleX;
-
-
-
-
+      // 判定サイズと同じ範囲
+      const visibleArea =
+        target.size * 1.6;
 
       const zoom =
         boxSize / (visibleArea * 100);
@@ -1968,14 +1963,13 @@ const visibleArea =
       crop.style.backgroundSize =
         `${bgWidth}px ${bgHeight}px`;
 
-      // ← scale考慮
       const posX =
         boxSize / 2 -
-        (((target.x / scaleX) + 0.5) * bgWidth);
+        ((target.x + 0.5) * bgWidth);
 
       const posY =
         boxSize / 2 -
-        ((0.5 - (target.y / scaleY)) * bgHeight);
+        ((0.5 - target.y) * bgHeight);
 
       crop.style.backgroundPosition =
         `${posX}px ${posY}px`;
@@ -1987,6 +1981,8 @@ const visibleArea =
   img.src = imageUrl;
 
 }
+
+
 
 setupGuideCropAuto({
   cropSelector: "#guideCrop_",
