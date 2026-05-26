@@ -652,7 +652,8 @@ pointer-events: auto;
   mindar-image-target="targetIndex: 7">
 
   <a-plane
-    src="#alienImg"
+id="alienPlane"    
+src="#alienImg"
     width="1"
     height="1"
     material="shader: flat; transparent: true;">
@@ -686,6 +687,7 @@ pointer-events: auto;
   mindar-image-target="targetIndex: 5">
 
   <a-plane
+id="girlPlane"
     src="#girlImg"
     width="1"
     height="1"
@@ -704,6 +706,7 @@ pointer-events: auto;
   mindar-image-target="targetIndex: 6">
 
   <a-plane
+ id="animalPlane"
     src="#animalImg"
     width="1"
     height="1"
@@ -793,6 +796,51 @@ pointer-events: auto;
 </a-scene>
 
 <script>
+
+function autoFitPlane(imagePath, planeId, baseHeight = 1){
+
+  const img = new Image();
+
+  img.onload = () => {
+
+    const aspect =
+      img.width / img.height;
+
+    const plane =
+      document.querySelector(planeId);
+
+    if(!plane) return;
+
+    plane.setAttribute(
+      "height",
+      baseHeight
+    );
+
+    plane.setAttribute(
+      "width",
+      baseHeight * aspect
+    );
+
+  };
+
+  img.src = imagePath;
+
+}
+
+autoFitPlane(
+  "girl.jpg",
+  "#girlPlane"
+);
+
+autoFitPlane(
+  "animal.jpg",
+  "#animalPlane"
+);
+
+autoFitPlane(
+  "alien.jpg",
+  "#alienPlane"
+);
 
 const effect = document.querySelector("#effect");
 const treasureEffect =
