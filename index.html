@@ -1917,7 +1917,9 @@ function setupGuideCropAuto({
 
   cropSelector,
   targets,
-  imageUrl
+  imageUrl,
+  scaleX = 1,
+  scaleY = 1
 
 }){
 
@@ -1937,8 +1939,9 @@ function setupGuideCropAuto({
 
       const boxSize = 90;
 
+      // ← scale考慮
       const visibleArea =
-        target.size ;
+        target.size * scaleX;
 
       const zoom =
         boxSize / (visibleArea * 100);
@@ -1955,13 +1958,14 @@ function setupGuideCropAuto({
       crop.style.backgroundSize =
         `${bgWidth}px ${bgHeight}px`;
 
+      // ← scale考慮
       const posX =
         boxSize / 2 -
-        ((target.x + 0.5) * bgWidth);
+        (((target.x / scaleX) + 0.5) * bgWidth);
 
       const posY =
         boxSize / 2 -
-        ((0.5 - target.y) * bgHeight);
+        ((0.5 - (target.y / scaleY)) * bgHeight);
 
       crop.style.backgroundPosition =
         `${posX}px ${posY}px`;
@@ -1977,19 +1981,25 @@ function setupGuideCropAuto({
 setupGuideCropAuto({
   cropSelector: "#guideCrop_",
   targets: targets,
-  imageUrl: "girl.jpg"
+  imageUrl: "girl.jpg",
+  scaleX: girlScaleX,
+  scaleY: girlScaleY
 });
 
 setupGuideCropAuto({
   cropSelector: "#animalGuideCrop_",
   targets: animalTargets,
-  imageUrl: "animal.jpg"
+  imageUrl: "animal.jpg",
+  scaleX: animalScaleX,
+  scaleY: animalScaleY
 });
 
 setupGuideCropAuto({
   cropSelector: "#alienGuideCrop_",
   targets: alienTargets,
-  imageUrl: "alien.jpg"
+  imageUrl: "alien.jpg",
+  scaleX: alienScaleX,
+  scaleY: alienScaleY
 });
 
 
