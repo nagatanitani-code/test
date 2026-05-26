@@ -1918,6 +1918,7 @@ document
 
 
 
+
 function setupGuideCropAuto({
 
   cropSelector,
@@ -1944,18 +1945,53 @@ function setupGuideCropAuto({
 
       const boxSize = 90;
 
-      // 判定サイズと同じ範囲
-      const visibleArea =
+      // =====================
+      // 判定サイズ
+      // =====================
+
+      const hitSize =
         target.size * 1.6;
 
-      const zoom =
-        boxSize / (visibleArea * 100);
+      // =====================
+      // ワールド座標 → 画像座標
+      // =====================
+
+      const normalizedX =
+        (target.x / scaleX) + 0.5;
+
+      const normalizedY =
+        0.5 - (target.y / scaleY);
+
+      // =====================
+      // 元画像上の中心座標
+      // =====================
+
+      const imageX =
+        normalizedX * imageWidth;
+
+      const imageY =
+        normalizedY * imageHeight;
+
+      // =====================
+      // 切り抜き範囲
+      // =====================
+
+      // A-Frameのサイズを画像サイズへ変換
+      const cropWidth =
+        imageWidth * hitSize / scaleX;
+
+      const cropHeight =
+        imageHeight * hitSize / scaleY;
+
+      // =====================
+      // 背景サイズ
+      // =====================
 
       const bgWidth =
-        imageWidth * zoom;
+        imageWidth * (boxSize / cropWidth);
 
       const bgHeight =
-        imageHeight * zoom;
+        imageHeight * (boxSize / cropHeight);
 
       crop.style.backgroundImage =
         `url("${imageUrl}")`;
@@ -1963,13 +1999,17 @@ function setupGuideCropAuto({
       crop.style.backgroundSize =
         `${bgWidth}px ${bgHeight}px`;
 
+      // =====================
+      // 背景位置
+      // =====================
+
       const posX =
         boxSize / 2 -
-        ((target.x + 0.5) * bgWidth);
+        imageX * (boxSize / cropWidth);
 
       const posY =
         boxSize / 2 -
-        ((0.5 - target.y) * bgHeight);
+        imageY * (boxSize / cropHeight);
 
       crop.style.backgroundPosition =
         `${posX}px ${posY}px`;
@@ -1981,6 +2021,7 @@ function setupGuideCropAuto({
   img.src = imageUrl;
 
 }
+
 
 
 
