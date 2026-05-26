@@ -45,7 +45,7 @@ pointer-events: auto;
 
   position: fixed;
 
-  top: 10px;
+  top: env(safe-area-inset-top, 0px);
   left: 50%;
 
   transform: translateX(-50%);
@@ -120,7 +120,7 @@ pointer-events: auto;
 
   position: fixed;
 
-  top: 120px;
+   top: calc(env(safe-area-inset-top, 0px) + 95px);
   left: 50%;
 
   transform: translateX(-50%);
@@ -149,7 +149,7 @@ pointer-events: auto;
 
   position: fixed;
 
-  top: 230px;
+ top: calc(env(safe-area-inset-top, 0px) + 190px);
   left: 50%;
 
   transform: translateX(-50%);
