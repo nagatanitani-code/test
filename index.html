@@ -799,7 +799,7 @@ const treasureEffect =
 document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
 let currentTargetIndex = 0;
-const girlScaleX = 1.8;
+const girlScaleX = 1.4;
 const girlScaleY = 1;
 
 const targets = [
@@ -864,11 +864,11 @@ const animalTargets = [
 
 ];
 
-const animalScaleX = 2;
-const animalScaleY = 2.5;
+const animalScaleX = 1;
+const animalScaleY = 1.4;
 
-const alienScaleX = 2;
-const alienScaleY = 2;
+const alienScaleX = 1.4;
+const alienScaleY = 1;
 
 const alienTargets = [
 
@@ -1920,6 +1920,7 @@ document
 
 
 
+
 function setupGuideCropAuto({
 
   cropSelector,
@@ -1937,6 +1938,8 @@ function setupGuideCropAuto({
     const imageWidth = img.width;
     const imageHeight = img.height;
 
+    const boxSize = 90;
+
     targets.forEach(target => {
 
       const crop =
@@ -1944,41 +1947,27 @@ function setupGuideCropAuto({
           cropSelector + target.id
         );
 
-      const boxSize = 90;
-
-      // 判定サイズ
-      const hitSize =
-        target.size * 1.6;
-
       // =====================
-      // ワールド座標 → 正規化
-      // =====================
-
-      const normalizedX =
-        target.x + 0.5;
-
-      const normalizedY =
-        0.5 - target.y;
-
-      // =====================
-      // 元画像座標
+      // AR座標 → 画像ピクセル座標
       // =====================
 
       const imageX =
-        normalizedX * imageWidth;
+        ((target.x * scaleX) / scaleX + 0.5)
+        * imageWidth;
 
       const imageY =
-        normalizedY * imageHeight;
+        (0.5 - ((target.y * scaleY) / scaleY))
+        * imageHeight;
 
       // =====================
       // 切り抜きサイズ
       // =====================
 
       const cropWidth =
-        imageWidth * hitSize / scaleX;
+        target.size * imageWidth;
 
       const cropHeight =
-        imageHeight * hitSize / scaleY;
+        target.size * imageHeight;
 
       // =====================
       // 背景サイズ
@@ -2018,6 +2007,8 @@ function setupGuideCropAuto({
   img.src = imageUrl;
 
 }
+
+
 
 
 
