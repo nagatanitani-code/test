@@ -2061,23 +2061,23 @@ function setupGuideCropAuto({
       // AR座標 → 画像ピクセル座標
       // =====================
 
-    const imageX =
-  (target.x + 0.5)
+ const imageX =
+  ((target.x / scaleX) + 0.5)
   * imageWidth;
 
 const imageY =
-  (0.5 - target.y)
+  (0.5 - (target.y / scaleY))
   * imageHeight;
 
       // =====================
       // 切り抜きサイズ
       // =====================
 
-      const cropWidth =
-        target.size * imageWidth;
+     const cropWidth =
+  (target.size / scaleX) * imageWidth;
 
-      const cropHeight =
-        target.size * imageHeight;
+const cropHeight =
+  (target.size / scaleY) * imageHeight;
 
       // =====================
       // 背景サイズ
