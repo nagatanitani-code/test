@@ -797,8 +797,12 @@ id="girlPlane"
 
 <script>
 
-function autoFitPlane(imagePath, planeId, maxSize = 3){
-
+function autoFitPlane(
+  imagePath,
+  planeId,
+  maxSize = 2.5,
+  type = ""
+){
   const img = new Image();
 
   img.onload = () => {
@@ -814,15 +818,12 @@ function autoFitPlane(imagePath, planeId, maxSize = 3){
     let width;
     let height;
 
-    // 横長画像
     if(aspect >= 1){
 
       width = maxSize;
       height = maxSize / aspect;
 
-    }
-    // 縦長画像
-    else{
+    }else{
 
       height = maxSize;
       width = maxSize * aspect;
@@ -832,27 +833,48 @@ function autoFitPlane(imagePath, planeId, maxSize = 3){
     plane.setAttribute("width", width);
     plane.setAttribute("height", height);
 
+    // ←追加
+    if(type === "girl"){
+      girlScaleX = width;
+      girlScaleY = height;
+    }
+
+    if(type === "animal"){
+      animalScaleX = width;
+      animalScaleY = height;
+    }
+
+    if(type === "alien"){
+      alienScaleX = width;
+      alienScaleY = height;
+    }
+
   };
 
   img.src = imagePath;
-
 }
 
 
 
 autoFitPlane(
   "girl.jpg",
-  "#girlPlane"
+  "#girlPlane",
+  2.5,
+  "girl"
 );
 
 autoFitPlane(
   "animal.jpg",
-  "#animalPlane"
+  "#animalPlane",
+  2.5,
+  "animal"
 );
 
 autoFitPlane(
   "alien.jpg",
-  "#alienPlane"
+  "#alienPlane",
+  2.5,
+  "alien"
 );
 
 const effect = document.querySelector("#effect");
@@ -860,8 +882,14 @@ const treasureEffect =
 document.querySelector("#treasureEffect");
 const scene = document.querySelector("a-scene");
 let currentTargetIndex = 0;
-const girlScaleX = 1;
-const girlScaleY = 1;
+let girlScaleX = 1;
+let girlScaleY = 1;
+
+let animalScaleX = 1;
+let animalScaleY = 1;
+
+let alienScaleX = 1;
+let alienScaleY = 1;
 
 const targets = [
 
@@ -925,11 +953,7 @@ const animalTargets = [
 
 ];
 
-const animalScaleX = 1;
-const animalScaleY = 1;
 
-const alienScaleX = 1;
-const alienScaleY = 1;
 
 const alienTargets = [
 
@@ -1922,16 +1946,17 @@ touch.setAttribute(
 
 scene.addEventListener("loaded", () => {
 
-  createTargets();
+  setTimeout(() => {
 
-  createAnimalTargets();
+    createTargets();
+    createAnimalTargets();
+    createAlienTargets();
 
-  createAlienTargets();
+    loadGame();
 
-  loadGame();
+  }, 300);
 
 });
-
 
 
 
