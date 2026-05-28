@@ -1096,6 +1096,9 @@ id="girlPlane"
 
 <script>
 
+let menuStampOpen = false;
+let menuTreasureOpen = false;
+
 function autoFitPlane(
   imagePath,
   planeId,
@@ -1796,8 +1799,13 @@ if(this.el.id === "targetMushroom"){
 
 }
   
-if( this.el.id !== "targetStamp1" && this.el.id !== "targetStamp2" && this.el.id !== "targetStamp3" )
-{ stampBox.style.display = "none"; 
+if(
+  !menuStampOpen &&
+  this.el.id !== "targetStamp1" &&
+  this.el.id !== "targetStamp2" &&
+  this.el.id !== "targetStamp3"
+){
+  stampBox.style.display = "none";
 }
     
     });
@@ -1833,12 +1841,15 @@ if(this.el.id === "targetMushroom"){
 }
 
 if(
-  this.el.id === "targetCoin" ||
-  this.el.id === "targetGold"
+  !menuTreasureOpen &&
+  (
+    this.el.id === "targetCoin" ||
+    this.el.id === "targetGold"
+  )
 ){
 
   treasureBox.style.display = "none";
-treasureEffect.style.display = "none";
+  treasureEffect.style.display = "none";
 
 }
 
@@ -2501,8 +2512,10 @@ startBtn.addEventListener("click", () => {
 // スタンプ画面
 stampMenuBtn.addEventListener("click", () => {
 
-  stampBox.style.display = "block";
+  menuStampOpen = true;
+  menuTreasureOpen = false;
 
+  stampBox.style.display = "block";
   treasureBox.style.display = "none";
 
 });
@@ -2511,8 +2524,10 @@ stampMenuBtn.addEventListener("click", () => {
 // お宝画面
 treasureMenuBtn.addEventListener("click", () => {
 
-  treasureBox.style.display = "block";
+  menuTreasureOpen = true;
+  menuStampOpen = false;
 
+  treasureBox.style.display = "block";
   stampBox.style.display = "none";
 
 });
@@ -2551,6 +2566,7 @@ window.AR_GAME = {
   handleTouch
 
 };
+
 
 
 
