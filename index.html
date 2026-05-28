@@ -569,7 +569,37 @@ pointer-events: auto;
   cursor: pointer;
 
 }
+#bannerContainer{
 
+  position: relative;
+
+  display: inline-block;
+
+}
+
+#bannerText{
+
+  position: absolute;
+
+  top: -55px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  color: white;
+
+  font-size: 28px;
+  font-weight: bold;
+
+  white-space: nowrap;
+
+  text-shadow:
+    0 0 10px rgba(0,0,0,0.8),
+    0 0 20px rgba(0,0,0,0.6);
+
+  z-index: 2;
+
+}
 
 
 
@@ -603,6 +633,10 @@ pointer-events: auto;
   <div id="closeComplete">
     ×
   </div>
+  <!-- 上に表示する文字 -->
+    <div id="bannerText">
+      この子達の日常をもっと見る！
+    </div>
 
   <!-- 画像ボタン -->
   <img
