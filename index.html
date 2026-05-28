@@ -798,13 +798,42 @@ display: none;
 
 }
 
+#backToMenuBtn{
 
+  position: fixed;
+
+  top: 20px;
+  left: 20px;
+
+  z-index: 50000;
+
+  padding: 14px 22px;
+
+  border: none;
+
+  border-radius: 16px;
+
+  background: rgba(0,0,0,0.75);
+
+  color: white;
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+  display: none;
+
+}
 
 
   </style>
 </head>
 
 <body>
+
+<button id="backToMenuBtn">
+  メニューへ戻る
+</button>
 
 <!-- メニュー画面 -->
 <div id="menuScreen">
@@ -1220,6 +1249,72 @@ id="girlPlane"
 
 let menuStampOpen = false;
 let menuTreasureOpen = false;
+
+const backToMenuBtn =
+  document.querySelector("#backToMenuBtn");
+
+
+// 読み取り開始
+startBtn.addEventListener("click", () => {
+
+  menuScreen.style.display = "none";
+
+  mainScene.style.display = "block";
+
+  backToMenuBtn.style.display = "block";
+
+});
+
+
+// メニューへ戻る
+backToMenuBtn.addEventListener("click", async () => {
+
+  mainScene.style.display = "none";
+
+  menuScreen.style.display = "flex";
+
+  backToMenuBtn.style.display = "none";
+
+});
+
+backToMenuBtn.addEventListener("click", async () => {
+
+  const arSystem =
+    mainScene.systems["mindar-image-system"];
+
+  if(arSystem){
+
+    await arSystem.stop();
+
+  }
+
+  mainScene.style.display = "none";
+
+  menuScreen.style.display = "flex";
+
+  backToMenuBtn.style.display = "none";
+
+});
+
+startBtn.addEventListener("click", async () => {
+
+  menuScreen.style.display = "none";
+
+  mainScene.style.display = "block";
+
+  backToMenuBtn.style.display = "block";
+
+  const arSystem =
+    mainScene.systems["mindar-image-system"];
+
+  if(arSystem){
+
+    await arSystem.start();
+
+  }
+
+});
+
 
 function autoFitPlane(
   imagePath,
