@@ -2517,12 +2517,40 @@ treasureMenuBtn.addEventListener("click", () => {
 
 });
 
+// 外部から参照できるようにする
+window.AR_GAME = {
 
+  // 状態
+  get foundTreasure(){
+    return foundTreasure;
+  },
 
+  get targets(){
+    return targets;
+  },
 
+  get animalTargets(){
+    return animalTargets;
+  },
 
+  get alienTargets(){
+    return alienTargets;
+  },
 
+  // UI
+  effect,
+  treasureEffect,
+  treasureBox,
+  stampBox,
 
+  // 関数
+  saveGame,
+  loadGame,
+  checkComplete,
+  showStampEffect,
+  handleTouch
+
+};
 
 
 
