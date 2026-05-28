@@ -837,6 +837,14 @@ display: none;
 
 <!-- メニュー画面 -->
 <div id="menuScreen">
+  <div id="gameTitle">
+    ARゲーム
+  </div>
+
+  <button id="startBtn">
+    読み取り開始
+  </button>
+</div>
 
 <!-- スタンプ専用画面 -->
 <div id="stampScreen" class="subScreen">
@@ -879,13 +887,7 @@ display: none;
   </button>
 
 </div>
-  <div id="gameTitle">
-    ARゲーム
-  </div>
 
-  <button id="startBtn">
-    読み取り開始
-  </button>
 
   <button id="openStampScreenBtn">
   スタンプ帳
@@ -895,7 +897,7 @@ display: none;
   お宝図鑑
 </button>
 
-</div>
+
 
 
 
@@ -1242,7 +1244,7 @@ id="girlPlane"
 
 </a-scene>
 
-
+<script>
 // =========================
 // AR開始
 // =========================
@@ -1305,7 +1307,7 @@ backToMenuBtn.addEventListener("click", async () => {
 
 
 
-<script>
+
 
 let menuStampOpen = false;
 let menuTreasureOpen = false;
