@@ -643,11 +643,108 @@ pointer-events: auto;
 }
 
 
+/* =========================
+   メニュー画面
+========================= */
+
+#menuScreen{
+
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      #101820,
+      #1d2d44
+    );
+
+  z-index: 20000;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 24px;
+
+}
+
+#gameTitle{
+
+  font-size: 42px;
+
+  color: gold;
+
+  font-weight: bold;
+
+  margin-bottom: 30px;
+
+  text-shadow:
+    0 0 20px rgba(255,215,0,0.7);
+
+}
+
+#menuScreen button{
+
+  width: 260px;
+
+  padding: 18px;
+
+  border: none;
+
+  border-radius: 18px;
+
+  font-size: 24px;
+
+  font-weight: bold;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff9800,
+      #ff5722
+    );
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.4);
+
+}
+
+
+
 
   </style>
 </head>
 
 <body>
+
+<!-- メニュー画面 -->
+<div id="menuScreen">
+
+  <div id="gameTitle">
+    ARゲーム
+  </div>
+
+  <button id="startBtn">
+    読み取り開始
+  </button>
+
+  <button id="stampMenuBtn">
+    スタンプを見る
+  </button>
+
+  <button id="treasureMenuBtn">
+    お宝を見る
+  </button>
+
+</div>
+
 
 
 <div id="completeWrap">
@@ -812,6 +909,8 @@ pointer-events: auto;
 </div>
 
 <a-scene
+  id="mainScene"
+  style="display:none"
   mindar-image="imageTargetSrc: targets.mind;maxTrack: 8;"
   color-space="sRGB"
   vr-mode-ui="enabled: false"
@@ -2363,6 +2462,56 @@ const cropHeight =
   img.src = imageUrl;
 
 }
+
+
+// =========================
+// メニュー制御
+// =========================
+
+const startBtn =
+  document.querySelector("#startBtn");
+
+const menuScreen =
+  document.querySelector("#menuScreen");
+
+const mainScene =
+  document.querySelector("#mainScene");
+
+const stampMenuBtn =
+  document.querySelector("#stampMenuBtn");
+
+const treasureMenuBtn =
+  document.querySelector("#treasureMenuBtn");
+
+
+// 読み取り開始
+startBtn.addEventListener("click", () => {
+
+  menuScreen.style.display = "none";
+
+  mainScene.style.display = "block";
+
+});
+
+
+// スタンプ画面
+stampMenuBtn.addEventListener("click", () => {
+
+  stampBox.style.display = "block";
+
+  treasureBox.style.display = "none";
+
+});
+
+
+// お宝画面
+treasureMenuBtn.addEventListener("click", () => {
+
+  treasureBox.style.display = "block";
+
+  stampBox.style.display = "none";
+
+});
 
 
 
