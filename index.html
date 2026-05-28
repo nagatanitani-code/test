@@ -143,7 +143,86 @@
 
 }
 
+/* =========================
+   専用画面
+========================= */
 
+.subScreen{
+
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      #111827,
+      #1e293b
+    );
+
+  z-index: 30000;
+
+  display: none;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 30px;
+
+}
+
+.subTitle{
+
+  font-size: 38px;
+
+  font-weight: bold;
+
+  color: gold;
+
+}
+
+.stampGrid,
+.treasureGrid{
+
+  display: flex;
+
+  gap: 20px;
+
+}
+
+.stampGrid img,
+.treasureGrid img{
+
+  width: 120px;
+
+  height: 120px;
+
+  border-radius: 18px;
+
+  background: white;
+
+}
+
+.backBtn{
+
+  padding: 16px 34px;
+
+  border: none;
+
+  border-radius: 18px;
+
+  font-size: 22px;
+
+  font-weight: bold;
+
+  background: #ff9800;
+
+  color: white;
+
+}
 
 
 #guideUI{
@@ -674,6 +753,8 @@ display: none;
 
 }
 
+
+
 #gameTitle{
 
   font-size: 42px;
@@ -728,6 +809,47 @@ display: none;
 <!-- メニュー画面 -->
 <div id="menuScreen">
 
+<!-- スタンプ専用画面 -->
+<div id="stampScreen" class="subScreen">
+
+  <div class="subTitle">
+    スタンプ一覧
+  </div>
+
+  <div class="stampGrid">
+
+    <img id="menuStamp1" src="stamp_empty.jpg">
+    <img id="menuStamp2" src="stamp_empty.jpg">
+    <img id="menuStamp3" src="stamp_empty.jpg">
+
+  </div>
+
+  <button class="backBtn" id="closeStampScreen">
+    戻る
+  </button>
+
+</div>
+
+
+<!-- お宝専用画面 -->
+<div id="treasureScreen" class="subScreen">
+
+  <div class="subTitle">
+    お宝一覧
+  </div>
+
+  <div class="treasureGrid">
+
+    <img id="menuTreasure1" src="treasure_unknown.jpg">
+    <img id="menuTreasure2" src="treasure_unknown.jpg">
+
+  </div>
+
+  <button class="backBtn" id="closeTreasureScreen">
+    戻る
+  </button>
+
+</div>
   <div id="gameTitle">
     ARゲーム
   </div>
@@ -736,13 +858,13 @@ display: none;
     読み取り開始
   </button>
 
-  <button id="stampMenuBtn">
-    スタンプを見る
-  </button>
+  <button id="openStampScreenBtn">
+  スタンプ帳
+</button>
 
-  <button id="treasureMenuBtn">
-    お宝を見る
-  </button>
+<button id="openTreasureScreenBtn">
+  お宝図鑑
+</button>
 
 </div>
 
@@ -2492,12 +2614,6 @@ const menuScreen =
 const mainScene =
   document.querySelector("#mainScene");
 
-const stampMenuBtn =
-  document.querySelector("#stampMenuBtn");
-
-const treasureMenuBtn =
-  document.querySelector("#treasureMenuBtn");
-
 
 // 読み取り開始
 startBtn.addEventListener("click", () => {
@@ -2508,29 +2624,87 @@ startBtn.addEventListener("click", () => {
 
 });
 
+const stampScreen =
+  document.querySelector("#stampScreen");
 
-// スタンプ画面
-stampMenuBtn.addEventListener("click", () => {
+const treasureScreen =
+  document.querySelector("#treasureScreen");
 
-  menuStampOpen = true;
-  menuTreasureOpen = false;
 
-  stampBox.style.display = "block";
-  treasureBox.style.display = "none";
+// ======================
+// スタンプ画面開く
+// ======================
+
+document
+.querySelector("#openStampScreenBtn")
+.addEventListener("click", () => {
+
+  stampScreen.style.display = "flex";
+
+  // セーブ状態反映
+  if(stamp1Get){
+    document.querySelector("#menuStamp1").src =
+      "stamp1.jpg";
+  }
+
+  if(stamp2Get){
+    document.querySelector("#menuStamp2").src =
+      "stamp2.jpg";
+  }
+
+  if(stamp3Get){
+    document.querySelector("#menuStamp3").src =
+      "stamp3.jpg";
+  }
 
 });
 
 
-// お宝画面
-treasureMenuBtn.addEventListener("click", () => {
+// ======================
+// お宝画面開く
+// ======================
 
-  menuTreasureOpen = true;
-  menuStampOpen = false;
+document
+.querySelector("#openTreasureScreenBtn")
+.addEventListener("click", () => {
 
-  treasureBox.style.display = "block";
-  stampBox.style.display = "none";
+  treasureScreen.style.display = "flex";
+
+  if(coinFound){
+    document.querySelector("#menuTreasure1").src =
+      "coin.jpg";
+  }
+
+  if(goldFound){
+    document.querySelector("#menuTreasure2").src =
+      "gold.jpg";
+  }
 
 });
+
+
+// ======================
+// 閉じる
+// ======================
+
+document
+.querySelector("#closeStampScreen")
+.addEventListener("click", () => {
+
+  stampScreen.style.display = "none";
+
+});
+
+document
+.querySelector("#closeTreasureScreen")
+.addEventListener("click", () => {
+
+  treasureScreen.style.display = "none";
+
+});
+
+
+
 
 // 外部から参照できるようにする
 window.AR_GAME = {
