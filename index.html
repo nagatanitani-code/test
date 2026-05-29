@@ -930,9 +930,9 @@ display: none;
 
 </div>
 
-
- 
-
+<div id="completeTreasure">
+ <button id="downloadWallpaperBtn"> 壁紙をダウンロード </button>
+</div>
 
 
 
@@ -952,11 +952,6 @@ display: none;
     id="completeImage"
     src="banner.jpg"
   >
-
-  <!-- 追加：壁紙DLボタン -->
-  <button id="downloadWallpaperBtn">
-    壁紙をダウンロード
-  </button>
 
 </div>
 
@@ -1911,6 +1906,8 @@ if(this.el.id === "targetCoin"){
 
   if(!coinFound){
 
+checkComplete();
+
   coinFound = true;
 
   foundTreasure++;
@@ -2009,6 +2006,7 @@ if(this.el.id === "targetGold"){
   treasureImage.src = "gold.jpg";
 
   if(!goldFound){
+  checkComplete();
 
   goldFound = true;
 
@@ -2175,6 +2173,24 @@ function showStampEffect(message){
 }
 
 function checkComplete(){
+
+// お宝コンプリート判定 
+if(foundTreasure >= totalTreasure){
+ effect.style.display = "none"; 
+ void effect.offsetWidth; 
+ effect.innerHTML = "お宝コンプリート！！";
+ effect.style.display = "block"; 
+ clearTimeout(completeTimer); 
+ completeTimer = setTimeout(() => { 
+  effect.style.display = "none";
+document.querySelector("#completeTreasure") .style.display = "block";
+
+  }, 2000);
+ }
+
+
+
+
 
   if(
     stamp1Get &&
