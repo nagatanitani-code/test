@@ -584,9 +584,8 @@ display: none;
 
 }
 
-#completeTreasure{
 
-  display: none;
+#completeTreasure{
 
   position: fixed;
 
@@ -596,11 +595,31 @@ display: none;
 
   display: none;
 
+  flex-direction: column;
+
   justify-content: center;
 
   align-items: center;
 
+  gap: 20px;
+
+  background: rgba(0,0,0,0.7);
+
 }
+
+#completeTreasureText{
+
+  font-size: 42px;
+
+  font-weight: bold;
+
+  color: gold;
+
+  text-shadow:
+    0 0 20px rgba(255,215,0,0.8);
+
+}
+
 
 
 
@@ -948,9 +967,19 @@ display: none;
 
 </div>
 
+
 <div id="completeTreasure">
- <button id="downloadWallpaperBtn"> 壁紙をダウンロード </button>
+
+  <div id="completeTreasureText">
+    壁紙プレゼント！
+  </div>
+
+  <button id="downloadWallpaperBtn">
+    壁紙をダウンロード
+  </button>
+
 </div>
+
 
 
 
