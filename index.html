@@ -601,6 +601,38 @@ display: none;
 
 }
 
+
+#downloadWallpaperBtn{
+
+  margin-top: 20px;
+
+  padding: 16px 28px;
+
+  border: none;
+
+  border-radius: 18px;
+
+  font-size: 22px;
+
+  font-weight: bold;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00c6ff,
+      #0072ff
+    );
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.4);
+
+  cursor: pointer;
+
+}
+
+
 /* 画像ボタン */
 #completeImage{
 
@@ -831,6 +863,7 @@ display: none;
 
 <body>
 
+
 <button id="backToMenuBtn">
   メニューへ戻る
 </button>
@@ -905,22 +938,29 @@ display: none;
 
 <div id="completeWrap">
 
-  <!-- 閉じるボタンを外へ -->
+  <!-- 閉じる -->
   <div id="closeComplete">
     ×
   </div>
-  <!-- 上に表示する文字 -->
-    <div id="bannerText">
-      この子達の日常をもっと見る！
-    </div>
 
-  <!-- 画像ボタン -->
+  <div id="bannerText">
+    この子達の日常をもっと見る！
+  </div>
+
+  <!-- バナー -->
   <img
     id="completeImage"
     src="banner.jpg"
   >
 
+  <!-- 追加：壁紙DLボタン -->
+  <button id="downloadWallpaperBtn">
+    壁紙をダウンロード
+  </button>
+
 </div>
+
+
 
 
 
@@ -2078,6 +2118,24 @@ if(
 
 });
 
+
+document
+.querySelector("#downloadWallpaperBtn")
+.addEventListener("click", () => {
+
+  const link =
+    document.createElement("a");
+
+  link.href = "wallpaper.jpg";
+  link.download = "wallpaper.jpg";
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  document.body.removeChild(link);
+
+});
 
 
 
