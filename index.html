@@ -639,6 +639,39 @@ display: none;
 }
 
 
+#closeTreasureComplete{
+
+  position: absolute;
+
+  top: 20px;
+  right: 20px;
+
+  width: 52px;
+  height: 52px;
+
+  border-radius: 50%;
+
+  background: rgba(0,0,0,0.8);
+
+  color: white;
+
+  font-size: 32px;
+  font-weight: bold;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 3px solid white;
+
+  cursor: pointer;
+
+}
+
+
+
+
 #downloadWallpaperBtn{
 
   margin-top: 20px;
@@ -969,6 +1002,11 @@ display: none;
 
 
 <div id="completeTreasure">
+
+<!-- 閉じるボタン --> 
+<div id="closeTreasureComplete"> 
+×
+ </div>
 
   <div id="completeTreasureText">
     壁紙プレゼント！
@@ -2180,6 +2218,16 @@ document
   link.click();
 
   document.body.removeChild(link);
+
+});
+
+
+document
+.querySelector("#closeTreasureComplete")
+.addEventListener("click", () => {
+
+  document.querySelector("#completeTreasure")
+    .style.display = "none";
 
 });
 
