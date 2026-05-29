@@ -2272,19 +2272,30 @@ function showStampEffect(message){
 }
 
 function checkCompleteTreasure(){
-// お宝コンプリート判定 
-if(foundTreasure >= totalTreasure){
- effect.style.display = "none"; 
- void effect.offsetWidth; 
- effect.innerHTML = "お宝コンプリート！！";
- effect.style.display = "block"; 
- clearTimeout(completeTimer); 
- completeTimer = setTimeout(() => { 
-  effect.style.display = "none";
-document.querySelector("#completeTreasure") .style.display = "flex";
 
-  }, 2000);
- }
+  if(foundTreasure >= totalTreasure){
+
+    effect.style.display = "none";
+
+    void effect.offsetWidth;
+
+    effect.innerHTML =
+      "お宝コンプリート！！";
+
+    effect.style.display = "block";
+
+    clearTimeout(completeTimer);
+
+    completeTimer = setTimeout(() => {
+
+      effect.style.display = "none";
+
+      document.querySelector("#completeTreasure")
+        .style.display = "flex";
+
+    }, 2000);
+
+  }
 
 }
 
