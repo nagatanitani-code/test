@@ -1924,7 +1924,7 @@ if(this.el.id === "targetCoin"){
 
   if(!coinFound){
 
-checkComplete();
+checkCompleteTreasure();
 
   coinFound = true;
 
@@ -2024,7 +2024,7 @@ if(this.el.id === "targetGold"){
   treasureImage.src = "gold.jpg";
 
   if(!goldFound){
-  checkComplete();
+ checkCompleteTreasure();
 
   goldFound = true;
 
@@ -2190,8 +2190,7 @@ function showStampEffect(message){
 
 }
 
-function checkComplete(){
-
+function checkCompleteTreasure(){
 // お宝コンプリート判定 
 if(foundTreasure >= totalTreasure){
  effect.style.display = "none"; 
@@ -2206,9 +2205,10 @@ document.querySelector("#completeTreasure") .style.display = "flex";
   }, 2000);
  }
 
+}
 
 
-
+function checkComplete(){
 
   if(
     stamp1Get &&
