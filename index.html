@@ -584,6 +584,24 @@ display: none;
 
 }
 
+#completeTreasure{
+
+  display: none;
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: none;
+
+  justify-content: center;
+
+  align-items: center;
+
+}
+
 
 
 #completeWrap{
@@ -2183,7 +2201,7 @@ if(foundTreasure >= totalTreasure){
  clearTimeout(completeTimer); 
  completeTimer = setTimeout(() => { 
   effect.style.display = "none";
-document.querySelector("#completeTreasure") .style.display = "block";
+document.querySelector("#completeTreasure") .style.display = "flex";
 
   }, 2000);
  }
