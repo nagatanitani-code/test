@@ -1953,11 +1953,11 @@ if(this.el.id === "targetCoin"){
 
   if(!coinFound){
 
-checkCompleteTreasure();
-
   coinFound = true;
 
   foundTreasure++;
+
+checkCompleteTreasure();
 
   saveGame();
 
@@ -2053,11 +2053,12 @@ if(this.el.id === "targetGold"){
   treasureImage.src = "gold.jpg";
 
   if(!goldFound){
- checkCompleteTreasure();
 
   goldFound = true;
 
   foundTreasure++;
+
+checkCompleteTreasure();
 
   saveGame();
 
