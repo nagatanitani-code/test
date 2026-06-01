@@ -548,11 +548,12 @@ const link =
 document.createElement("a");
 
 link.download =
-"photo_spot.png";
+"photo_spot.jpg";
 
 link.href =
 canvas.toDataURL(
-"image/png"
+"image/jpeg",
+0.95
 );
 
 link.click();
