@@ -18,11 +18,7 @@ font-family:sans-serif;
 }
 
 
-#captureBtn{
 
-bottom:100px;
-
-}
 
 /* ======================
 メニュー
@@ -190,7 +186,7 @@ z-index:9999;
 
 position:fixed;
 
-bottom:30px;
+bottom:100px;
 left:50%;
 
 transform:translateX(-50%);
@@ -557,12 +553,19 @@ canvas.toDataURL(
 0.95
 );
 
-const win =
-window.open();
+const win = window.open();
+
+if(win){
 
 win.document.write(
 '<img src="'+imageURL+'" style="width:100%">'
 );
+
+}else{
+
+location.href = imageURL;
+
+}
 
 }else{
 
@@ -579,6 +582,7 @@ canvas.toDataURL(
 );
 
 link.click();
+}
 
 }
 catch(e){
