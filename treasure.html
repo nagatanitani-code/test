@@ -343,6 +343,36 @@ body{
 
 }
 
+#closeCompleteBtn{
+
+  position:absolute;
+
+  top:20px;
+  right:20px;
+
+  width:50px;
+  height:50px;
+
+  border-radius:50%;
+
+  background:rgba(0,0,0,.8);
+
+  color:white;
+
+  font-size:32px;
+  font-weight:bold;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  border:2px solid white;
+
+}
+
 </style>
 </head>
 
@@ -465,7 +495,9 @@ body{
 <!-- コンプリート -->
 
 <div id="completeTreasure">
-
+  <div id="closeCompleteBtn">
+    ×
+  </div>
   <div id="completeText">
     COMPLETE!!
   </div>
@@ -887,6 +919,14 @@ document
 .addEventListener("click", () => {
 
   hintScreen.style.display = "none";
+
+});
+
+document
+.querySelector("#closeCompleteBtn")
+.addEventListener("click", () => {
+
+  completeTreasure.style.display = "none";
 
 });
 
