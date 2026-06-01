@@ -8,6 +8,7 @@ content="width=device-width,initial-scale=1.0">
 
 <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <style>
 
@@ -188,30 +189,21 @@ left:50%;
 
 transform:translateX(-50%);
 
-padding:18px 30px;
+padding:18px 32px;
+
+font-size:24px;
 
 border:none;
 
 border-radius:20px;
 
-background:
-linear-gradient(
-135deg,
-#ff9800,
-#ff5722
-);
+background:#ff9800;
 
 color:white;
 
-font-size:24px;
-font-weight:bold;
-
-display:none;
-
 z-index:99999;
 
-box-shadow:
-0 4px 15px rgba(0,0,0,.4);
+display:none;
 
 }
 
@@ -267,11 +259,7 @@ class="backBtn">
 <!-- フォト案内 -->
 
 <div id="photoMessage">
-
 フォトスポット発見！
-
-<br>
-
 <button id="captureBtn">
 
 📸 撮影する
@@ -467,20 +455,27 @@ captureBtn.style.display =
 
 });
 
+const captureBtn =
+document.querySelector("#captureBtn");
+
 captureBtn.addEventListener(
 "click",
-()=>{
+async ()=>{
+
+captureBtn.style.display =
+"none";
+
+const target =
+document.body;
 
 const canvas =
-document.querySelector("canvas");
-
-if(!canvas){
-
-alert("撮影できません");
-
-return;
-
+await html2canvas(
+target,
+{
+useCORS:true,
+backgroundColor:null
 }
+);
 
 const link =
 document.createElement("a");
@@ -495,8 +490,11 @@ canvas.toDataURL(
 
 link.click();
 
-});
+captureBtn.style.display =
+"block";
 
+}
+);
 </script>
 
 </body>
