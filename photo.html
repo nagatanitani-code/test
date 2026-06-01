@@ -260,15 +260,15 @@ class="backBtn">
 
 <!-- フォト案内 -->
 
-<div id="photoMessage">
-フォトスポット発見！
+
+
 <button id="captureBtn">
 
 📸 撮影する
 
 </button>
 
-</div>
+
 
 <!-- AR -->
 
@@ -419,43 +419,8 @@ hintScreen.style.display="none";
 フォトスポット
 ====================== */
 
-document
-.querySelector("#targetPhoto")
-.addEventListener(
-"targetFound",
-()=>{
 
-photoMessage.style.display=
-"block";
-captureBtn.style.display =
-"block";
 
-});
-
-document
-.querySelector("#targetPhoto")
-.addEventListener(
-"targetLost",
-()=>{
-
-photoMessage.style.display=
-"none";
-captureBtn.style.display =
-"none";
-
-});
-
-photoMessage.addEventListener(
-"click",
-()=>{
-
-photoMessage.style.display=
-"none";
-
-captureBtn.style.display =
-"none";
-
-});
 
 
 captureBtn.addEventListener(
@@ -597,7 +562,27 @@ captureBtn.style.display="block";
 
 });
 
+document
+.querySelector("#targetPhoto")
+.addEventListener(
+"targetFound",
+()=>{
 
+captureBtn.style.display =
+"block";
+
+});
+
+document
+.querySelector("#targetPhoto")
+.addEventListener(
+"targetLost",
+()=>{
+
+captureBtn.style.display =
+"none";
+
+});
 
 </script>
 
