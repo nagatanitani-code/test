@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -179,6 +179,42 @@ display:none;
 z-index:9999;
 }
 
+#captureBtn{
+
+position:fixed;
+
+bottom:30px;
+left:50%;
+
+transform:translateX(-50%);
+
+padding:18px 30px;
+
+border:none;
+
+border-radius:20px;
+
+background:
+linear-gradient(
+135deg,
+#ff9800,
+#ff5722
+);
+
+color:white;
+
+font-size:24px;
+font-weight:bold;
+
+display:none;
+
+z-index:99999;
+
+box-shadow:
+0 4px 15px rgba(0,0,0,.4);
+
+}
+
 </style>
 </head>
 
@@ -232,11 +268,15 @@ class="backBtn">
 
 <div id="photoMessage">
 
-📸 フォトスポット発見！
+フォトスポット発見！
 
 <br>
 
-スクリーンショットで撮影してね！
+<button id="captureBtn">
+
+📸 撮影する
+
+</button>
 
 </div>
 
@@ -301,6 +341,9 @@ document.querySelector("#hintScreen");
 
 const photoMessage =
 document.querySelector("#photoMessage");
+
+const captureBtn =
+document.querySelector("#captureBtn");
 
 /* ======================
 AR開始
@@ -394,6 +437,8 @@ document
 
 photoMessage.style.display=
 "block";
+captureBtn.style.display =
+"block";
 
 });
 
@@ -405,6 +450,8 @@ document
 
 photoMessage.style.display=
 "none";
+captureBtn.style.display =
+"none";
 
 });
 
@@ -415,10 +462,43 @@ photoMessage.addEventListener(
 photoMessage.style.display=
 "none";
 
+captureBtn.style.display =
+"none";
+
+});
+
+captureBtn.addEventListener(
+"click",
+()=>{
+
+const canvas =
+document.querySelector("canvas");
+
+if(!canvas){
+
+alert("撮影できません");
+
+return;
+
+}
+
+const link =
+document.createElement("a");
+
+link.download =
+"photo_spot.png";
+
+link.href =
+canvas.toDataURL(
+"image/png"
+);
+
+link.click();
+
 });
 
 </script>
 
 </body>
 </html>
-```
+
