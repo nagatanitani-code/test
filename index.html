@@ -2520,45 +2520,7 @@ touch.setAttribute(
 
     container.appendChild(touch);
 
-    const frame =
-      document.createElement("a-ring");
-
-    frame.setAttribute(
-  "position",
-  `${target.x * animalScaleX}
-   ${target.y * animalScaleY}
-   0.03`
-);
-
-    frame.setAttribute(
-      "radius-inner",
-      target.guideSize / 2
-    );
-
-    frame.setAttribute(
-      "radius-outer",
-      target.guideSize / 2 + 0.02
-    );
-
-    frame.setAttribute(
-      "material",
-      "color: cyan; opacity: 0; transparent: true;"
-    );
-
-    frame.setAttribute(
-      "animation",
-      `
-      property: scale;
-      from: 1 1 1;
-      to: 1.15 1.15 1;
-      dir: alternate;
-      dur: 700;
-      loop: false;
-      `
-    );
-
-    container.appendChild(frame);
-
+   
   });
 
 
@@ -2621,44 +2583,6 @@ touch.setAttribute(
 
     container.appendChild(touch);
 
-    const frame =
-      document.createElement("a-ring");
-
-    frame.setAttribute(
-  "position",
-`${target.x * alienScaleX}
- ${target.y * alienScaleY}
-   0.03`
-);
-
-    frame.setAttribute(
-      "radius-inner",
-      target.guideSize / 2
-    );
-
-    frame.setAttribute(
-      "radius-outer",
-      target.guideSize / 2 + 0.02
-    );
-
-    frame.setAttribute(
-      "material",
-      "color: cyan; opacity: 0; transparent: true;"
-    );
-
-    frame.setAttribute(
-      "animation",
-      `
-      property: scale;
-      from: 1 1 1;
-      to: 1.15 1.15 1;
-      dir: alternate;
-      dur: 700;
-      loop: false;
-      `
-    );
-
-    container.appendChild(frame);
 
   });
 
