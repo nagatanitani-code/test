@@ -544,6 +544,28 @@ frameHeight
 保存
 */
 
+const isIOS =
+/iPhone|iPad|iPod/i.test(
+navigator.userAgent
+);
+
+if(isIOS){
+
+const imageURL =
+canvas.toDataURL(
+"image/jpeg",
+0.95
+);
+
+const win =
+window.open();
+
+win.document.write(
+'<img src="'+imageURL+'" style="width:100%">'
+);
+
+}else{
+
 const link =
 document.createElement("a");
 
