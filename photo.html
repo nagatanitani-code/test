@@ -8,7 +8,6 @@ content="width=device-width,initial-scale=1.0">
 
 <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <style>
 
@@ -16,6 +15,13 @@ body{
 margin:0;
 overflow:hidden;
 font-family:sans-serif;
+}
+
+
+#captureBtn{
+
+bottom:100px;
+
 }
 
 /* ======================
@@ -455,27 +461,88 @@ captureBtn.style.display =
 
 });
 
-const captureBtn =
-document.querySelector("#captureBtn");
 
 captureBtn.addEventListener(
 "click",
 async ()=>{
 
-captureBtn.style.display =
-"none";
+try{
 
-const target =
-document.body;
+captureBtn.style.display="none";
+
+const video =
+document.querySelector("video");
+
+if(!video){
+
+alert("カメラ取得失敗");
+
+captureBtn.style.display="block";
+
+return;
+
+}
 
 const canvas =
-await html2canvas(
-target,
-{
-useCORS:true,
-backgroundColor:null
-}
+document.querySelector(
+"#captureCanvas"
 );
+
+const ctx =
+canvas.getContext("2d");
+
+canvas.width =
+video.videoWidth;
+
+canvas.height =
+video.videoHeight;
+
+/*
+カメラ映像
+*/
+ctx.drawImage(
+video,
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+/*
+ARフレーム
+*/
+const frame =
+document.querySelector(
+"#frameImg"
+);
+
+if(frame.complete){
+
+const frameWidth =
+canvas.width * 0.8;
+
+const frameHeight =
+frameWidth * 1.5;
+
+const x =
+(canvas.width - frameWidth)/2;
+
+const y =
+(canvas.height - frameHeight)/2;
+
+ctx.drawImage(
+frame,
+x,
+y,
+frameWidth,
+frameHeight
+);
+
+}
+
+/*
+保存
+*/
 
 const link =
 document.createElement("a");
@@ -490,12 +557,27 @@ canvas.toDataURL(
 
 link.click();
 
-captureBtn.style.display =
-"block";
+}
+catch(e){
+
+console.error(e);
+
+alert("撮影失敗");
 
 }
-);
+
+captureBtn.style.display="block";
+
+});
+
+
+
 </script>
+
+<canvas
+id="captureCanvas"
+style="display:none;">
+</canvas>
 
 </body>
 </html>
