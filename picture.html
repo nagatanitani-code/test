@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    body { margin: 0; overflow: hidden; }
+
+    /* 発見エフェクト */
+    #effect {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      padding: 16px 30px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(255,220,0,0.95), rgba(255,140,0,0.95));
+      color: white;
+      font-size: 34px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      box-shadow: 0 0 40px rgba(255,180,0,0.8);
+      z-index: 9999;
+      animation: pop 0.8s ease;
+    }
+
+    @keyframes pop {
+      0%   { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+      50%  { transform: translate(-50%, -50%) scale(1.4); }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    /* 上部ガイドUI */
+    .guideUI {
+      position: fixed;
+      top: env(safe-area-inset-top, 0px);
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      gap: 14px;
+      z-index: 999;
+    }
+
+    .guideItem {
+      position: relative;
+      width: 90px; height: 90px;
+      border: 4px solid yellow;
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.7);
+    }
+
+    .guideCrop {
+      width: 100%; height: 100%;
+      background-repeat: no-repeat;
+      background-color: black;
+    }
+
+    .guideCheck {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: none;
+    }
+
+    /* メニュー画面 */
+    #menuScreen {
+      position: fixed; inset: 0;
+      background: linear-gradient(180deg, #101820, #1d2d44);
+      z-index: 20000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+    }
+
+    #gameTitle {
+      font-size: 42px;
+      color: gold;
+      font-weight: bold;
+      margin-bottom: 30px;
+      text-shadow: 0 0 20px rgba(255,215,0,0.7);
+    }
+
+    #menuScreen button {
+      width: 260px;
+      padding: 18px;
+      border: none;
+      border-radius: 18px;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(135deg, #ff9800, #ff5722);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+      cursor: pointer;
+    }
+
+    #backToMenuBtn {
+      position: fixed;
+      top: 20px; left: 20px;
+      z-index: 50000;
+      padding: 14px 22px;
+      border: none;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.75);
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      display: none;
+      cursor: pointer;
+    }
+
+    /* 進捗表示 */
+    #progressBox {
+      position: fixed;
+      bottom: 20px; left: 20px;
+      background: rgba(0,0,0,0.75);
+      border: 2px solid rgba(255,255,255,0.15);
+      border-radius: 18px;
+      padding: 14px 20px;
+      color: white;
+      z-index: 999;
+      display: none;
+      font-size: 18px;
+    }
+
+    #progressBox .label {
+      font-size: 12px;
+      color: #ffe066;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+
+    #progressCount {
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    /* コンプリート画面 */
+    #completeScreen {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+    }
+
+    #completeText {
+      font-size: 42px;
+      font-weight: bold;
+      color: gold;
+      text-shadow: 0 0 20px rgba(255,215,0,0.8);
+    }
+
+    #completeClose {
+      padding: 16px 34px;
+      border: none;
+      border-radius: 18px;
+      font-size: 22px;
+      font-weight: bold;
+      background: #ff9800;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+
+  <script>
+    // 【修正】A-FrameコンポーネントはHTML読み込み前に登録する必要があるためhead内に移動
+    AFRAME.registerComponent("markerhandler", {
+      init() {
+        const effect = document.querySelector("#effect");
+        this.el.addEventListener("targetFound", () => {
+          if(effect) effect.style.display = "none";
+          document.querySelector("#progressBox").style.display = "block";
+
+          if (this.el.id === "targetGirl")   document.querySelector("#guideUI").style.display       = "flex";
+          if (this.el.id === "targetAnimal") document.querySelector("#animalGuideUI").style.display = "flex";
+          if (this.el.id === "targetAlien")  document.querySelector("#alienGuideUI").style.display  = "flex";
+        });
+
+        this.el.addEventListener("targetLost", () => {
+          if (this.el.id === "targetGirl")   document.querySelector("#guideUI").style.display       = "none";
+          if (this.el.id === "targetAnimal") document.querySelector("#animalGuideUI").style.display = "none";
+          if (this.el.id === "targetAlien")  document.querySelector("#alienGuideUI").style.display  = "none";
+        });
+      }
+    });
+  </script>
+</head>
+
+<body>
+
+<div id="menuScreen">
+  <div id="gameTitle">絵探しゲーム</div>
+  <button id="startBtn">スタート</button>
+</div>
+
+<button id="backToMenuBtn">メニューへ戻る</button>
+
+<div id="progressBox">
+  <div class="label">発見数</div>
+  <div id="progressCount">0 / 8</div>
+</div>
+
+<div id="effect">発見!!</div>
+
+<div id="guideUI" class="guideUI">
+  <div class="guideItem">
+    <div class="guideCrop" id="guideCrop_heart"></div>
+    <img class="guideCheck" id="guideCheck_heart" src="check.png">
+  </div>
+  <div class="guideItem">
+    <div class="guideCrop" id="guideCrop_eye"></div>
+    <img class="guideCheck" id="guideCheck_eye" src="check.png">
+  </div>
+  <div class="guideItem">
+    <div class="guideCrop" id="guideCrop_ribbon"></div>
+    <img class="guideCheck" id="guideCheck_ribbon" src="check.png">
+  </div>
+</div>
+
+<div id="animalGuideUI" class="guideUI">
+  <div class="guideItem">
+    <div class="guideCrop" id="animalGuideCrop_ear"></div>
+    <img class="guideCheck" id="guideCheck_ear" src="check.png">
+  </div>
+  <div class="guideItem">
+    <div class="guideCrop" id="animalGuideCrop_nose"></div>
+    <img class="guideCheck" id="guideCheck_nose" src="check.png">
+  </div>
+  <div class="guideItem">
+    <div class="guideCrop" id="animalGuideCrop_tail"></div>
+    <img class="guideCheck" id="guideCheck_tail" src="check.png">
+  </div>
+</div>
+
+<div id="alienGuideUI" class="guideUI">
+  <div class="guideItem">
+    <div class="guideCrop" id="alienGuideCrop_alienEye"></div>
+    <img class="guideCheck" id="guideCheck_alienEye" src="check.png">
+  </div>
+  <div class="guideItem">
+    <div class="guideCrop" id="alienGuideCrop_alienMouth"></div>
+    <img class="guideCheck" id="guideCheck_alienMouth" src="check.png">
+  </div>
+</div>
+
+<div id="completeScreen">
+  <div id="completeText">全部発見！！</div>
+  <button id="completeClose">閉じる</button>
+</div>
+
+<a-scene
+  id="mainScene"
+  style="display:none"
+  mindar-image="imageTargetSrc: targets.mind; maxTrack: 1;"
+  color-space="sRGB"
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false">
+
+  <a-assets>
+    <img id="girlImg"    src="girl.jpg" />
+    <img id="animalImg"  src="animal.jpg" />
+    <img id="alienImg"   src="alien.jpg" />
+    <img id="checkImg"   src="check.png" />
+  </a-assets>
+
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+  <a-entity id="targetGirl" markerhandler mindar-image-target="targetIndex: 5">
+    <a-plane id="girlPlane" src="#girlImg"
+      width="1" height="1"
+      material="shader: flat; transparent: true;">
+    </a-plane>
+    <a-entity id="guideContainer"></a-entity>
+  </a-entity>
+
+  <a-entity id="targetAnimal" markerhandler mindar-image-target="targetIndex: 6">
+    <a-plane id="animalPlane" src="#animalImg"
+      width="1" height="1"
+      material="shader: flat; transparent: true;">
+    </a-plane>
+    <a-entity id="animalGuideContainer"></a-entity>
+  </a-entity>
+
+  <a-entity id="targetAlien" markerhandler mindar-image-target="targetIndex: 7">
+    <a-plane id="alienPlane" src="#alienImg"
+      width="1" height="1"
+      material="shader: flat; transparent: true;">
+    </a-plane>
+    <a-entity id="alienGuideContainer"></a-entity>
+  </a-entity>
+
+</a-scene>
+
+<script>
+// ========================
+// ターゲット定義
+// ========================
+
+const targets = [
+  { id: "heart",  name: "ワニ",   x:  0.13, y: -0.15, guideSize: 0.3, hitSize: 0.45, found: false },
+  { id: "eye",    name: "ロボ",   x: -0.11, y:  0.15, guideSize: 0.3, hitSize: 0.45, found: false },
+  { id: "ribbon", name: "鬼",     x:  0.38, y:  0.39, guideSize: 0.3, hitSize: 0.45, found: false }
+];
+
+const animalTargets = [
+  { id: "ear",  name: "紫キャラクター", x: -0.2,  y:  0.25, guideSize: 0.2, hitSize: 0.35, found: false },
+  { id: "nose", name: "緑キャラクター", x:  0.1,  y:  0.0,  guideSize: 0.2, hitSize: 0.35, found: false },
+  { id: "tail", name: "山キャラクター", x:  0.36, y: -0.24, guideSize: 0.2, hitSize: 0.35, found: false }
+];
+
+const alienTargets = [
+  { id: "alienEye",   name: "白猫",     x: -0.25, y:  0.22, guideSize: 0.25, hitSize: 0.4, found: false },
+  { id: "alienMouth", name: "ハチワレ猫", x:  0.21, y: -0.14, guideSize: 0.25, hitSize: 0.4, found: false }
+];
+
+const allTargets = [...targets, ...animalTargets, ...alienTargets];
+const totalCount = allTargets.length;
+
+// スケール
+let girlScaleX   = 1, girlScaleY   = 1;
+let animalScaleX = 1, animalScaleY = 1;
+let alienScaleX  = 1, alienScaleY  = 1;
+
+// ========================
+// セーブ / ロード
+// ========================
+
+function saveGame() {
+  localStorage.setItem("arPicSearch", JSON.stringify({
+    targets:       targets.map(t => ({ id: t.id, found: t.found })),
+    animalTargets: animalTargets.map(t => ({ id: t.id, found: t.found })),
+    alienTargets:  alienTargets.map(t => ({ id: t.id, found: t.found }))
+  }));
+}
+
+function loadGame() {
+  let data;
+  try { data = JSON.parse(localStorage.getItem("arPicSearch")); } catch(e) {}
+  if (!data) return;
+
+  [
+    [data.targets,       targets],
+    [data.animalTargets, animalTargets],
+    [data.alienTargets,  alienTargets]
+  ].forEach(([saved, arr]) => {
+    saved?.forEach(s => {
+      const t = arr.find(t => t.id === s.id);
+      if (t && s.found) {
+        t.found = true;
+        const el = document.querySelector("#guideCheck_" + t.id);
+        if (el) el.style.display = "block";
+      }
+    });
+  });
+
+  updateProgress();
+}
+
+// ========================
+// 進捗表示
+// ========================
+
+function updateProgress() {
+  const found = allTargets.filter(t => t.found).length;
+  document.querySelector("#progressCount").textContent = `${found} / ${totalCount}`;
+}
+
+// ========================
+// 発見エフェクト
+// ========================
+
+const effect = document.querySelector("#effect");
+
+function showEffect(message) {
+  effect.innerHTML = message;
+  effect.style.display = "block";
+  void effect.offsetWidth; // アニメーションリセット
+  setTimeout(() => { effect.style.display = "none"; }, 1200);
+}
+
+// ========================
+// コンプリートチェック
+// ========================
+
+function checkComplete() {
+  if (allTargets.every(t => t.found)) {
+    setTimeout(() => {
+      document.querySelector("#completeScreen").style.display = "flex";
+    }, 1500);
+  }
+}
+
+// ========================
+// タッチ / クリック判定
+// ========================
+
+function handleTouch(event) {
+  const camera = document.querySelector("[camera]");
+  if (!camera) return;
+
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+
+  const x = event.touches ? event.touches[0].clientX : event.clientX;
+  const y = event.touches ? event.touches[0].clientY : event.clientY;
+
+  mouse.x =  (x / window.innerWidth)  * 2 - 1;
+  mouse.y = -(y / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera.getObject3D("camera"));
+
+  const objects = [];
+  document.querySelectorAll(".clickable").forEach(el => {
+    if (!el.object3D.visible) return;
+    el.object3D.traverse(obj => { if (obj.isMesh) objects.push(obj); });
+  });
+
+  const intersects = raycaster.intersectObjects(objects, true);
+  if (intersects.length === 0) return;
+
+  const hitEl = intersects[0].object.el || intersects[0].object.parent?.el;
+  if (!hitEl) return;
+
+  const target = allTargets.find(t => t.id === hitEl.id);
+  if (!target || target.found) return;
+
+  // 発見！
+  target.found = true;
+  saveGame();
+  updateProgress();
+  showEffect(target.name + " 発見！！");
+
+  // UIチェック
+  const checkUI = document.querySelector("#guideCheck_" + target.id);
+  if (checkUI) checkUI.style.display = "block";
+
+  // 3Dチェックマーク
+  const isAnimal = animalTargets.includes(target);
+  const isAlien  = alienTargets.includes(target);
+
+  const sx = isAnimal ? animalScaleX : isAlien ? alienScaleX : girlScaleX;
+  const sy = isAnimal ? animalScaleY : isAlien ? alienScaleY : girlScaleY;
+
+  const check = document.createElement("a-plane");
+  check.setAttribute("src", "#checkImg");
+  check.setAttribute("position", `${target.x * sx} ${target.y * sy} 0.08`);
+  const cs = target.guideSize * 1.6;
+  check.setAttribute("width", cs);
+  check.setAttribute("height", cs);
+  check.setAttribute("material", "shader: flat; transparent: true");
+
+  const containerSel = isAnimal ? "#animalGuideContainer"
+                      : isAlien ? "#alienGuideContainer"
+                      :           "#guideContainer";
+  document.querySelector(containerSel).appendChild(check);
+
+  checkComplete();
+}
+
+document.addEventListener("touchstart", handleTouch);
+document.addEventListener("click", handleTouch);
+
+// ========================
+// 画像に合わせてプレーンサイズを自動調整 (Promise化して同期制御しやすく変更)
+// ========================
+function autoFitPlane(imagePath, planeId, maxSize, type) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const aspect = img.width / img.height;
+      const plane  = document.querySelector(planeId);
+      let w = maxSize, h = maxSize;
+      
+      if (plane) {
+        if (aspect >= 1) { w = maxSize; h = maxSize / aspect; }
+        else             { h = maxSize; w = maxSize * aspect;  }
+
+        plane.setAttribute("width",  w);
+        plane.setAttribute("height", h);
+      }
+
+      if (type === "girl")   { girlScaleX   = w; girlScaleY   = h; }
+      if (type === "animal") { animalScaleX = w; animalScaleY = h; }
+      if (type === "alien")  { alienScaleX  = w; alienScaleY  = h; }
+      resolve({ img, scaleX: w, scaleY: h });
+    };
+    img.src = imagePath;
+  });
+}
+
+// ========================
+// 当たり判定 & ガイドリング生成
+// ========================
+function createHitPlanes(container, targetList, getScale) {
+  targetList.forEach(target => {
+    const { sx, sy } = getScale();
+
+    const touch = document.createElement("a-plane");
+    touch.setAttribute("class", "clickable");
+    touch.setAttribute("id", target.id);
+    touch.setAttribute("position", `${target.x * sx} ${target.y * sy} 0.05`);
+    touch.setAttribute("width",  target.hitSize);
+    touch.setAttribute("height", target.hitSize);
+    touch.setAttribute("material", "color: red; opacity: 0; transparent: true; side: double; depthTest: false;");
+    container.appendChild(touch);
+
+    const ring = document.createElement("a-ring");
+    ring.setAttribute("position", `${target.x * sx} ${target.y * sy} 0.03`);
+    ring.setAttribute("radius-inner", target.guideSize / 2);
+    ring.setAttribute("radius-outer", target.guideSize / 2 + 0.02);
+    ring.setAttribute("material", "color: yellow; opacity: 0.8; transparent: true; side: double");
+    ring.setAttribute("animation", "property: scale; from: 1 1 1; to: 1.15 1.15 1; dir: alternate; dur: 700; loop: true;");
+    container.appendChild(ring);
+  });
+}
+
+// ========================
+// ガイドUI（切り抜き）生成
+// ========================
+function setupGuideCropAuto({ img, cropSelector, targets, imageUrl, scaleX, scaleY }) {
+  const iw = img.width, ih = img.height;
+  const boxSize = 90;
+
+  targets.forEach(target => {
+    const crop = document.querySelector(cropSelector + target.id);
+    if (!crop) return;
+
+    const imageX = ((target.x * scaleX) + scaleX / 2) / scaleX * iw;
+    const imageY = ((scaleY / 2) - (target.y * scaleY))  / scaleY * ih;
+
+    const cropW = (target.guideSize / scaleX) * iw;
+    const cropH = (target.guideSize / scaleY) * ih;
+
+    const bgW = iw * (boxSize / cropW);
+    const bgH = ih * (boxSize / cropH);
+
+    const posX = boxSize / 2 - imageX * (boxSize / cropW);
+    const posY = boxSize / 2 - imageY * (boxSize / cropH);
+
+    crop.style.backgroundImage    = `url("${imageUrl}")`;
+    crop.style.backgroundSize     = `${bgW}px ${bgH}px`;
+    crop.style.backgroundPosition = `${posX}px ${posY}px`;
+  });
+}
+
+// ========================
+// 初期化・起動処理の一本化
+// ========================
+async function initGame() {
+  // 1. 画像の読み込みとサイズ合わせを確実に待つ
+  const girlResult   = await autoFitPlane("girl.jpg",   "#girlPlane",   2.5, "girl");
+  const animalResult = await autoFitPlane("animal.jpg", "#animalPlane", 2.5, "animal");
+  const alienResult  = await autoFitPlane("alien.jpg",  "#alienPlane",  2.5, "alien");
+
+  // 2. 正確なスケールが決定した後に3D空間の判定オブジェクトを作成
+  createHitPlanes(document.querySelector("#guideContainer"), targets, () => ({ sx: girlScaleX, sy: girlScaleY }));
+  createHitPlanes(document.querySelector("#animalGuideContainer"), animalTargets, () => ({ sx: animalScaleX, sy: animalScaleY }));
+  createHitPlanes(document.querySelector("#alienGuideContainer"), alienTargets, () => ({ sx: alienScaleX, sy: alienScaleY }));
+
+  // 3. セーブデータのロード
+  loadGame();
+
+  // 4. ガイドUIの切り抜き表示
+  setupGuideCropAuto({ img: girlResult.img,   cropSelector: "#guideCrop_",       targets,       imageUrl: "girl.jpg",   scaleX: girlScaleX,   scaleY: girlScaleY   });
+  setupGuideCropAuto({ img: animalResult.img, cropSelector: "#animalGuideCrop_", targets: animalTargets, imageUrl: "animal.jpg", scaleX: animalScaleX, scaleY: animalScaleY });
+  setupGuideCropAuto({ img: alienResult.img,  cropSelector: "#alienGuideCrop_",  targets: alienTargets,  imageUrl: "alien.jpg",  scaleX: alienScaleX,  scaleY: alienScaleY  });
+}
+
+// ドム読み込み後に初期化実行
+window.addEventListener("DOMContentLoaded", initGame);
+
+// ========================
+// AR開始 / メニューへ戻る
+// ========================
+
+document.querySelector("#startBtn").addEventListener("click", async () => {
+  document.querySelector("#menuScreen").style.display = "none";
+  document.querySelector("#mainScene").style.display  = "block";
+  document.querySelector("#backToMenuBtn").style.display = "block";
+
+  // シーンのロードを確実に待ってからARシステムを起動
+  const sceneEl = document.querySelector("#mainScene");
+  if (!sceneEl.hasLoaded) {
+    await new Promise(r => sceneEl.addEventListener("loaded", r));
+  }
+  
+  const ar = sceneEl.systems["mindar-image-system"];
+  if (ar) await ar.start();
+});
+
+document.querySelector("#backToMenuBtn").addEventListener("click", async () => {
+  const ar = document.querySelector("#mainScene").systems["mindar-image-system"];
+  if (ar) try { await ar.stop(); } catch(e) {}
+
+  document.querySelector("#mainScene").style.display    = "none";
+  document.querySelector("#menuScreen").style.display   = "flex";
+  document.querySelector("#backToMenuBtn").style.display = "none";
+  document.querySelector("#progressBox").style.display  = "none";
+  ["#guideUI", "#animalGuideUI", "#alienGuideUI"].forEach(s => {
+    document.querySelector(s).style.display = "none";
+  });
+});
+
+document.querySelector("#completeClose").addEventListener("click", () => {
+  document.querySelector("#completeScreen").style.display = "none";
+});
+</script>
+
+</body>
+</html>
