@@ -753,6 +753,7 @@ function checkComplete(){
 
       completeWrap.style.display =
         "flex";
+backToMenuBtn.style.display = "none";
 
     },1000);
 
@@ -1028,8 +1029,9 @@ document
 
   e.stopPropagation();
 
-  completeWrap.style.display =
-    "none";
+  completeWrap.style.display = "none";
+
+  backToMenuBtn.style.display = "block";
 
 });
 
