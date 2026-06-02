@@ -66,7 +66,7 @@ cursor: pointer;
 
 /* ======================
 戻る
-====================== */
+===================== */
 
 #backToMenuBtn{
 position:fixed;
@@ -114,30 +114,31 @@ cursor: pointer;
 }
 
 /* ======================
-★画面固定フォトフレーム UI
+★画面固定フォトフレーム UI（ぎりぎりいっぱいに変更）
 ====================== */
 
-/* 画面全体にぴったり固定するフレーム */
 #photoFrameOverlay {
 position: fixed;
 inset: 0;
 display: none;
-z-index: 9998; /* カメラ映像の上、UIの下 */
-pointer-events: none; /* 下のカメラやボタンをタップできるようにスルー */
-justify-content: center;
-align-items: center;
+z-index: 9998; 
+pointer-events: none; 
 }
 
 #photoFrameOverlay img {
-width: 80%; /* 撮影ロジックに合わせたサイズ */
-height: auto;
-max-height: 80vh;
-object-fit: contain;
+width: 100%;
+height: 100%;
+
+/* 【パターンの切り替え】
+  初期設定は「cover」にしています。フレームの形状に合わせて選んでください。
+*/
+/*object-fit: cover; */    /* 【おすすめ】縦横比を保ったまま、画面に隙間なく一杯に広げます（端が少しはみ出る場合があります） */
+ object-fit: fill;   /* 【歪み許容】画像を引き伸ばして、画面サイズに完璧に変形させて合わせます */
 }
 
 #captureBtn{
 position:fixed;
-bottom:100px;
+bottom:50px; /* フル画面で見やすくなるよう、位置を少し下に調整 */
 left:50%;
 transform:translateX(-50%);
 padding:18px 32px;
@@ -151,7 +152,6 @@ display:none;
 cursor: pointer;
 }
 
-/* ★追加: フレームを消すための閉じるボタン */
 #closeFrameBtn {
 position: fixed;
 top: 20px;
@@ -219,7 +219,6 @@ vr-mode-ui="enabled:false"
 device-orientation-permission-ui="enabled:false">
 
 <a-camera camera position="0 0 0" look-controls="enabled:false"></a-camera>
-
 <a-entity id="targetPhoto" mindar-image-target="targetIndex:8"></a-entity>
 
 </a-scene>
@@ -232,12 +231,9 @@ const backBtn = document.querySelector("#backToMenuBtn");
 const hintScreen = document.querySelector("#hintScreen");
 const captureBtn = document.querySelector("#captureBtn");
 const targetPhoto = document.querySelector("#targetPhoto");
-
-// ★追加したUI
 const photoFrameOverlay = document.querySelector("#photoFrameOverlay");
 const closeFrameBtn = document.querySelector("#closeFrameBtn");
 
-// マーカーが読み込まれてフレームが固定されているかのフラグ
 let isFrameActive = false;
 
 /* ======================
@@ -264,7 +260,6 @@ const arSystem = mainScene.systems["mindar-image-system"];
 if(arSystem){
 await arSystem.stop();
 }
-// すべての状態をリセット
 resetPhotoFrame();
 
 mainScene.style.display="none";
@@ -284,20 +279,20 @@ hintScreen.style.display="none";
 });
 
 /* ======================
-★フォトフレーム・撮影ボタンを消す処理（閉じるボタン）
+フォトフレームを消す処理
 ====================== */
 function resetPhotoFrame() {
 isFrameActive = false;
 photoFrameOverlay.style.display = "none";
 captureBtn.style.display = "none";
 closeFrameBtn.style.display = "none";
-backBtn.style.display = "block"; // 戻るボタンを再表示
+backBtn.style.display = "block";
 }
 
 closeFrameBtn.addEventListener("click", resetPhotoFrame);
 
 /* ======================
-フォトスポット（撮影・保存）
+フォトスポット（全画面撮影対応）
 ====================== */
 captureBtn.addEventListener("click", async ()=>{
 try{
@@ -316,20 +311,41 @@ const ctx = canvas.getContext("2d");
 canvas.width = video.videoWidth;
 canvas.height = video.videoHeight;
 
-/* カメラ映像 */
+/* 1. カメラ映像を一杯に描画 */
 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-/* ARフレーム（画面固定と同じ比率で書き込み） */
+/* 2. ARフレームを画面いっぱいに合成（CSSの表示方法に連動） */
 const frame = document.querySelector("#overlayFrameImg");
 if(frame.complete){
-const frameWidth = canvas.width * 0.8;
-const frameHeight = frameWidth * (frame.naturalHeight / frame.naturalWidth);
-const x = (canvas.width - frameWidth)/2;
-const y = (canvas.height - frameHeight)/2;
-ctx.drawImage(frame, x, y, frameWidth, frameHeight);
+const imgStyle = window.getComputedStyle(frame);
+const fitType = imgStyle.objectFit;
+
+let drawW = canvas.width;
+let drawH = canvas.height;
+let drawX = 0;
+let drawY = 0;
+
+if (fitType === "cover") {
+// CSSの object-fit: cover を再現する計算
+const videoAspect = canvas.width / canvas.height;
+const frameAspect = frame.naturalWidth / frame.naturalHeight;
+
+if (frameAspect > videoAspect) {
+drawH = canvas.height;
+drawW = canvas.height * frameAspect;
+drawX = (canvas.width - drawW) / 2;
+} else {
+drawW = canvas.width;
+drawH = canvas.width / frameAspect;
+drawY = (canvas.height - drawH) / 2;
+}
+}
+// fitType === "fill" の場合はデフォルトの canvas.width / canvas.height（引き伸ばし）でそのまま描画されます
+
+ctx.drawImage(frame, drawX, drawY, drawW, drawH);
 }
 
-/* 保存 */
+/* 3. 保存処理 */
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 if(isIOS){
 const imageURL = canvas.toDataURL("image/jpeg", 0.95);
@@ -354,23 +370,19 @@ closeFrameBtn.style.display="block";
 });
 
 /* ======================
-★ターゲット認識時の切り替え
+ターゲット認識
 ====================== */
 targetPhoto.addEventListener("targetFound", ()=>{
-// すでにフレーム表示中なら何もしない
 if (isFrameActive) return;
 
 isFrameActive = true;
-photoFrameOverlay.style.display = "flex"; // 画面固定フォトフレーム表示
-captureBtn.style.display = "block";       // 撮影ボタン表示
-closeFrameBtn.style.display = "block";   // 閉じるボタン表示
-backBtn.style.display = "none";          // 撮影中邪魔にならないようメニュー戻るボタンを隠す
+photoFrameOverlay.style.display = "block"; 
+captureBtn.style.display = "block";       
+closeFrameBtn.style.display = "block";   
+backBtn.style.display = "none";          
 });
 
-// 画面固定になったため、Mind-AR側でロストしても自動では何も消さない
-targetPhoto.addEventListener("targetLost", ()=>{
-// 処理なし（「閉じる」が押されるまで表示をキープ）
-});
+targetPhoto.addEventListener("targetLost", ()=>{});
 </script>
 
 <canvas id="captureCanvas" style="display:none;"></canvas>
