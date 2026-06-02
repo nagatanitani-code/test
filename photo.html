@@ -114,22 +114,25 @@ cursor: pointer;
 }
 
 /* ======================
-フォト案内
+★画面固定フォトフレーム UI
 ====================== */
 
-#photoMessage{
-position:fixed;
-bottom:30px;
-left:50%;
-transform:translateX(-50%);
-background:rgba(0,0,0,.82);
-color:white;
-padding:18px 28px;
-border-radius:24px;
-font-size:22px;
-text-align:center;
-display:none;
-z-index:9999;
+/* 画面全体にぴったり固定するフレーム */
+#photoFrameOverlay {
+position: fixed;
+inset: 0;
+display: none;
+z-index: 9998; /* カメラ映像の上、UIの下 */
+pointer-events: none; /* 下のカメラやボタンをタップできるようにスルー */
+justify-content: center;
+align-items: center;
+}
+
+#photoFrameOverlay img {
+width: 80%; /* 撮影ロジックに合わせたサイズ */
+height: auto;
+max-height: 80vh;
+object-fit: contain;
 }
 
 #captureBtn{
@@ -145,6 +148,23 @@ background:#ff9800;
 color:white;
 z-index:99999;
 display:none;
+cursor: pointer;
+}
+
+/* ★追加: フレームを消すための閉じるボタン */
+#closeFrameBtn {
+position: fixed;
+top: 20px;
+right: 20px;
+padding: 12px 18px;
+font-size: 20px;
+border: none;
+border-radius: 14px;
+background: rgba(255, 59, 48, 0.9);
+color: white;
+font-weight: bold;
+z-index: 99999;
+display: none;
 cursor: pointer;
 }
 
@@ -185,7 +205,11 @@ cursor: pointer;
 <button id="closeHintBtn" class="backBtn">戻る</button>
 </div>
 
+<div id="photoFrameOverlay">
+<img src="frame.png" id="overlayFrameImg">
+</div>
 <button id="captureBtn">📸 撮影する</button>
+<button id="closeFrameBtn">❌ 閉じる</button>
 
 <a-scene
 id="mainScene"
@@ -194,15 +218,9 @@ mindar-image="imageTargetSrc: targets.mind; maxTrack:1;"
 vr-mode-ui="enabled:false"
 device-orientation-permission-ui="enabled:false">
 
-<a-assets>
-<img id="frameImg" src="frame.png">
-</a-assets>
-
 <a-camera camera position="0 0 0" look-controls="enabled:false"></a-camera>
 
-<a-entity id="targetPhoto" mindar-image-target="targetIndex:8">
-<a-plane src="#frameImg" position="0 1 0" width="2" height="3" material="shader:flat;transparent:true;"></a-plane>
-</a-entity>
+<a-entity id="targetPhoto" mindar-image-target="targetIndex:8"></a-entity>
 
 </a-scene>
 
@@ -212,12 +230,15 @@ const mainScene = document.querySelector("#mainScene");
 const startBtn = document.querySelector("#startBtn");
 const backBtn = document.querySelector("#backToMenuBtn");
 const hintScreen = document.querySelector("#hintScreen");
-const photoMessage = document.querySelector("#photoMessage");
 const captureBtn = document.querySelector("#captureBtn");
 const targetPhoto = document.querySelector("#targetPhoto");
 
-// ★ 追加：マーカーが一度でも発見されたかを記録するフラグ
-let isFrameFixed = false;
+// ★追加したUI
+const photoFrameOverlay = document.querySelector("#photoFrameOverlay");
+const closeFrameBtn = document.querySelector("#closeFrameBtn");
+
+// マーカーが読み込まれてフレームが固定されているかのフラグ
+let isFrameActive = false;
 
 /* ======================
 AR開始
@@ -236,22 +257,19 @@ await arSystem.start();
 });
 
 /* ======================
-戻る
+戻る（メニューへ）
 ====================== */
 backBtn.addEventListener("click", async ()=>{
 const arSystem = mainScene.systems["mindar-image-system"];
 if(arSystem){
 await arSystem.stop();
 }
-// ★ 追加：メニューに戻る時は固定化フラグをリセット
-isFrameFixed = false;
-targetPhoto.setAttribute("visible", false);
+// すべての状態をリセット
+resetPhotoFrame();
 
 mainScene.style.display="none";
 menuScreen.style.display="flex";
 backBtn.style.display="none";
-photoMessage.style.display="none";
-captureBtn.style.display="none";
 });
 
 /* ======================
@@ -266,15 +284,30 @@ hintScreen.style.display="none";
 });
 
 /* ======================
-フォトスポット
+★フォトフレーム・撮影ボタンを消す処理（閉じるボタン）
+====================== */
+function resetPhotoFrame() {
+isFrameActive = false;
+photoFrameOverlay.style.display = "none";
+captureBtn.style.display = "none";
+closeFrameBtn.style.display = "none";
+backBtn.style.display = "block"; // 戻るボタンを再表示
+}
+
+closeFrameBtn.addEventListener("click", resetPhotoFrame);
+
+/* ======================
+フォトスポット（撮影・保存）
 ====================== */
 captureBtn.addEventListener("click", async ()=>{
 try{
 captureBtn.style.display="none";
+closeFrameBtn.style.display="none";
 const video = document.querySelector("video");
 if(!video){
 alert("カメラ取得失敗");
 captureBtn.style.display="block";
+closeFrameBtn.style.display="block";
 return;
 }
 
@@ -286,11 +319,11 @@ canvas.height = video.videoHeight;
 /* カメラ映像 */
 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-/* ARフレーム */
-const frame = document.querySelector("#frameImg");
+/* ARフレーム（画面固定と同じ比率で書き込み） */
+const frame = document.querySelector("#overlayFrameImg");
 if(frame.complete){
 const frameWidth = canvas.width * 0.8;
-const frameHeight = frameWidth * 1.5;
+const frameHeight = frameWidth * (frame.naturalHeight / frame.naturalWidth);
 const x = (canvas.width - frameWidth)/2;
 const y = (canvas.height - frameHeight)/2;
 ctx.drawImage(frame, x, y, frameWidth, frameHeight);
@@ -317,25 +350,26 @@ console.error(e);
 alert("撮影失敗");
 }
 captureBtn.style.display="block";
+closeFrameBtn.style.display="block";
 });
 
 /* ======================
-★ 修正：ターゲット認識・ロストの制御
+★ターゲット認識時の切り替え
 ====================== */
 targetPhoto.addEventListener("targetFound", ()=>{
-isFrameFixed = true; // マーカーを見つけたので固定モードをONにする
-captureBtn.style.display = "block";
+// すでにフレーム表示中なら何もしない
+if (isFrameActive) return;
+
+isFrameActive = true;
+photoFrameOverlay.style.display = "flex"; // 画面固定フォトフレーム表示
+captureBtn.style.display = "block";       // 撮影ボタン表示
+closeFrameBtn.style.display = "block";   // 閉じるボタン表示
+backBtn.style.display = "none";          // 撮影中邪魔にならないようメニュー戻るボタンを隠す
 });
 
-targetPhoto.addEventListener("targetLost", () => {
-// すでに一度見つけていれば、見失っても消さない
-if (isFrameFixed) {
-setTimeout(() => {
-targetPhoto.setAttribute("visible", true); // Mind-ARによる非表示化を強制上書き
-}, 0);
-} else {
-captureBtn.style.display = "none";
-}
+// 画面固定になったため、Mind-AR側でロストしても自動では何も消さない
+targetPhoto.addEventListener("targetLost", ()=>{
+// 処理なし（「閉じる」が押されるまで表示をキープ）
 });
 </script>
 
