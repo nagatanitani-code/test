@@ -84,8 +84,26 @@
       font-size: 42px;
       color: gold;
       font-weight: bold;
-      margin-bottom: 30px;
+      margin-bottom: 10px; /* 余白を少し詰める */
       text-shadow: 0 0 20px rgba(255,215,0,0.7);
+    }
+
+    /* ★ 追加：スタートボタン用の説明文スタイル */
+    .menuGuide {
+      font-size: 16px;
+      color: #e0e0e0;
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: -4px; /* ボタンとの距離を少し近づける */
+      padding: 0 20px; /* スマホ画面の端で改行された時のマージン */
+    }
+
+    /* ★ 追加：説明文とボタンをまとめるグループ */
+    .menuGroup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
     }
 
     #menuScreen button {
@@ -174,7 +192,6 @@
   </style>
 
   <script>
-    // 【修正】A-FrameコンポーネントはHTML読み込み前に登録する必要があるためhead内に移動
     AFRAME.registerComponent("markerhandler", {
       init() {
         const effect = document.querySelector("#effect");
@@ -201,7 +218,14 @@
 
 <div id="menuScreen">
   <div id="gameTitle">絵探しゲーム</div>
-  <button id="startBtn">スタート</button>
+  
+  <div class="menuGroup">
+    <div class="menuGuide">
+      ここから読み込んでね！<br>
+      上のガイドの絵を探してタップしよう！
+    </div>
+    <button id="startBtn">スタート</button>
+  </div>
 </div>
 
 <button id="backToMenuBtn">メニューへ戻る</button>
@@ -320,14 +344,13 @@ const animalTargets = [
 ];
 
 const alienTargets = [
-  { id: "alienEye",   name: "白猫",     x: -0.25, y:  0.22, guideSize: 0.25, hitSize: 0.4, found: false },
+  { id: "alienEye",   name: "白猫",      x: -0.25, y:  0.22, guideSize: 0.25, hitSize: 0.4, found: false },
   { id: "alienMouth", name: "ハチワレ猫", x:  0.21, y: -0.14, guideSize: 0.25, hitSize: 0.4, found: false }
 ];
 
 const allTargets = [...targets, ...animalTargets, ...alienTargets];
 const totalCount = allTargets.length;
 
-// スケール
 let girlScaleX   = 1, girlScaleY   = 1;
 let animalScaleX = 1, animalScaleY = 1;
 let alienScaleX  = 1, alienScaleY  = 1;
@@ -367,31 +390,19 @@ function loadGame() {
   updateProgress();
 }
 
-// ========================
-// 進捗表示
-// ========================
-
 function updateProgress() {
   const found = allTargets.filter(t => t.found).length;
   document.querySelector("#progressCount").textContent = `${found} / ${totalCount}`;
 }
-
-// ========================
-// 発見エフェクト
-// ========================
 
 const effect = document.querySelector("#effect");
 
 function showEffect(message) {
   effect.innerHTML = message;
   effect.style.display = "block";
-  void effect.offsetWidth; // アニメーションリセット
+  void effect.offsetWidth;
   setTimeout(() => { effect.style.display = "none"; }, 1200);
 }
-
-// ========================
-// コンプリートチェック
-// ========================
 
 function checkComplete() {
   if (allTargets.every(t => t.found)) {
@@ -400,10 +411,6 @@ function checkComplete() {
     }, 1500);
   }
 }
-
-// ========================
-// タッチ / クリック判定
-// ========================
 
 function handleTouch(event) {
   const camera = document.querySelector("[camera]");
@@ -435,17 +442,14 @@ function handleTouch(event) {
   const target = allTargets.find(t => t.id === hitEl.id);
   if (!target || target.found) return;
 
-  // 発見！
   target.found = true;
   saveGame();
   updateProgress();
   showEffect(target.name + " 発見！！");
 
-  // UIチェック
   const checkUI = document.querySelector("#guideCheck_" + target.id);
   if (checkUI) checkUI.style.display = "block";
 
-  // 3Dチェックマーク
   const isAnimal = animalTargets.includes(target);
   const isAlien  = alienTargets.includes(target);
 
@@ -471,9 +475,6 @@ function handleTouch(event) {
 document.addEventListener("touchstart", handleTouch);
 document.addEventListener("click", handleTouch);
 
-// ========================
-// 画像に合わせてプレーンサイズを自動調整 (Promise化して同期制御しやすく変更)
-// ========================
 function autoFitPlane(imagePath, planeId, maxSize, type) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -499,9 +500,6 @@ function autoFitPlane(imagePath, planeId, maxSize, type) {
   });
 }
 
-// ========================
-// 当たり判定 & ガイドリング生成
-// ========================
 function createHitPlanes(container, targetList, getScale) {
   targetList.forEach(target => {
     const { sx, sy } = getScale();
@@ -525,9 +523,6 @@ function createHitPlanes(container, targetList, getScale) {
   });
 }
 
-// ========================
-// ガイドUI（切り抜き）生成
-// ========================
 function setupGuideCropAuto({ img, cropSelector, targets, imageUrl, scaleX, scaleY }) {
   const iw = img.width, ih = img.height;
   const boxSize = 90;
@@ -554,42 +549,29 @@ function setupGuideCropAuto({ img, cropSelector, targets, imageUrl, scaleX, scal
   });
 }
 
-// ========================
-// 初期化・起動処理の一本化
-// ========================
 async function initGame() {
-  // 1. 画像の読み込みとサイズ合わせを確実に待つ
   const girlResult   = await autoFitPlane("girl.jpg",   "#girlPlane",   2.5, "girl");
   const animalResult = await autoFitPlane("animal.jpg", "#animalPlane", 2.5, "animal");
   const alienResult  = await autoFitPlane("alien.jpg",  "#alienPlane",  2.5, "alien");
 
-  // 2. 正確なスケールが決定した後に3D空間の判定オブジェクトを作成
   createHitPlanes(document.querySelector("#guideContainer"), targets, () => ({ sx: girlScaleX, sy: girlScaleY }));
   createHitPlanes(document.querySelector("#animalGuideContainer"), animalTargets, () => ({ sx: animalScaleX, sy: animalScaleY }));
   createHitPlanes(document.querySelector("#alienGuideContainer"), alienTargets, () => ({ sx: alienScaleX, sy: alienScaleY }));
 
-  // 3. セーブデータのロード
   loadGame();
 
-  // 4. ガイドUIの切り抜き表示
   setupGuideCropAuto({ img: girlResult.img,   cropSelector: "#guideCrop_",       targets,       imageUrl: "girl.jpg",   scaleX: girlScaleX,   scaleY: girlScaleY   });
   setupGuideCropAuto({ img: animalResult.img, cropSelector: "#animalGuideCrop_", targets: animalTargets, imageUrl: "animal.jpg", scaleX: animalScaleX, scaleY: animalScaleY });
   setupGuideCropAuto({ img: alienResult.img,  cropSelector: "#alienGuideCrop_",  targets: alienTargets,  imageUrl: "alien.jpg",  scaleX: alienScaleX,  scaleY: alienScaleY  });
 }
 
-// ドム読み込み後に初期化実行
 window.addEventListener("DOMContentLoaded", initGame);
-
-// ========================
-// AR開始 / メニューへ戻る
-// ========================
 
 document.querySelector("#startBtn").addEventListener("click", async () => {
   document.querySelector("#menuScreen").style.display = "none";
   document.querySelector("#mainScene").style.display  = "block";
   document.querySelector("#backToMenuBtn").style.display = "block";
 
-  // シーンのロードを確実に待ってからARシステムを起動
   const sceneEl = document.querySelector("#mainScene");
   if (!sceneEl.hasLoaded) {
     await new Promise(r => sceneEl.addEventListener("loaded", r));

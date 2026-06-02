@@ -2,8 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -21,61 +20,64 @@ body{
 ====================== */
 
 #menuScreen{
-
   position:fixed;
   inset:0;
-
   display:flex;
   flex-direction:column;
-
   justify-content:center;
   align-items:center;
-
-  gap:25px;
-
+  gap:16px; /* ボタンと解説が増えたため全体の隙間を少しコンパクトに調整 */
   background:
   linear-gradient(
     180deg,
     #101820,
     #1d2d44
   );
-
   z-index:9999;
 }
 
 #gameTitle{
-
   font-size:42px;
   font-weight:bold;
-
   color:gold;
-
+  margin-bottom: 10px; /* タイトル下の余白 */
   text-shadow:
   0 0 20px rgba(255,215,0,.7);
+}
 
+/* ★追加：説明文とボタンを綺麗に縦並びにするグループ */
+.menuGroup{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px; /* 説明文とボタンの間の隙間 */
+}
+
+/* ★追加：各ボタンの解説テキスト用スタイル */
+.menuGuide{
+  font-size:14px;
+  color:#e0e0e0;
+  text-align:center;
+  line-height:1.4;
+  letter-spacing: 0.5px;
 }
 
 .menuBtn{
-
   width:260px;
-
   padding:18px;
-
   border:none;
   border-radius:18px;
-
   font-size:24px;
   font-weight:bold;
-
   color:white;
-
   background:
   linear-gradient(
     135deg,
     #ff9800,
     #ff5722
   );
-
+  box-shadow: 0 6px 18px rgba(0,0,0,.4);
+  cursor: pointer;
 }
 
 /* ======================
@@ -83,25 +85,16 @@ body{
 ====================== */
 
 #backToMenuBtn{
-
   position:fixed;
-
   top:20px;
   left:20px;
-
   z-index:9999;
-
   display:none;
-
   padding:12px 20px;
-
   border:none;
   border-radius:14px;
-
   background:rgba(0,0,0,.8);
-
   color:white;
-
   font-size:18px;
 }
 
@@ -110,49 +103,32 @@ body{
 ====================== */
 
 #treasureBox{
-
   position:fixed;
-
   top:15px;
   right:15px;
-
   z-index:999;
-
   display:none;
-
   text-align:center;
-
   padding:15px;
-
   border-radius:20px;
-
   color:white;
-
   background:
   rgba(0,0,0,.75);
-
 }
 
 #treasureTitle{
-
   font-size:12px;
   color:gold;
-
 }
 
 #treasureCount{
-
   font-size:28px;
   font-weight:bold;
-
 }
 
 #treasureImage{
-
   width:120px;
-
   margin-top:10px;
-
   border-radius:12px;
 }
 
@@ -161,30 +137,19 @@ body{
 ====================== */
 
 #treasureEffect{
-
   position:fixed;
-
   bottom:40px;
   left:50%;
-
   transform:
   translateX(-50%);
-
   background:gold;
-
   color:black;
-
   font-size:24px;
   font-weight:bold;
-
   padding:12px 24px;
-
   border-radius:14px;
-
   display:none;
-
   z-index:9999;
-
 }
 
 /* ======================
@@ -192,58 +157,41 @@ body{
 ====================== */
 
 #treasureScreen{
-
   position:fixed;
-
   inset:0;
-
   display:none;
-
   flex-direction:column;
-
   justify-content:center;
   align-items:center;
-
   gap:25px;
-
   background:
   linear-gradient(
     180deg,
     #111827,
     #1e293b
   );
-
   z-index:20000;
 }
 
 .treasureGrid{
-
   display:flex;
   gap:20px;
 }
 
 .treasureGrid img{
-
   width:150px;
   height:150px;
-
   border-radius:18px;
-
   background:white;
+  object-fit: cover;
 }
 
 .backBtn{
-
   padding:16px 30px;
-
   border:none;
-
   border-radius:18px;
-
   font-size:22px;
-
   background:#ff9800;
-
   color:white;
 }
 
@@ -252,47 +200,30 @@ body{
 ====================== */
 
 #completeTreasure{
-
   position:fixed;
-
   inset:0;
-
   display:none;
-
   flex-direction:column;
-
   justify-content:center;
   align-items:center;
-
   gap:25px;
-
   background:
   rgba(0,0,0,.75);
-
   z-index:30000;
 }
 
 #completeText{
-
   font-size:42px;
-
   font-weight:bold;
-
   color:gold;
 }
 
 #downloadWallpaperBtn{
-
   padding:18px 30px;
-
   border:none;
-
   border-radius:18px;
-
   font-size:24px;
-
   color:white;
-
   background:
   linear-gradient(
     135deg,
@@ -301,76 +232,54 @@ body{
   );
 }
 
+/* ======================
+   場所確認画面
+====================== */
+
 #hintScreen{
-
   position:fixed;
-
   inset:0;
-
   display:none;
-
   flex-direction:column;
-
   justify-content:center;
   align-items:center;
-
   gap:25px;
-
   background:
     linear-gradient(
       180deg,
       #111827,
       #1e293b
     );
-
   z-index:20000;
-
 }
 
 .hintGrid{
-
   display:flex;
-
   gap:20px;
-
 }
 
 .hintGrid img{
-
   width:180px;
-
   border-radius:20px;
-
+  object-fit: cover;
 }
 
 #closeCompleteBtn{
-
   position:absolute;
-
   top:20px;
   right:20px;
-
   width:50px;
   height:50px;
-
   border-radius:50%;
-
   background:rgba(0,0,0,.8);
-
   color:white;
-
   font-size:32px;
   font-weight:bold;
-
   display:flex;
-
   align-items:center;
   justify-content:center;
-
   cursor:pointer;
-
   border:2px solid white;
-
 }
 
 </style>
@@ -378,42 +287,38 @@ body{
 
 <body>
 
-<!-- メニュー -->
-
 <div id="menuScreen">
 
   <div id="gameTitle">
     お宝探しAR
   </div>
 
-  <button
-    id="startBtn"
-    class="menuBtn">
-    探索開始
-  </button>
+  <div class="menuGroup">
+    <div class="menuGuide">最初にここから読み込んでね！</div>
+    <button id="startBtn" class="menuBtn">
+      探索開始
+    </button>
+  </div>
 
-  <button
-    id="openTreasureBtn"
-    class="menuBtn">
-    お宝図鑑
-  </button>
+  <div class="menuGroup">
+    <div class="menuGuide">ここで取得したお宝を確認できるよ！</div>
+    <button id="openTreasureBtn" class="menuBtn">
+      お宝図鑑
+    </button>
+  </div>
 
-<button
-  id="openHintBtn"
-  class="menuBtn">
-  場所確認
-</button>
-
+  <div class="menuGroup">
+    <div class="menuGuide">ここでお宝の場所を確認できるよ！</div>
+    <button id="openHintBtn" class="menuBtn">
+      場所確認
+    </button>
+  </div>
 
 </div>
-
-<!-- 戻る -->
 
 <button id="backToMenuBtn">
 メニューへ戻る
 </button>
-
-<!-- お宝BOX -->
 
 <div id="treasureBox">
 
@@ -425,20 +330,13 @@ body{
     0 / 2
   </div>
 
-  <img
-    id="treasureImage"
-    src=""
-  >
+  <img id="treasureImage" src="">
 
 </div>
-
-<!-- 発見演出 -->
 
 <div id="treasureEffect">
 宝発見！
 </div>
-
-<!-- 図鑑 -->
 
 <div id="treasureScreen">
 
@@ -447,22 +345,11 @@ body{
   </h1>
 
   <div class="treasureGrid">
-
-    <img
-      id="menuTreasure1"
-      src="treasure_unknown.jpg"
-    >
-
-    <img
-      id="menuTreasure2"
-      src="treasure_unknown.jpg"
-    >
-
+    <img id="menuTreasure1" src="treasure_unknown.jpg">
+    <img id="menuTreasure2" src="treasure_unknown.jpg">
   </div>
 
-  <button
-    id="closeTreasureBtn"
-    class="backBtn">
+  <button id="closeTreasureBtn" class="backBtn">
     戻る
   </button>
 
@@ -475,113 +362,48 @@ body{
   </h1>
 
   <div class="hintGrid">
-
     <img src="hint1.jpg">
-
     <img src="hint2.jpg">
-
   </div>
 
-  <button
-    id="closeHintBtn"
-    class="backBtn">
-
+  <button id="closeHintBtn" class="backBtn">
     戻る
-
   </button>
 
 </div>
 
-<!-- コンプリート -->
-
 <div id="completeTreasure">
-  <div id="closeCompleteBtn">
-    ×
-  </div>
-  <div id="completeText">
-    COMPLETE!!
-  </div>
-
+  <div id="closeCompleteBtn">×</div>
+  <div id="completeText">COMPLETE!!</div>
   <button id="downloadWallpaperBtn">
     wallpaper入手
   </button>
-
 </div>
-
-<!-- AR -->
 
 <a-scene
 id="mainScene"
 style="display:none"
-mindar-image="
-imageTargetSrc: targets.mind;
-maxTrack:1;
-"
+mindar-image="imageTargetSrc: targets.mind; maxTrack:1;"
+color-space="sRGB"
 vr-mode-ui="enabled:false"
 device-orientation-permission-ui="enabled:false">
 
 <a-assets>
-
   <img id="coinImg" src="coin.jpg">
   <img id="goldImg" src="gold.jpg">
-
 </a-assets>
 
-<a-camera
-camera
-position="0 0 0"
-look-controls="enabled:false">
-</a-camera>
+<a-camera camera position="0 0 0" look-controls="enabled:false"></a-camera>
 
-<!-- coin -->
-
-<a-entity
-id="targetCoin"
-mindar-image-target="targetIndex:3">
-
-  <a-plane
-  width="0.01"
-  height="0.01"
-  visible="false">
-  </a-plane>
-
+<a-entity id="targetCoin" mindar-image-target="targetIndex:3">
+  <a-plane width="0.01" height="0.01" visible="false"></a-plane>
 </a-entity>
 
-<!-- gold -->
-
-<a-entity
-id="targetGold"
-mindar-image-target="targetIndex:4">
-
-  <a-plane
-  width="0.01"
-  height="0.01"
-  visible="false">
-  </a-plane>
-
+<a-entity id="targetGold" mindar-image-target="targetIndex:4">
+  <a-plane width="0.01" height="0.01" visible="false"></a-plane>
 </a-entity>
 
 </a-scene>
-
-<a-scene
-  id="mainScene"
-  style="display:none"
-  mindar-image="imageTargetSrc: targets.mind; maxTrack:1;"
-  color-space="sRGB"
-  vr-mode-ui="enabled:false"
-  device-orientation-permission-ui="enabled:false">
-
-<a-assets>
-
-  <img id="coinImg" src="coin.jpg">
-  <img id="goldImg" src="gold.jpg">
-
-</a-assets>
-
-<a-camera
-  position="0 0 0"
-  look-controls="enabled:false">
-</a-camera>
 
 
 <script>
@@ -589,33 +411,15 @@ mindar-image-target="targetIndex:4">
 // ======================
 // 基本変数
 // ======================
-
-const menuScreen =
-document.querySelector("#menuScreen");
-
-const mainScene =
-document.querySelector("#mainScene");
-
-const startBtn =
-document.querySelector("#startBtn");
-
-const backToMenuBtn =
-document.querySelector("#backToMenuBtn");
-
-const treasureEffect =
-document.querySelector("#treasureEffect");
-
-const treasureCount =
-document.querySelector("#treasureCount");
-
-const treasureImage =
-document.querySelector("#treasureImage");
-
-const treasureBox =
-document.querySelector("#treasureBox");
-
-const completeTreasure =
-document.querySelector("#completeTreasure");
+const menuScreen = document.querySelector("#menuScreen");
+const mainScene = document.querySelector("#mainScene");
+const startBtn = document.querySelector("#startBtn");
+const backToMenuBtn = document.querySelector("#backToMenuBtn");
+const treasureEffect = document.querySelector("#treasureEffect");
+const treasureCount = document.querySelector("#treasureCount");
+const treasureImage = document.querySelector("#treasureImage");
+const treasureBox = document.querySelector("#treasureBox");
+const completeTreasure = document.querySelector("#completeTreasure");
 
 let coinFound = false;
 let goldFound = false;
@@ -627,318 +431,184 @@ const totalTreasure = 2;
 // ======================
 // セーブ
 // ======================
-
 function saveGame(){
-
   localStorage.setItem(
     "treasureSave",
-
     JSON.stringify({
-
       coinFound,
       goldFound
-
     })
-
   );
-
 }
 
 
 // ======================
 // ロード
 // ======================
-
 function loadGame(){
-
-  const saveData =
-    JSON.parse(
-      localStorage.getItem("treasureSave")
-    );
-
+  const saveData = JSON.parse(localStorage.getItem("treasureSave"));
   if(!saveData) return;
 
-  coinFound =
-    saveData.coinFound || false;
-
-  goldFound =
-    saveData.goldFound || false;
+  coinFound = saveData.coinFound || false;
+  goldFound = saveData.goldFound || false;
 
   foundTreasure = 0;
-
   if(coinFound) foundTreasure++;
   if(goldFound) foundTreasure++;
 
-  treasureCount.innerHTML =
-    `${foundTreasure} / ${totalTreasure}`;
-
+  treasureCount.innerHTML = `${foundTreasure} / ${totalTreasure}`;
 }
 
 
 // ======================
 // コンプリート判定
 // ======================
-
 function checkCompleteTreasure(){
-
   if(foundTreasure >= totalTreasure){
-
     setTimeout(() => {
-
       completeTreasure.style.display = "flex";
-
     }, 1000);
-
   }
-
 }
 
 
 // ======================
 // coin
 // ======================
-
-document
-.querySelector("#targetCoin")
-.addEventListener("targetFound", () => {
-
+document.querySelector("#targetCoin").addEventListener("targetFound", () => {
   treasureBox.style.display = "block";
-
   treasureImage.src = "coin.jpg";
 
   if(!coinFound){
-
     coinFound = true;
-
     foundTreasure++;
-
-    treasureCount.innerHTML =
-      `${foundTreasure} / ${totalTreasure}`;
-
-    treasureEffect.innerHTML =
-      "お宝発見！";
-
+    treasureCount.innerHTML = `${foundTreasure} / ${totalTreasure}`;
+    treasureEffect.innerHTML = "お宝発見！";
     saveGame();
-
     checkCompleteTreasure();
-
   }else{
-
-    treasureEffect.innerHTML =
-      "発見済みのお宝";
-
+    treasureEffect.innerHTML = "発見済みのお宝";
   }
 
   treasureEffect.style.display = "block";
-
   setTimeout(() => {
-
     treasureEffect.style.display = "none";
-
   }, 1500);
-
 });
 
 
 // ======================
 // gold
 // ======================
-
-document
-.querySelector("#targetGold")
-.addEventListener("targetFound", () => {
-
+document.querySelector("#targetGold").addEventListener("targetFound", () => {
   treasureBox.style.display = "block";
-
   treasureImage.src = "gold.jpg";
 
   if(!goldFound){
-
     goldFound = true;
-
     foundTreasure++;
-
-    treasureCount.innerHTML =
-      `${foundTreasure} / ${totalTreasure}`;
-
-    treasureEffect.innerHTML =
-      "大当たり発見！！";
-
+    treasureCount.innerHTML = `${foundTreasure} / ${totalTreasure}`;
+    treasureEffect.innerHTML = "大物発見！！";
     saveGame();
-
     checkCompleteTreasure();
-
   }else{
-
-    treasureEffect.innerHTML =
-      "発見済みのお宝";
-
+    treasureEffect.innerHTML = "発見済みのお宝";
   }
 
   treasureEffect.style.display = "block";
-
   setTimeout(() => {
-
     treasureEffect.style.display = "none";
-
   }, 1500);
-
 });
 
 
 // ======================
 // 壁紙DL
 // ======================
-
-document
-.querySelector("#downloadWallpaperBtn")
-.addEventListener("click", () => {
-
-  const link =
-    document.createElement("a");
-
+document.querySelector("#downloadWallpaperBtn").addEventListener("click", () => {
+  const link = document.createElement("a");
   link.href = "wallpaper.jpg";
-
-  link.download =
-    "wallpaper.jpg";
-
+  link.download = "wallpaper.jpg";
   document.body.appendChild(link);
-
   link.click();
-
   document.body.removeChild(link);
-
 });
 
 
 // ======================
 // AR開始
 // ======================
-
 startBtn.addEventListener("click", async () => {
-
   menuScreen.style.display = "none";
-
   mainScene.style.display = "block";
-
   backToMenuBtn.style.display = "block";
 
-  await new Promise(resolve =>
-    setTimeout(resolve, 200)
-  );
+  await new Promise(resolve => setTimeout(resolve, 200));
 
-  const arSystem =
-    mainScene.systems["mindar-image-system"];
-
+  const arSystem = mainScene.systems["mindar-image-system"];
   if(arSystem){
-
     await arSystem.start();
-
   }
-
 });
 
 
 // ======================
 // メニューへ戻る
 // ======================
-
 backToMenuBtn.addEventListener("click", async () => {
-
-  const arSystem =
-    mainScene.systems["mindar-image-system"];
-
+  const arSystem = mainScene.systems["mindar-image-system"];
   if(arSystem){
-
     try{
-
       await arSystem.stop();
-
     }catch(e){
-
       console.log(e);
-
     }
-
   }
 
   mainScene.style.display = "none";
-
   menuScreen.style.display = "flex";
-
   backToMenuBtn.style.display = "none";
-
 });
 
-const treasureScreen =
-document.querySelector("#treasureScreen");
+// ======================
+// 各画面の切り替えイベント
+// ======================
+const treasureScreen = document.querySelector("#treasureScreen");
 
-document
-.querySelector("#openTreasureBtn")
-.addEventListener("click", () => {
-
+document.querySelector("#openTreasureBtn").addEventListener("click", () => {
   treasureScreen.style.display = "flex";
-
   if(coinFound){
-
-    document.querySelector("#menuTreasure1")
-      .src = "coin.jpg";
-
+    document.querySelector("#menuTreasure1").src = "coin.jpg";
   }
-
   if(goldFound){
-
-    document.querySelector("#menuTreasure2")
-      .src = "gold.jpg";
-
+    document.querySelector("#menuTreasure2").src = "gold.jpg";
   }
-
 });
 
-document
-.querySelector("#closeTreasureBtn")
-.addEventListener("click", () => {
-
+document.querySelector("#closeTreasureBtn").addEventListener("click", () => {
   treasureScreen.style.display = "none";
-
 });
 
-const hintScreen =
-document.querySelector("#hintScreen");
+const hintScreen = document.querySelector("#hintScreen");
 
-document
-.querySelector("#openHintBtn")
-.addEventListener("click", () => {
-
+document.querySelector("#openHintBtn").addEventListener("click", () => {
   hintScreen.style.display = "flex";
-
 });
 
-document
-.querySelector("#closeHintBtn")
-.addEventListener("click", () => {
-
+document.querySelector("#closeHintBtn").addEventListener("click", () => {
   hintScreen.style.display = "none";
-
 });
 
-document
-.querySelector("#closeCompleteBtn")
-.addEventListener("click", () => {
-
+document.querySelector("#closeCompleteBtn").addEventListener("click", () => {
   completeTreasure.style.display = "none";
-
 });
 
 // ======================
 // 起動時ロード
 // ======================
-
 loadGame();
 
 </script>
 
 </body>
 </html>
-
-

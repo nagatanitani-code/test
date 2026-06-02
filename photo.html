@@ -1,10 +1,8 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -17,63 +15,55 @@ overflow:hidden;
 font-family:sans-serif;
 }
 
-
-
-
 /* ======================
 メニュー
 ====================== */
 
 #menuScreen{
-
 position:fixed;
 inset:0;
-
 display:flex;
 flex-direction:column;
-
 justify-content:center;
 align-items:center;
-
-gap:25px;
-
-background:
-linear-gradient(
-180deg,
-#101820,
-#1d2d44
-);
-
+gap:20px; /* 全体の間隔を微調整 */
+background: linear-gradient(180deg, #101820, #1d2d44);
 z-index:9999;
 }
 
 #gameTitle{
-
 font-size:42px;
 font-weight:bold;
-
 color:gold;
+margin-bottom: 20px; /* タイトルの下に少し余白を追加 */
+}
+
+/* ★ 追加：説明文のスタイル */
+.menuGuide{
+font-size:16px;
+color:#e0e0e0;
+text-align:center;
+margin-bottom: -5px; /* ボタンとの距離を近づける */
+line-height:1.4;
+}
+
+/* ★ 追加：ボタンと説明文をまとめるグループ */
+.menuGroup{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:10px;
 }
 
 .menuBtn{
-
 width:260px;
-
 padding:18px;
-
 border:none;
 border-radius:18px;
-
 font-size:24px;
-
 color:white;
-
-background:
-linear-gradient(
-135deg,
-#ff9800,
-#ff5722
-);
+background: linear-gradient(135deg, #ff9800, #ff5722);
+cursor: pointer;
 }
 
 /* ======================
@@ -81,24 +71,15 @@ linear-gradient(
 ====================== */
 
 #backToMenuBtn{
-
 position:fixed;
-
 top:20px;
 left:20px;
-
 display:none;
-
 z-index:99999;
-
 padding:12px 20px;
-
 border:none;
-
 border-radius:14px;
-
 background:rgba(0,0,0,.8);
-
 color:white;
 }
 
@@ -107,48 +88,28 @@ color:white;
 ====================== */
 
 #hintScreen{
-
 position:fixed;
 inset:0;
-
 display:none;
-
 flex-direction:column;
-
 justify-content:center;
 align-items:center;
-
 gap:20px;
-
-background:
-linear-gradient(
-180deg,
-#111827,
-#1e293b
-);
-
+background: linear-gradient(180deg, #111827, #1e293b);
 z-index:20000;
 }
 
 #hintScreen img{
-
 width:250px;
-
 border-radius:20px;
 }
 
 .backBtn{
-
 padding:14px 28px;
-
 border:none;
-
 border-radius:18px;
-
 background:#ff9800;
-
 color:white;
-
 font-size:22px;
 }
 
@@ -157,56 +118,33 @@ font-size:22px;
 ====================== */
 
 #photoMessage{
-
 position:fixed;
-
 bottom:30px;
 left:50%;
-
 transform:translateX(-50%);
-
 background:rgba(0,0,0,.82);
-
 color:white;
-
 padding:18px 28px;
-
 border-radius:24px;
-
 font-size:22px;
-
 text-align:center;
-
 display:none;
-
 z-index:9999;
 }
 
 #captureBtn{
-
 position:fixed;
-
 bottom:100px;
 left:50%;
-
 transform:translateX(-50%);
-
 padding:18px 32px;
-
 font-size:24px;
-
 border:none;
-
 border-radius:20px;
-
 background:#ff9800;
-
 color:white;
-
 z-index:99999;
-
 display:none;
-
 }
 
 </style>
@@ -215,382 +153,179 @@ display:none;
 <body>
 
 <!-- メニュー -->
-
 <div id="menuScreen">
 
 <div id="gameTitle">
 フォトスポットAR
 </div>
 
+<!-- ★ 読み込み開始のグループ -->
+<div class="menuGroup">
+<div class="menuGuide">まずはここで読み込んでね！</div>
 <button id="startBtn" class="menuBtn">
 読み込み開始
 </button>
+</div>
 
+<!-- ★ 場所確認のグループ -->
+<div class="menuGroup">
+<div class="menuGuide">ここでフォトスポットの場所を確認できるよ！</div>
 <button id="openHintBtn" class="menuBtn">
 場所確認
 </button>
+</div>
 
 </div>
 
 <!-- 戻る -->
-
 <button id="backToMenuBtn">
 メニューへ戻る
 </button>
 
 <!-- 場所確認 -->
-
 <div id="hintScreen">
-
-<h1 style="color:gold;">
-場所確認
-</h1>
-
+<h1 style="color:gold;">場所確認</h1>
 <img src="hint_p.jpg">
-
-<button
-id="closeHintBtn"
-class="backBtn">
-
-戻る
-
-</button>
-
+<button id="closeHintBtn" class="backBtn">戻る</button>
 </div>
 
 <!-- フォト案内 -->
-
-
-
-<button id="captureBtn">
-
-📸 撮影する
-
-</button>
-
-
+<button id="captureBtn">📸 撮影する</button>
 
 <!-- AR -->
-
 <a-scene
 id="mainScene"
 style="display:none"
-mindar-image="
-imageTargetSrc: targets.mind;
-maxTrack:1;
-"
+mindar-image="imageTargetSrc: targets.mind; maxTrack:1;"
 vr-mode-ui="enabled:false"
 device-orientation-permission-ui="enabled:false">
 
 <a-assets>
-
-<img
-id="frameImg"
-src="frame.png">
-
+<img id="frameImg" src="frame.png">
 </a-assets>
 
-<a-camera
-camera
-position="0 0 0"
-look-controls="enabled:false">
-</a-camera>
+<a-camera camera position="0 0 0" look-controls="enabled:false"></a-camera>
 
-<a-entity
-id="targetPhoto"
-mindar-image-target="targetIndex:8">
-
-<a-plane
-src="#frameImg"
-position="0 1 0"
-width="2"
-height="3"
-material="shader:flat;transparent:true;">
-</a-plane>
-
+<a-entity id="targetPhoto" mindar-image-target="targetIndex:8">
+<a-plane src="#frameImg" position="0 1 0" width="2" height="3" material="shader:flat;transparent:true;"></a-plane>
 </a-entity>
 
 </a-scene>
 
 <script>
-
-const menuScreen =
-document.querySelector("#menuScreen");
-
-const mainScene =
-document.querySelector("#mainScene");
-
-const startBtn =
-document.querySelector("#startBtn");
-
-const backBtn =
-document.querySelector("#backToMenuBtn");
-
-const hintScreen =
-document.querySelector("#hintScreen");
-
-const photoMessage =
-document.querySelector("#photoMessage");
-
-const captureBtn =
-document.querySelector("#captureBtn");
+const menuScreen = document.querySelector("#menuScreen");
+const mainScene = document.querySelector("#mainScene");
+const startBtn = document.querySelector("#startBtn");
+const backBtn = document.querySelector("#backToMenuBtn");
+const hintScreen = document.querySelector("#hintScreen");
+const photoMessage = document.querySelector("#photoMessage");
+const captureBtn = document.querySelector("#captureBtn");
 
 /* ======================
 AR開始
 ====================== */
-
-startBtn.addEventListener(
-"click",
-async ()=>{
-
+startBtn.addEventListener("click", async ()=>{
 menuScreen.style.display="none";
-
 mainScene.style.display="block";
-
 backBtn.style.display="block";
 
-await new Promise(resolve=>
-setTimeout(resolve,200)
-);
+await new Promise(resolve=> setTimeout(resolve,200));
 
-const arSystem =
-mainScene.systems[
-"mindar-image-system"
-];
-
+const arSystem = mainScene.systems["mindar-image-system"];
 if(arSystem){
-
 await arSystem.start();
-
 }
-
 });
 
 /* ======================
 戻る
 ====================== */
-
-backBtn.addEventListener(
-"click",
-async ()=>{
-
-const arSystem =
-mainScene.systems[
-"mindar-image-system"
-];
-
+backBtn.addEventListener("click", async ()=>{
+const arSystem = mainScene.systems["mindar-image-system"];
 if(arSystem){
-
 await arSystem.stop();
-
 }
-
 mainScene.style.display="none";
-
 menuScreen.style.display="flex";
-
 backBtn.style.display="none";
-
 photoMessage.style.display="none";
-
 });
 
 /* ======================
 場所確認
 ====================== */
-
-document
-.querySelector("#openHintBtn")
-.addEventListener("click",()=>{
-
+document.querySelector("#openHintBtn").addEventListener("click",()=>{
 hintScreen.style.display="flex";
-
 });
 
-document
-.querySelector("#closeHintBtn")
-.addEventListener("click",()=>{
-
+document.querySelector("#closeHintBtn").addEventListener("click",()=>{
 hintScreen.style.display="none";
-
 });
 
 /* ======================
 フォトスポット
 ====================== */
-
-
-
-
-
-captureBtn.addEventListener(
-"click",
-async ()=>{
-
+captureBtn.addEventListener("click", async ()=>{
 try{
-
 captureBtn.style.display="none";
-
-const video =
-document.querySelector("video");
-
+const video = document.querySelector("video");
 if(!video){
-
 alert("カメラ取得失敗");
-
 captureBtn.style.display="block";
-
 return;
-
 }
 
-const canvas =
-document.querySelector(
-"#captureCanvas"
-);
+const canvas = document.querySelector("#captureCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = video.videoWidth;
+canvas.height = video.videoHeight;
 
-const ctx =
-canvas.getContext("2d");
+/* カメラ映像 */
+ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-canvas.width =
-video.videoWidth;
-
-canvas.height =
-video.videoHeight;
-
-/*
-カメラ映像
-*/
-ctx.drawImage(
-video,
-0,
-0,
-canvas.width,
-canvas.height
-);
-
-/*
-ARフレーム
-*/
-const frame =
-document.querySelector(
-"#frameImg"
-);
-
+/* ARフレーム */
+const frame = document.querySelector("#frameImg");
 if(frame.complete){
-
-const frameWidth =
-canvas.width * 0.8;
-
-const frameHeight =
-frameWidth * 1.5;
-
-const x =
-(canvas.width - frameWidth)/2;
-
-const y =
-(canvas.height - frameHeight)/2;
-
-ctx.drawImage(
-frame,
-x,
-y,
-frameWidth,
-frameHeight
-);
-
+const frameWidth = canvas.width * 0.8;
+const frameHeight = frameWidth * 1.5;
+const x = (canvas.width - frameWidth)/2;
+const y = (canvas.height - frameHeight)/2;
+ctx.drawImage(frame, x, y, frameWidth, frameHeight);
 }
 
-/*
-保存
-*/
-
-const isIOS =
-/iPhone|iPad|iPod/i.test(
-navigator.userAgent
-);
-
+/* 保存 */
+const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 if(isIOS){
-
-const imageURL =
-canvas.toDataURL(
-"image/jpeg",
-0.95
-);
-
+const imageURL = canvas.toDataURL("image/jpeg", 0.95);
 const win = window.open();
-
 if(win){
-
-win.document.write(
-'<img src="'+imageURL+'" style="width:100%">'
-);
-
+win.document.write('<img src="'+imageURL+'" style="width:100%">');
 }else{
-
 location.href = imageURL;
-
 }
-
 }else{
-
-const link =
-document.createElement("a");
-
-link.download =
-"photo_spot.jpg";
-
-link.href =
-canvas.toDataURL(
-"image/jpeg",
-0.95
-);
-
+const link = document.createElement("a");
+link.download = "photo_spot.jpg";
+link.href = canvas.toDataURL("image/jpeg", 0.95);
 link.click();
 }
-
-}
-catch(e){
-
+} catch(e){
 console.error(e);
-
 alert("撮影失敗");
-
 }
-
 captureBtn.style.display="block";
-
 });
 
-document
-.querySelector("#targetPhoto")
-.addEventListener(
-"targetFound",
-()=>{
-
-captureBtn.style.display =
-"block";
-
+document.querySelector("#targetPhoto").addEventListener("targetFound", ()=>{
+captureBtn.style.display = "block";
 });
 
-document
-.querySelector("#targetPhoto")
-.addEventListener(
-"targetLost",
-()=>{
-
-captureBtn.style.display =
-"none";
-
+document.querySelector("#targetPhoto").addEventListener("targetLost", ()=>{
+captureBtn.style.display = "none";
 });
-
 </script>
 
-<canvas
-id="captureCanvas"
-style="display:none;">
-</canvas>
+<canvas id="captureCanvas" style="display:none;"></canvas>
 
 </body>
 </html>
-

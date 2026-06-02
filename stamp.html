@@ -1,16 +1,13 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
 <style>
-
 
 body{
   margin:0;
@@ -23,62 +20,65 @@ body{
 ====================== */
 
 #menuScreen{
-
   position:fixed;
   inset:0;
-
   display:flex;
   flex-direction:column;
-
   justify-content:center;
   align-items:center;
-
-  gap:25px;
-
+  gap:16px; /* ボタンと説明文が増えたため、全体の隙間を少しコンパクトに微調整 */
   background:
   linear-gradient(
     180deg,
     #101820,
     #1d2d44
   );
-
   z-index:9999;
 }
 
 #gameTitle{
-
   font-size:42px;
   font-weight:bold;
-
   color:gold;
-
+  margin-bottom: 10px; /* タイトル下の余白を微調整 */
   text-shadow:
   0 0 20px rgba(255,215,0,.7);
 }
 
+/* ★追加：説明文とボタンを1つのセットとして綺麗に並べるグループ */
+.menuGroup{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px; /* 説明文とボタンの間の隙間 */
+}
+
+/* ★追加：各ボタンの解説テキスト用スタイル */
+.menuGuide{
+  font-size:14px;
+  color:#e0e0e0;
+  text-align:center;
+  line-height:1.4;
+  letter-spacing: 0.5px;
+}
+
 .menuBtn{
-
   width:260px;
-
   padding:18px;
-
   border:none;
   border-radius:18px;
-
   font-size:24px;
   font-weight:bold;
-
   color:white;
-
   background:
   linear-gradient(
     135deg,
     #ff9800,
     #ff5722
   );
-
   box-shadow:
   0 6px 18px rgba(0,0,0,.4);
+  cursor: pointer;
 }
 
 /* ======================
@@ -86,26 +86,17 @@ body{
 ====================== */
 
 #backToMenuBtn{
-
   position:fixed;
-
   top:20px;
   left:20px;
-
   display:none;
-
   z-index:99999;
-
   padding:12px 20px;
-
   border:none;
   border-radius:14px;
-
   background:
   rgba(0,0,0,.8);
-
   color:white;
-
   font-size:18px;
 }
 
@@ -114,47 +105,32 @@ body{
 ====================== */
 
 #stampBox{
-
   position:fixed;
-
   top:15px;
   right:15px;
-
   display:none;
-
   text-align:center;
-
   padding:15px;
-
   border-radius:20px;
-
   color:white;
-
   z-index:999;
-
   background:
   rgba(0,0,0,.75);
 }
 
 #stampTitle{
-
   font-size:12px;
-
   color:gold;
 }
 
 #stampCount{
-
   font-size:28px;
   font-weight:bold;
 }
 
 #stampPreview{
-
   width:120px;
-
   margin-top:10px;
-
   border-radius:12px;
 }
 
@@ -163,28 +139,18 @@ body{
 ====================== */
 
 #stampEffect{
-
   position:fixed;
-
   bottom:40px;
   left:50%;
-
   transform:
   translateX(-50%);
-
   background:gold;
-
   color:black;
-
   font-size:24px;
   font-weight:bold;
-
   padding:12px 24px;
-
   border-radius:16px;
-
   display:none;
-
   z-index:99999;
 }
 
@@ -194,36 +160,25 @@ body{
 
 #hintScreen,
 #stampScreen{
-
   position:fixed;
-
   inset:0;
-
   display:none;
-
   flex-direction:column;
-
   justify-content:center;
   align-items:center;
-
   gap:25px;
-
   background:
   linear-gradient(
     180deg,
     #111827,
     #1e293b
   );
-
   z-index:20000;
 }
 
 .screenTitle{
-
   color:gold;
-
   font-size:38px;
-
   margin:0;
 }
 
@@ -232,28 +187,19 @@ body{
 ====================== */
 
 .hintGrid{
-
   display:flex;
   flex-wrap:wrap;
-
   justify-content:center;
-
   gap:20px;
-
   max-width:90%;
 }
 
 .hintGrid img{
-
   width:180px;
   height:180px;
-
   object-fit:cover;
-
   border-radius:20px;
-
   background:white;
-
   box-shadow:
   0 6px 18px rgba(0,0,0,.4);
 }
@@ -263,39 +209,26 @@ body{
 ====================== */
 
 .stampGrid{
-
   display:flex;
-
   gap:20px;
 }
 
 .stampGrid img{
-
   width:150px;
   height:150px;
-
   object-fit:cover;
-
   border-radius:18px;
-
   background:white;
-
   box-shadow:
   0 6px 18px rgba(0,0,0,.4);
 }
 
 .backBtn{
-
   padding:16px 30px;
-
   border:none;
-
   border-radius:18px;
-
   font-size:22px;
-
   background:#ff9800;
-
   color:white;
 }
 
@@ -304,92 +237,58 @@ body{
 ====================== */
 
 #completeWrap{
-
   position:fixed;
-
   inset:0;
-
   display:none;
-
   flex-direction:column;
-
   justify-content:center;
   align-items:center;
-
   gap:25px;
-
   background:
   rgba(0,0,0,.75);
-
   z-index:30000;
 }
 
 #completeText{
-
   font-size:42px;
-
   font-weight:bold;
-
   color:gold;
-
   text-shadow:
   0 0 20px rgba(255,215,0,.8);
 }
 
 #completeImage{
-
   width:320px;
   max-width:85vw;
-
   border-radius:24px;
-
   cursor:pointer;
-
   box-shadow:
   0 0 30px rgba(255,180,0,.8);
 }
 
 #closeComplete{
-
   position:absolute;
-
   top:20px;
   left:20px;
-
   width:52px;
   height:52px;
-
   border-radius:50%;
-
   background:
   rgba(0,0,0,.8);
-
   color:white;
-
   font-size:32px;
   font-weight:bold;
-
   display:flex;
-
   justify-content:center;
   align-items:center;
-
   border:3px solid white;
-
   cursor:pointer;
 }
 
-
-
 </style>
-
 </head>
 
 <body>
-
-<!-- ======================
-     メニュー
-====================== -->
 
 <div id="menuScreen">
 
@@ -397,31 +296,32 @@ body{
     スタンプラリーAR
   </div>
 
-  <button id="startBtn" class="menuBtn">
-    探索開始
-  </button>
+  <div class="menuGroup">
+    <div class="menuGuide">最初はここから読み込んでね！</div>
+    <button id="startBtn" class="menuBtn">
+      探索開始
+    </button>
+  </div>
 
-  <button id="openHintBtn" class="menuBtn">
-    場所確認
-  </button>
+  <div class="menuGroup">
+    <div class="menuGuide">スタンプの場所はここで確認できるよ！</div>
+    <button id="openHintBtn" class="menuBtn">
+      場所確認
+    </button>
+  </div>
 
-  <button id="openStampBtn" class="menuBtn">
-    スタンプ帳
-  </button>
+  <div class="menuGroup">
+    <div class="menuGuide">取得したスタンプはここで確認できるよ！</div>
+    <button id="openStampBtn" class="menuBtn">
+      スタンプ帳
+    </button>
+  </div>
 
 </div>
-
-<!-- ======================
-     戻る
-====================== -->
 
 <button id="backToMenuBtn">
 メニューへ戻る
 </button>
-
-<!-- ======================
-     スタンプBOX
-====================== -->
 
 <div id="stampBox">
 
@@ -433,24 +333,13 @@ body{
     0 / 3
   </div>
 
-  <img
-    id="stampPreview"
-    src=""
-  >
+  <img id="stampPreview" src="">
 
 </div>
-
-<!-- ======================
-     発見演出
-====================== -->
 
 <div id="stampEffect">
 スタンプGET!!
 </div>
-
-<!-- ======================
-     場所確認
-====================== -->
 
 <div id="hintScreen">
 
@@ -459,26 +348,16 @@ body{
   </h1>
 
   <div class="hintGrid">
-
     <img src="hint1_t.jpg">
-
     <img src="hint2_t.jpg">
-
     <img src="hint3_t.jpg">
-
   </div>
 
-  <button
-    id="closeHintBtn"
-    class="backBtn">
+  <button id="closeHintBtn" class="backBtn">
     戻る
   </button>
 
 </div>
-
-<!-- ======================
-     スタンプ帳
-====================== -->
 
 <div id="stampScreen">
 
@@ -487,165 +366,75 @@ body{
   </h1>
 
   <div class="stampGrid">
-
-    <img
-      id="menuStamp1"
-      src="stamp_unknown.jpg">
-
-    <img
-      id="menuStamp2"
-      src="stamp_unknown.jpg">
-
-    <img
-      id="menuStamp3"
-      src="stamp_unknown.jpg">
-
+    <img id="menuStamp1" src="stamp_unknown.jpg">
+    <img id="menuStamp2" src="stamp_unknown.jpg">
+    <img id="menuStamp3" src="stamp_unknown.jpg">
   </div>
 
-  <button
-    id="closeStampBtn"
-    class="backBtn">
+  <button id="closeStampBtn" class="backBtn">
     戻る
   </button>
 
 </div>
 
-<!-- ======================
-     COMPLETE
-====================== -->
-
 <div id="completeWrap">
-
   <div id="closeComplete">
     ×
   </div>
-
   <div id="completeText">
     COMPLETE!!
   </div>
-
-  <img
-    id="completeImage"
-    src="banner.jpg">
-
+  <img id="completeImage" src="banner.jpg">
 </div>
-
-<!-- ======================
-     AR
-====================== -->
 
 <a-scene
 id="mainScene"
 style="display:none"
-mindar-image="
-imageTargetSrc: targets.mind;
-maxTrack:1;
-"
+mindar-image="imageTargetSrc: targets.mind; maxTrack:1;"
 vr-mode-ui="enabled:false"
 device-orientation-permission-ui="enabled:false">
 
 <a-assets>
-
   <img id="stamp1Img" src="stamp1.jpg">
   <img id="stamp2Img" src="stamp2.jpg">
   <img id="stamp3Img" src="stamp3.jpg">
-
 </a-assets>
 
-<a-camera
-camera
-position="0 0 0"
-look-controls="enabled:false">
-</a-camera>
+<a-camera camera position="0 0 0" look-controls="enabled:false"></a-camera>
 
-<!-- stamp1 -->
-
-<a-entity
-id="targetStamp1"
-mindar-image-target="targetIndex:0">
-
-  <a-plane
-    width="0.01"
-    height="0.01"
-    visible="false">
-  </a-plane>
-
+<a-entity id="targetStamp1" mindar-image-target="targetIndex:0">
+  <a-plane width="0.01" height="0.01" visible="false"></a-plane>
 </a-entity>
 
-<!-- stamp2 -->
-
-<a-entity
-id="targetStamp2"
-mindar-image-target="targetIndex:1">
-
-  <a-plane
-    width="0.01"
-    height="0.01"
-    visible="false">
-  </a-plane>
-
+<a-entity id="targetStamp2" mindar-image-target="targetIndex:1">
+  <a-plane width="0.01" height="0.01" visible="false"></a-plane>
 </a-entity>
 
-<!-- stamp3 -->
-
-<a-entity
-id="targetStamp3"
-mindar-image-target="targetIndex:2">
-
-  <a-plane
-    width="0.01"
-    height="0.01"
-    visible="false">
-  </a-plane>
-
+<a-entity id="targetStamp3" mindar-image-target="targetIndex:2">
+  <a-plane width="0.01" height="0.01" visible="false"></a-plane>
 </a-entity>
 
 </a-scene>
 
 <script>
-
-
 // ======================
 // 要素取得
 // ======================
-
-const menuScreen =
-document.querySelector("#menuScreen");
-
-const mainScene =
-document.querySelector("#mainScene");
-
-const startBtn =
-document.querySelector("#startBtn");
-
-const backToMenuBtn =
-document.querySelector("#backToMenuBtn");
-
-const stampBox =
-document.querySelector("#stampBox");
-
-const stampPreview =
-document.querySelector("#stampPreview");
-
-const stampCount =
-document.querySelector("#stampCount");
-
-const stampEffect =
-document.querySelector("#stampEffect");
-
-const hintScreen =
-document.querySelector("#hintScreen");
-
-const stampScreen =
-document.querySelector("#stampScreen");
-
-const completeWrap =
-document.querySelector("#completeWrap");
+const menuScreen = document.querySelector("#menuScreen");
+const mainScene = document.querySelector("#mainScene");
+const startBtn = document.querySelector("#startBtn");
+const backToMenuBtn = document.querySelector("#backToMenuBtn");
+const stampBox = document.querySelector("#stampBox");
+const stampPreview = document.querySelector("#stampPreview");
+const stampCount = document.querySelector("#stampCount");
+const stampEffect = document.querySelector("#stampEffect");
+const hintScreen = document.querySelector("#hintScreen");
+const stampScreen = document.querySelector("#stampScreen");
+const completeWrap = document.querySelector("#completeWrap");
 
 // ======================
 // 状態
 // ======================
-
 let stamp1Get = false;
 let stamp2Get = false;
 let stamp3Get = false;
@@ -656,406 +445,212 @@ const totalStamp = 3;
 // ======================
 // セーブ
 // ======================
-
 function saveGame(){
-
   localStorage.setItem(
     "stampSave",
-
     JSON.stringify({
-
       stamp1Get,
       stamp2Get,
       stamp3Get
-
     })
-
   );
-
 }
 
 // ======================
 // ロード
 // ======================
-
 function loadGame(){
-
-  const saveData =
-    JSON.parse(
-      localStorage.getItem("stampSave")
-    );
-
+  const saveData = JSON.parse(localStorage.getItem("stampSave"));
   if(!saveData) return;
 
-  stamp1Get =
-    saveData.stamp1Get || false;
-
-  stamp2Get =
-    saveData.stamp2Get || false;
-
-  stamp3Get =
-    saveData.stamp3Get || false;
+  stamp1Get = saveData.stamp1Get || false;
+  stamp2Get = saveData.stamp2Get || false;
+  stamp3Get = saveData.stamp3Get || false;
 
   foundStamp = 0;
-
   if(stamp1Get) foundStamp++;
   if(stamp2Get) foundStamp++;
   if(stamp3Get) foundStamp++;
 
   updateStampBook();
-
 }
 
 // ======================
 // スタンプ帳更新
 // ======================
-
 function updateStampBook(){
-
-  stampCount.innerHTML =
-    `${foundStamp} / ${totalStamp}`;
+  stampCount.innerHTML = `${foundStamp} / ${totalStamp}`;
 
   if(stamp1Get){
-
-    document.querySelector(
-      "#menuStamp1"
-    ).src = "stamp1.jpg";
-
+    document.querySelector("#menuStamp1").src = "stamp1.jpg";
   }
-
   if(stamp2Get){
-
-    document.querySelector(
-      "#menuStamp2"
-    ).src = "stamp2.jpg";
-
+    document.querySelector("#menuStamp2").src = "stamp2.jpg";
   }
-
   if(stamp3Get){
-
-    document.querySelector(
-      "#menuStamp3"
-    ).src = "stamp3.jpg";
-
+    document.querySelector("#menuStamp3").src = "stamp3.jpg";
   }
-
 }
 
 // ======================
 // COMPLETE判定
 // ======================
-
 function checkComplete(){
-
   if(foundStamp >= totalStamp){
-
     setTimeout(() => {
-
-      completeWrap.style.display =
-        "flex";
-backToMenuBtn.style.display = "none";
-
+      completeWrap.style.display = "flex";
+      backToMenuBtn.style.display = "none";
     },1000);
-
   }
-
 }
 
 // ======================
 // 演出
 // ======================
-
 function showStampEffect(text){
-
   stampEffect.innerHTML = text;
-
-  stampEffect.style.display =
-    "block";
+  stampEffect.style.display = "block";
 
   setTimeout(() => {
-
-    stampEffect.style.display =
-      "none";
-
+    stampEffect.style.display = "none";
   },1500);
-
 }
 
 // ======================
 // stamp1
 // ======================
-
-document
-.querySelector("#targetStamp1")
-.addEventListener("targetFound",()=>{
-
+document.querySelector("#targetStamp1").addEventListener("targetFound",()=>{
   stampBox.style.display = "block";
-
-  stampPreview.src =
-    "stamp1.jpg";
+  stampPreview.src = "stamp1.jpg";
 
   if(!stamp1Get){
-
     stamp1Get = true;
-
     foundStamp++;
-
     saveGame();
-
     updateStampBook();
-
-    showStampEffect(
-      "スタンプ1 GET!"
-    );
-
+    showStampEffect("スタンプ1 GET!");
     checkComplete();
-
   }else{
-
-    showStampEffect(
-      "取得済み"
-    );
-
+    showStampEffect("取得済み");
   }
-
 });
 
 // ======================
 // stamp2
 // ======================
-
-document
-.querySelector("#targetStamp2")
-.addEventListener("targetFound",()=>{
-
+document.querySelector("#targetStamp2").addEventListener("targetFound",()=>{
   stampBox.style.display = "block";
-
-  stampPreview.src =
-    "stamp2.jpg";
+  stampPreview.src = "stamp2.jpg";
 
   if(!stamp2Get){
-
     stamp2Get = true;
-
     foundStamp++;
-
     saveGame();
-
     updateStampBook();
-
-    showStampEffect(
-      "スタンプ2 GET!"
-    );
-
+    showStampEffect("スタンプ2 GET!");
     checkComplete();
-
   }else{
-
-    showStampEffect(
-      "取得済み"
-    );
-
+    showStampEffect("取得済み");
   }
-
 });
 
 // ======================
 // stamp3
 // ======================
-
-document
-.querySelector("#targetStamp3")
-.addEventListener("targetFound",()=>{
-
+document.querySelector("#targetStamp3").addEventListener("targetFound",()=>{
   stampBox.style.display = "block";
-
-  stampPreview.src =
-    "stamp3.jpg";
+  stampPreview.src = "stamp3.jpg";
 
   if(!stamp3Get){
-
     stamp3Get = true;
-
     foundStamp++;
-
     saveGame();
-
     updateStampBook();
-
-    showStampEffect(
-      "スタンプ3 GET!"
-    );
-
+    showStampEffect("スタンプ3 GET!");
     checkComplete();
-
   }else{
-
-    showStampEffect(
-      "取得済み"
-    );
-
+    showStampEffect("取得済み");
   }
-
 });
 
 // ======================
 // AR開始
 // ======================
+startBtn.addEventListener("click", async ()=>{
+  menuScreen.style.display = "none";
+  mainScene.style.display = "block";
+  backToMenuBtn.style.display = "block";
 
-startBtn.addEventListener(
-  "click",
-  async ()=>{
+  await new Promise(resolve => setTimeout(resolve,200));
 
-  menuScreen.style.display =
-    "none";
-
-  mainScene.style.display =
-    "block";
-
-  backToMenuBtn.style.display =
-    "block";
-
-  await new Promise(resolve =>
-    setTimeout(resolve,200)
-  );
-
-  const arSystem =
-    mainScene.systems[
-      "mindar-image-system"
-    ];
-
+  const arSystem = mainScene.systems["mindar-image-system"];
   if(arSystem){
-
     await arSystem.start();
-
   }
-
 });
 
 // ======================
 // 戻る
 // ======================
-
-backToMenuBtn.addEventListener(
-  "click",
-  async ()=>{
-
-  const arSystem =
-    mainScene.systems[
-      "mindar-image-system"
-    ];
-
+backToMenuBtn.addEventListener("click", async ()=>{
+  const arSystem = mainScene.systems["mindar-image-system"];
   if(arSystem){
-
     try{
-
       await arSystem.stop();
-
     }catch(e){
-
       console.log(e);
-
     }
-
   }
 
-  mainScene.style.display =
-    "none";
-
-  menuScreen.style.display =
-    "flex";
-
-  backToMenuBtn.style.display =
-    "none";
-
-  stampBox.style.display =
-    "none";
-
+  mainScene.style.display = "none";
+  menuScreen.style.display = "flex";
+  backToMenuBtn.style.display = "none";
+  stampBox.style.display = "none";
 });
 
 // ======================
 // 場所確認
 // ======================
-
-document
-.querySelector("#openHintBtn")
-.addEventListener("click",()=>{
-
-  hintScreen.style.display =
-    "flex";
-
+document.querySelector("#openHintBtn").addEventListener("click",()=>{
+  hintScreen.style.display = "flex";
 });
 
-document
-.querySelector("#closeHintBtn")
-.addEventListener("click",()=>{
-
-  hintScreen.style.display =
-    "none";
-
+document.querySelector("#closeHintBtn").addEventListener("click",()=>{
+  hintScreen.style.display = "none";
 });
 
 // ======================
 // スタンプ帳
 // ======================
-
-document
-.querySelector("#openStampBtn")
-.addEventListener("click",()=>{
-
+document.querySelector("#openStampBtn").addEventListener("click",()=>{
   updateStampBook();
-
-  stampScreen.style.display =
-    "flex";
-
+  stampScreen.style.display = "flex";
 });
 
-document
-.querySelector("#closeStampBtn")
-.addEventListener("click",()=>{
-
-  stampScreen.style.display =
-    "none";
-
+document.querySelector("#closeStampBtn").addEventListener("click",()=>{
+  stampScreen.style.display = "none";
 });
 
 // ======================
 // COMPLETE閉じる
 // ======================
-
-document
-.querySelector("#closeComplete")
-.addEventListener("click",(e)=>{
-
+document.querySelector("#closeComplete").addEventListener("click",(e)=>{
   e.stopPropagation();
-
   completeWrap.style.display = "none";
-
   backToMenuBtn.style.display = "block";
-
 });
 
 // ======================
 // バナータップ
 // ======================
-
-document
-.querySelector("#completeImage")
-.addEventListener("click",()=>{
-
-  window.location.href =
-    "https://nagatanitani-code.github.io/test/stamp.html";
-
+document.querySelector("#completeImage").addEventListener("click",()=>{
+  window.location.href = "https://nagatanitani-code.github.io/test/stamp.html";
 });
 
 // ======================
 // 起動時
 // ======================
-
 loadGame();
-
-
-
 </script>
 
 </body>
