@@ -84,21 +84,19 @@
       font-size: 42px;
       color: gold;
       font-weight: bold;
-      margin-bottom: 10px; /* 余白を少し詰める */
+      margin-bottom: 10px;
       text-shadow: 0 0 20px rgba(255,215,0,0.7);
     }
 
-    /* ★ 追加：スタートボタン用の説明文スタイル */
     .menuGuide {
       font-size: 16px;
       color: #e0e0e0;
       text-align: center;
       line-height: 1.6;
-      margin-bottom: -4px; /* ボタンとの距離を少し近づける */
-      padding: 0 20px; /* スマホ画面の端で改行された時のマージン */
+      margin-bottom: -4px;
+      padding: 0 20px;
     }
 
-    /* ★ 追加：説明文とボタンをまとめるグループ */
     .menuGroup {
       display: flex;
       flex-direction: column;
@@ -119,9 +117,11 @@
       cursor: pointer;
     }
 
+    /* ★ 左下配置に変更、スマホの下部セーフエリアを考慮 */
     #backToMenuBtn {
       position: fixed;
-      top: 20px; left: 20px;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px)); 
+      left: 20px;
       z-index: 50000;
       padding: 14px 22px;
       border: none;
@@ -134,10 +134,11 @@
       cursor: pointer;
     }
 
-    /* 進捗表示 */
+    /* ★ 戻るボタンの上に綺麗に重なるように bottom を調整 */
     #progressBox {
       position: fixed;
-      bottom: 20px; left: 20px;
+      bottom: calc(85px + env(safe-area-inset-bottom, 0px)); 
+      left: 20px;
       background: rgba(0,0,0,0.75);
       border: 2px solid rgba(255,255,255,0.15);
       border-radius: 18px;
@@ -344,7 +345,7 @@ const animalTargets = [
 ];
 
 const alienTargets = [
-  { id: "alienEye",   name: "白猫",      x: -0.25, y:  0.22, guideSize: 0.25, hitSize: 0.4, found: false },
+  { id: "alienEye",   name: "白猫",       x: -0.25, y:  0.22, guideSize: 0.25, hitSize: 0.4, found: false },
   { id: "alienMouth", name: "ハチワレ猫", x:  0.21, y: -0.14, guideSize: 0.25, hitSize: 0.4, found: false }
 ];
 
