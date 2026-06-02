@@ -16,7 +16,7 @@ body{
 }
 
 /* ======================
-   メニュー
+   メニュー（スクロール＆画面最適化）
 ====================== */
 
 #menuScreen{
@@ -24,9 +24,10 @@ body{
   inset:0;
   display:flex;
   flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  gap:16px; /* ボタンと解説が増えたため全体の隙間を少しコンパクトに調整 */
+  align-items:center; /* 中央揃え */
+  gap:24px; /* 各グループの間隔を少し広げてスッキリと */
+  padding: 40px 20px; /* 上下にスクロールした際の余白を確保 */
+  box-sizing: border-box;
   background:
   linear-gradient(
     180deg,
@@ -34,15 +35,18 @@ body{
     #1d2d44
   );
   z-index:9999;
+  overflow-y: auto; /* 項目が増えたら自動で縦スクロール可能にする */
+  -webkit-overflow-scrolling: touch; /* iOSでのスクロールを滑らかに */
 }
 
 #gameTitle{
   font-size:42px;
   font-weight:bold;
   color:gold;
-  margin-bottom: 10px; /* タイトル下の余白 */
+  margin-bottom: 10px; 
   text-shadow:
   0 0 20px rgba(255,215,0,.7);
+  text-align: center;
 }
 
 /* 説明文とボタンを綺麗に縦並びにするグループ */
@@ -50,7 +54,9 @@ body{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:6px; /* 説明文とボタンの間の隙間 */
+  gap:8px; 
+  width: 100%;
+  max-width: 320px; /* ボタン全体の最大幅 */
 }
 
 /* 各ボタンの解説テキスト用スタイル */
@@ -63,7 +69,8 @@ body{
 }
 
 .menuBtn{
-  width:260px;
+  width:100%; /* グループの幅（max-width）いっぱいに広げる */
+  max-width: 280px;
   padding:18px;
   border:none;
   border-radius:18px;
@@ -154,17 +161,19 @@ body{
 }
 
 /* ======================
-   図鑑画面
+   共通サブ画面（全面スクロール・レスポンシブ化）
 ====================== */
 
-#treasureScreen{
+#treasureScreen,
+#hintScreen{
   position:fixed;
   inset:0;
   display:none;
   flex-direction:column;
-  justify-content:center;
   align-items:center;
   gap:25px;
+  padding: 40px 20px;
+  box-sizing: border-box;
   background:
   linear-gradient(
     180deg,
@@ -172,19 +181,30 @@ body{
     #1e293b
   );
   z-index:20000;
+  overflow-y: auto; /* 画像が増えたらスクロールできるようにする */
+  -webkit-overflow-scrolling: touch;
 }
+
+/* ======================
+   図鑑画面（グリッド配置）
+====================== */
 
 .treasureGrid{
   display:flex;
+  flex-wrap: wrap; /* 横幅が足りなくなったら自動で折り返す */
+  justify-content: center;
   gap:20px;
+  width: 100%;
+  max-width: 600px; /* 大画面でも広がりすぎないように制限 */
 }
 
 .treasureGrid img{
-  width:150px;
-  height:150px;
+  width:130px; /* スマホで2列に並びやすいサイズに変更 */
+  height:130px;
   border-radius:18px;
   background:white;
   object-fit: cover;
+  box-shadow: 0 6px 18px rgba(0,0,0,.4);
 }
 
 .backBtn{
@@ -195,6 +215,29 @@ body{
   background:#ff9800;
   color:white;
   cursor: pointer;
+  margin-top: auto; /* コンテンツが少ないときは最下部、多いときは下に押し出される */
+  flex-shrink: 0; /* スクロール時にボタンが潰れるのを防ぐ */
+}
+
+/* ======================
+   場所確認画面（グリッド配置）
+====================== */
+
+.hintGrid{
+  display:flex;
+  flex-wrap: wrap; /* 自動折り返し */
+  justify-content: center;
+  gap:20px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.hintGrid img{
+  width:140px; /* 横幅に合わせて綺麗にフィット */
+  height:140px;
+  border-radius:20px;
+  object-fit: cover;
+  box-shadow: 0 6px 18px rgba(0,0,0,.4);
 }
 
 /* ======================
@@ -233,38 +276,6 @@ body{
     #0072ff
   );
   cursor: pointer;
-}
-
-/* ======================
-   場所確認画面
-====================== */
-
-#hintScreen{
-  position:fixed;
-  inset:0;
-  display:none;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  gap:25px;
-  background:
-    linear-gradient(
-      180deg,
-      #111827,
-      #1e293b
-    );
-  z-index:20000;
-}
-
-.hintGrid{
-  display:flex;
-  gap:20px;
-}
-
-.hintGrid img{
-  width:180px;
-  border-radius:20px;
-  object-fit: cover;
 }
 
 #closeCompleteBtn{
@@ -343,7 +354,7 @@ body{
 
 <div id="treasureScreen">
 
-  <h1 style="color:gold;">
+  <h1 style="color:gold; margin: 0; font-size: 38px;">
     お宝図鑑
   </h1>
 
@@ -360,7 +371,7 @@ body{
 
 <div id="hintScreen">
 
-  <h1 style="color:gold;">
+  <h1 style="color:gold; margin: 0; font-size: 38px;">
     場所確認
   </h1>
 

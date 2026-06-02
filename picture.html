@@ -68,16 +68,21 @@
       display: none;
     }
 
-    /* メニュー画面 */
+    /* ======================
+       メニュー（スクロール＆画面最適化）
+    ====================== */
     #menuScreen {
       position: fixed; inset: 0;
       background: linear-gradient(180deg, #101820, #1d2d44);
       z-index: 20000;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
       gap: 24px;
+      padding: 40px 20px;
+      box-sizing: border-box;
+      overflow-y: auto; /* ボタンが増えてもスクロール可能に */
+      -webkit-overflow-scrolling: touch;
     }
 
     #gameTitle {
@@ -86,26 +91,29 @@
       font-weight: bold;
       margin-bottom: 10px;
       text-shadow: 0 0 20px rgba(255,215,0,0.7);
+      text-align: center;
     }
 
     .menuGuide {
-      font-size: 16px;
+      font-size: 14px;
       color: #e0e0e0;
       text-align: center;
       line-height: 1.6;
-      margin-bottom: -4px;
-      padding: 0 20px;
+      letter-spacing: 0.5px;
     }
 
     .menuGroup {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
+      gap: 8px;
+      width: 100%;
+      max-width: 320px;
     }
 
     #menuScreen button {
-      width: 260px;
+      width: 100%;
+      max-width: 280px;
       padding: 18px;
       border: none;
       border-radius: 18px;
@@ -190,6 +198,77 @@
       color: white;
       cursor: pointer;
     }
+
+    /* ======================
+       クリア済み画面（全面スクロール・レスポンシブ）
+    ====================== */
+    #clearScreen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      padding: 40px 20px;
+      box-sizing: border-box;
+      background: linear-gradient(180deg, #111827, #1e293b);
+      z-index: 20000;
+      overflow-y: auto; /* スクロール可能に */
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .clearGrid {
+      display: flex;
+      flex-wrap: wrap; /* 自動折り返し */
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    /* 見つけたキャラクターカードの枠 */
+    .clearItem {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.05);
+      padding: 10px;
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .clearItem img {
+      width: 110px;
+      height: 110px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: #000;
+    }
+
+    .clearName {
+      font-size: 12px;
+      color: #ffe066;
+      font-weight: bold;
+      text-align: center;
+      max-width: 110px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .backBtn {
+      padding: 16px 30px;
+      border: none;
+      border-radius: 18px;
+      background: #ff9800;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: auto; 
+      flex-shrink: 0; /* スクロールしてもボタンが潰れないようにする */
+    }
   </style>
 
   <script>
@@ -222,10 +301,14 @@
   
   <div class="menuGroup">
     <div class="menuGuide">
-      ここから読み込んでね！<br>
       上のガイドの絵を探してタップしよう！
     </div>
     <button id="startBtn">スタート</button>
+  </div>
+
+  <div class="menuGroup">
+    <div class="menuGuide">見つけたキャラクターの一覧だよ！</div>
+    <button id="openClearBtn">クリア済み</button>
   </div>
 </div>
 
@@ -284,6 +367,25 @@
   <button id="completeClose">閉じる</button>
 </div>
 
+<div id="clearScreen">
+  <h1 style="color:gold; margin: 0; font-size: 38px;">クリア済み</h1>
+  
+  <div class="clearGrid">
+    <div class="clearItem"><img id="clearImg_heart" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+    <div class="clearItem"><img id="clearImg_eye" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+    <div class="clearItem"><img id="clearImg_ribbon" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+    
+    <div class="clearItem"><img id="clearImg_ear" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+    <div class="clearItem"><img id="clearImg_nose" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+    <div class="clearItem"><img id="clearImg_tail" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+    
+    <div class="clearItem"><img id="clearImg_alienEye" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+    <div class="clearItem"><img id="clearImg_alienMouth" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+  </div>
+  
+  <button id="closeClearBtn" class="backBtn">メニューに戻る</button>
+</div>
+
 <a-scene
   id="mainScene"
   style="display:none"
@@ -333,9 +435,9 @@
 // ========================
 
 const targets = [
-  { id: "heart",  name: "ワニ",   x:  0.13, y: -0.15, guideSize: 0.3, hitSize: 0.45, found: false },
-  { id: "eye",    name: "ロボ",   x: -0.11, y:  0.15, guideSize: 0.3, hitSize: 0.45, found: false },
-  { id: "ribbon", name: "鬼",     x:  0.38, y:  0.39, guideSize: 0.3, hitSize: 0.45, found: false }
+  { id: "heart",  name: "ワニ",    x:  0.13, y: -0.15, guideSize: 0.3, hitSize: 0.45, found: false },
+  { id: "eye",    name: "ロボ",    x: -0.11, y:  0.15, guideSize: 0.3, hitSize: 0.45, found: false },
+  { id: "ribbon", name: "鬼",      x:  0.38, y:  0.39, guideSize: 0.3, hitSize: 0.45, found: false }
 ];
 
 const animalTargets = [
@@ -357,7 +459,7 @@ let animalScaleX = 1, animalScaleY = 1;
 let alienScaleX  = 1, alienScaleY  = 1;
 
 // ========================
-// セーブ / ロード
+// セーブ / ロード / 表示更新
 // ========================
 
 function saveGame() {
@@ -389,11 +491,29 @@ function loadGame() {
   });
 
   updateProgress();
+  updateClearScreen();
 }
 
 function updateProgress() {
   const found = allTargets.filter(t => t.found).length;
   document.querySelector("#progressCount").textContent = `${found} / ${totalCount}`;
+}
+
+// 【新規追加】クリア済み図鑑の表示を更新する関数
+function updateClearScreen() {
+  allTargets.forEach(t => {
+    const imgEl = document.querySelector("#clearImg_" + t.id);
+    const nameEl = imgEl?.nextElementSibling; // clearNameを取得
+    
+    if (imgEl && t.found) {
+      // どのイラストに所属しているかで画像ソースを判定
+      if (targets.includes(t))      imgEl.src = "girl.jpg";
+      if (animalTargets.includes(t)) imgEl.src = "animal.jpg";
+      if (alienTargets.includes(t))  imgEl.src = "alien.jpg";
+      
+      if (nameEl) nameEl.textContent = t.name;
+    }
+  });
 }
 
 const effect = document.querySelector("#effect");
@@ -483,7 +603,7 @@ function autoFitPlane(imagePath, planeId, maxSize, type) {
       const aspect = img.width / img.height;
       const plane  = document.querySelector(planeId);
       let w = maxSize, h = maxSize;
-      
+       
       if (plane) {
         if (aspect >= 1) { w = maxSize; h = maxSize / aspect; }
         else             { h = maxSize; w = maxSize * aspect;  }
@@ -580,9 +700,21 @@ document.querySelector("#startBtn").addEventListener("click", async () => {
   if (!sceneEl.hasLoaded) {
     await new Promise(r => sceneEl.addEventListener("loaded", r));
   }
-  
+   
   const ar = sceneEl.systems["mindar-image-system"];
-  if (ar) await ar.start(); // ここで確実起動
+  if (ar) await ar.start(); 
+});
+
+/* ==================================
+  【新規追加】クリア済みボタンの画面遷移
+================================== */
+document.querySelector("#openClearBtn").addEventListener("click", () => {
+  updateClearScreen(); // 最新の発見状況を反映
+  document.querySelector("#clearScreen").style.display = "flex";
+});
+
+document.querySelector("#closeClearBtn").addEventListener("click", () => {
+  document.querySelector("#clearScreen").style.display = "none";
 });
 
 /* ==================================
@@ -594,14 +726,13 @@ document.querySelector("#backToMenuBtn").addEventListener("click", async () => {
     try { await ar.stop(); } catch(e) {}
   }
 
-  // ★ 生成されたビデオ要素とカメラ機材(ストリーム)を物理的に切断・削除する
   const video = document.querySelector("video");
   if (video) {
     if (video.srcObject) {
       const tracks = video.srcObject.getTracks();
-      tracks.forEach(track => track.stop()); // スマホのカメラを停止
+      tracks.forEach(track => track.stop()); 
     }
-    video.remove(); // 残った映像タグを消去
+    video.remove(); 
   }
 
   document.querySelector("#mainScene").style.display    = "none";

@@ -10,157 +10,188 @@
 <style>
 
 body{
-margin:0;
-overflow:hidden;
-font-family:sans-serif;
+  margin:0;
+  overflow:hidden;
+  font-family:sans-serif;
 }
 
 /* ======================
-メニュー
+   メニュー（スクロール＆画面最適化）
 ====================== */
 
 #menuScreen{
-position:fixed;
-inset:0;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-gap:20px; 
-background: linear-gradient(180deg, #101820, #1d2d44);
-z-index:9999;
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:24px; /* 各グループの間隔を広げて見やすく */
+  padding: 40px 20px; /* 上下にスクロールした際の余白を確保 */
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #101820, #1d2d44);
+  z-index:9999;
+  overflow-y: auto; /* 項目が増えたら自動で縦スクロール可能にする */
+  -webkit-overflow-scrolling: touch; /* iOSでのスクロールを滑らかに */
 }
 
 #gameTitle{
-font-size:42px;
-font-weight:bold;
-color:gold;
-margin-bottom: 20px; 
+  font-size:42px;
+  font-weight:bold;
+  color:gold;
+  margin-bottom: 10px; 
+  text-shadow: 0 0 20px rgba(255,215,0,.7);
+  text-align: center;
+}
+
+/* 説明文とボタンを綺麗に縦並びにするグループ */
+.menuGroup{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  width: 100%;
+  max-width: 320px; /* ボタン全体の最大幅 */
 }
 
 .menuGuide{
-font-size:16px;
-color:#e0e0e0;
-text-align:center;
-margin-bottom: -5px; 
-line-height:1.4;
-}
-
-.menuGroup{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:10px;
+  font-size:14px; /* 少しコンパクトにして画面に収まりやすく */
+  color:#e0e0e0;
+  text-align:center;
+  line-height:1.4;
+  letter-spacing: 0.5px;
 }
 
 .menuBtn{
-width:260px;
-padding:18px;
-border:none;
-border-radius:18px;
-font-size:24px;
-color:white;
-background: linear-gradient(135deg, #ff9800, #ff5722);
-cursor: pointer;
+  width:100%; /* グループの幅いっぱいに広げる */
+  max-width: 280px;
+  padding:18px;
+  border:none;
+  border-radius:18px;
+  font-size:24px;
+  font-weight:bold;
+  color:white;
+  background: linear-gradient(135deg, #ff9800, #ff5722);
+  box-shadow: 0 6px 18px rgba(0,0,0,.4);
+  cursor: pointer;
 }
 
 /* ======================
-戻る
+   戻る
 ===================== */
 
 #backToMenuBtn{
-position:fixed;
-top:20px;
-left:20px;
-display:none;
-z-index:99999;
-padding:12px 20px;
-border:none;
-border-radius:14px;
-background:rgba(0,0,0,.8);
-color:white;
-cursor: pointer;
+  position:fixed;
+  top:20px;
+  left:20px;
+  display:none;
+  z-index:99999;
+  padding:12px 20px;
+  border:none;
+  border-radius:14px;
+  background:rgba(0,0,0,.8);
+  color:white;
+  font-size:18px;
+  cursor: pointer;
 }
 
 /* ======================
-場所確認
+   場所確認（全画面スクロール・レスポンシブ化）
 ====================== */
 
 #hintScreen{
-position:fixed;
-inset:0;
-display:none;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-gap:20px;
-background: linear-gradient(180deg, #111827, #1e293b);
-z-index:20000;
+  position:fixed;
+  inset:0;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  gap:25px;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #111827, #1e293b);
+  z-index:20000;
+  overflow-y: auto; /* 画像が増えたらスクロールできるようにする */
+  -webkit-overflow-scrolling: touch;
 }
 
-#hintScreen img{
-width:250px;
-border-radius:20px;
+/* 今後、画像が複数に増えても自動で折り返して並ぶグリッド */
+.hintGrid {
+  display: flex;
+  flex-wrap: wrap; /* 横幅が足りなくなったら自動で折り返す */
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 600px; /* PCなどの大画面で広がりすぎないように制限 */
+}
+
+.hintGrid img{
+  width: 140px; /* スマホで2列に並びやすいサイズに変更 */
+  height: 140px;
+  border-radius:20px;
+  object-fit: cover;
+  box-shadow: 0 6px 18px rgba(0,0,0,.4);
 }
 
 .backBtn{
-padding:14px 28px;
-border:none;
-border-radius:18px;
-background:#ff9800;
-color:white;
-font-size:22px;
-cursor: pointer;
+  padding:16px 30px;
+  border:none;
+  border-radius:18px;
+  background:#ff9800;
+  color:white;
+  font-size:22px;
+  cursor: pointer;
+  margin-top: auto; /* コンテンツが少ないときは最下部、多いときは下に押し出される */
+  flex-shrink: 0; /* スクロール時にボタンが潰れるのを防ぐ */
 }
 
 /* ======================
-画面固定フォトフレーム UI
+   画面固定フォトフレーム UI
 ====================== */
 
 #photoFrameOverlay {
-position: fixed;
-inset: 0;
-display: none;
-z-index: 9998; 
-pointer-events: none; 
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 9998; 
+  pointer-events: none; 
 }
 
 #photoFrameOverlay img {
-width: 100%;
-height: 100%;
-object-fit: fill;   
+  width: 100%;
+  height: 100%;
+  object-fit: fill;   
 }
 
 #captureBtn{
-position:fixed;
-bottom:50px; 
-left:50%;
-transform:translateX(-50%);
-padding:18px 32px;
-font-size:24px;
-border:none;
-border-radius:20px;
-background:#ff9800;
-color:white;
-z-index:99999;
-display:none;
-cursor: pointer;
+  position:fixed;
+  bottom:50px; 
+  left:50%;
+  transform:translateX(-50%);
+  padding:18px 32px;
+  font-size:24px;
+  border:none;
+  border-radius:20px;
+  background:#ff9800;
+  color:white;
+  z-index:99999;
+  display:none;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,.4);
 }
 
 #closeFrameBtn {
-position: fixed;
-top: 20px;
-right: 20px;
-padding: 12px 18px;
-font-size: 20px;
-border: none;
-border-radius: 14px;
-background: rgba(255, 59, 48, 0.9);
-color: white;
-font-weight: bold;
-z-index: 99999;
-display: none;
-cursor: pointer;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 18px;
+  font-size: 20px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255, 59, 48, 0.9);
+  color: white;
+  font-weight: bold;
+  z-index: 99999;
+  display: none;
+  cursor: pointer;
 }
 
 </style>
@@ -170,38 +201,42 @@ cursor: pointer;
 
 <div id="menuScreen">
 
-<div id="gameTitle">
-フォトスポットAR
-</div>
+  <div id="gameTitle">
+    フォトスポットAR
+  </div>
 
-<div class="menuGroup">
-<div class="menuGuide">まずはここで読み込んでね！</div>
-<button id="startBtn" class="menuBtn">
-読み込み開始
-</button>
-</div>
+  <div class="menuGroup">
+    <div class="menuGuide">まずはここで読み込んでね！</div>
+    <button id="startBtn" class="menuBtn">
+      読み込み開始
+    </button>
+  </div>
 
-<div class="menuGroup">
-<div class="menuGuide">ここでフォトスポットの場所を確認できるよ！</div>
-<button id="openHintBtn" class="menuBtn">
-場所確認
-</button>
-</div>
+  <div class="menuGroup">
+    <div class="menuGuide">ここでフォトスポットの場所を確認できるよ！</div>
+    <button id="openHintBtn" class="menuBtn">
+      場所確認
+    </button>
+  </div>
 
 </div>
 
 <button id="backToMenuBtn">
-メニューへ戻る
+  メニューへ戻る
 </button>
 
 <div id="hintScreen">
-<h1 style="color:gold;">場所確認</h1>
-<img src="hint_p.jpg">
-<button id="closeHintBtn" class="backBtn">戻る</button>
+  <h1 style="color:gold; margin: 0; font-size: 38px;">場所確認</h1>
+  
+  <div class="hintGrid">
+    <img src="hint_p.jpg">
+  </div>
+  
+  <button id="closeHintBtn" class="backBtn">戻る</button>
 </div>
 
 <div id="photoFrameOverlay">
-<img src="frame.png" id="overlayFrameImg">
+  <img src="frame.png" id="overlayFrameImg">
 </div>
 <button id="captureBtn">📸 撮影する</button>
 <button id="closeFrameBtn">❌ 閉じる</button>
@@ -235,64 +270,68 @@ let isFrameActive = false;
 AR開始（ボタンを押したタイミングでカメラを起動）
 ====================== */
 startBtn.addEventListener("click", async ()=>{
-menuScreen.style.display="none";
-mainScene.style.display="block";
-backBtn.style.display="block";
+  menuScreen.style.display="none";
+  mainScene.style.display="block";
+  backBtn.style.display="block";
 
-await new Promise(resolve=> setTimeout(resolve,200));
+  await new Promise(resolve=> setTimeout(resolve,200));
 
-const arSystem = mainScene.systems["mindar-image-system"];
-if(arSystem){
-await arSystem.start(); // ここでカメラをオンにする
-}
+  const arSystem = mainScene.systems["mindar-image-system"];
+  if(arSystem){
+    await arSystem.start(); // ここでカメラをオンにする
+  }
 });
 
 /* ======================
 戻る（メニューへ：カメラを完全にオフにする）
 ====================== */
 backBtn.addEventListener("click", async ()=>{
-const arSystem = mainScene.systems["mindar-image-system"];
-if(arSystem){
-await arSystem.stop(); // ここでカメラとARをストップする
-}
+  const arSystem = mainScene.systems["mindar-image-system"];
+  if(arSystem){
+    try{
+      await arSystem.stop(); // ここでカメラとARをストップする
+    }catch(e){
+      console.log(e);
+    }
+  }
 
-// MindARが生成した不要なビデオ要素やストリームを確実に停止して削除
-const video = document.querySelector("video");
-if (video) {
-if (video.srcObject) {
-const tracks = video.srcObject.getTracks();
-tracks.forEach(track => track.stop()); // スマホのカメラ機材自体を終了
-}
-video.remove(); // 画面に残るビデオ要素を消去
-}
+  // MindARが生成した不要なビデオ要素やストリームを確実に停止して削除
+  const video = document.querySelector("video");
+  if (video) {
+    if (video.srcObject) {
+      const tracks = video.srcObject.getTracks();
+      tracks.forEach(track => track.stop()); // スマホのカメラ機材自体を終了
+    }
+    video.remove(); // 画面に残るビデオ要素を消去
+  }
 
-resetPhotoFrame();
+  resetPhotoFrame();
 
-mainScene.style.display="none";
-menuScreen.style.display="flex";
-backBtn.style.display="none";
+  mainScene.style.display="none";
+  menuScreen.style.display="flex";
+  backBtn.style.display="none";
 });
 
 /* ======================
 場所確認
 ====================== */
 document.querySelector("#openHintBtn").addEventListener("click",()=>{
-hintScreen.style.display="flex";
+  hintScreen.style.display="flex";
 });
 
 document.querySelector("#closeHintBtn").addEventListener("click",()=>{
-hintScreen.style.display="none";
+  hintScreen.style.display="none";
 });
 
 /* ======================
 フォトフレームを消す処理
 ====================== */
 function resetPhotoFrame() {
-isFrameActive = false;
-photoFrameOverlay.style.display = "none";
-captureBtn.style.display = "none";
-closeFrameBtn.style.display = "none";
-backBtn.style.display = "block";
+  isFrameActive = false;
+  photoFrameOverlay.style.display = "none";
+  captureBtn.style.display = "none";
+  closeFrameBtn.style.display = "none";
+  backBtn.style.display = "block";
 }
 
 closeFrameBtn.addEventListener("click", resetPhotoFrame);
@@ -301,89 +340,89 @@ closeFrameBtn.addEventListener("click", resetPhotoFrame);
 フォトスポット（全画面撮影対応）
 ====================== */
 captureBtn.addEventListener("click", async ()=>{
-try{
-captureBtn.style.display="none";
-closeFrameBtn.style.display="none";
-const video = document.querySelector("video");
-if(!video){
-alert("カメラ取得失敗");
-captureBtn.style.display="block";
-closeFrameBtn.style.display="block";
-return;
-}
+  try{
+    captureBtn.style.display="none";
+    closeFrameBtn.style.display="none";
+    const video = document.querySelector("video");
+    if(!video){
+      alert("カメラ取得失敗");
+      captureBtn.style.display="block";
+      closeFrameBtn.style.display="block";
+      return;
+    }
 
-const canvas = document.querySelector("#captureCanvas");
-const ctx = canvas.getContext("2d");
-canvas.width = video.videoWidth;
-canvas.height = video.videoHeight;
+    const canvas = document.querySelector("#captureCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
-/* 1. カメラ映像を一杯に描画 */
-ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    /* 1. カメラ映像を一杯に描画 */
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-/* 2. ARフレームを画面いっぱいに合成 */
-const frame = document.querySelector("#overlayFrameImg");
-if(frame.complete){
-const imgStyle = window.getComputedStyle(frame);
-const fitType = imgStyle.objectFit;
+    /* 2. ARフレームを画面いっぱいに合成 */
+    const frame = document.querySelector("#overlayFrameImg");
+    if(frame.complete){
+      const imgStyle = window.getComputedStyle(frame);
+      const fitType = imgStyle.objectFit;
 
-let drawW = canvas.width;
-let drawH = canvas.height;
-let drawX = 0;
-let drawY = 0;
+      let drawW = canvas.width;
+      let drawH = canvas.height;
+      let drawX = 0;
+      let drawY = 0;
 
-if (fitType === "cover") {
-const videoAspect = canvas.width / canvas.height;
-const frameAspect = frame.naturalWidth / frame.naturalHeight;
+      if (fitType === "cover") {
+        const videoAspect = canvas.width / canvas.height;
+        const frameAspect = frame.naturalWidth / frame.naturalHeight;
 
-if (frameAspect > videoAspect) {
-drawH = canvas.height;
-drawW = canvas.height * frameAspect;
-drawX = (canvas.width - drawW) / 2;
-} else {
-drawW = canvas.width;
-drawH = canvas.width / frameAspect;
-drawY = (canvas.height - drawH) / 2;
-}
-}
+        if (frameAspect > videoAspect) {
+          drawH = canvas.height;
+          drawW = canvas.height * frameAspect;
+          drawX = (canvas.width - drawW) / 2;
+        } else {
+          drawW = canvas.width;
+          drawH = canvas.width / frameAspect;
+          drawY = (canvas.height - drawH) / 2;
+        }
+      }
 
-ctx.drawImage(frame, drawX, drawY, drawW, drawH);
-}
+      ctx.drawImage(frame, drawX, drawY, drawW, drawH);
+    }
 
-/* 3. 保存処理 */
-const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-if(isIOS){
-const imageURL = canvas.toDataURL("image/jpeg", 0.95);
-const win = window.open();
-if(win){
-win.document.write('<img src="'+imageURL+'" style="width:100%">');
-}else{
-location.href = imageURL;
-}
-}else{
-const link = document.createElement("a");
-link.download = "photo_spot.jpg";
-link.href = canvas.toDataURL("image/jpeg", 0.95);
-link.click();
-}
-} catch(e){
-console.error(e);
-alert("撮影失敗");
-}
-captureBtn.style.display="block";
-closeFrameBtn.style.display="block";
+    /* 3. 保存処理 */
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if(isIOS){
+      const imageURL = canvas.toDataURL("image/jpeg", 0.95);
+      const win = window.open();
+      if(win){
+        win.document.write('<img src="'+imageURL+'" style="width:100%">');
+      }else{
+        location.href = imageURL;
+      }
+    }else{
+      const link = document.createElement("a");
+      link.download = "photo_spot.jpg";
+      link.href = canvas.toDataURL("image/jpeg", 0.95);
+      link.click();
+    }
+  } catch(e){
+    console.error(e);
+    alert("撮影失敗");
+  }
+  captureBtn.style.display="block";
+  closeFrameBtn.style.display="block";
 });
 
 /* ======================
 ターゲット認識
 ====================== */
 targetPhoto.addEventListener("targetFound", ()=>{
-if (isFrameActive) return;
+  if (isFrameActive) return;
 
-isFrameActive = true;
-photoFrameOverlay.style.display = "block"; 
-captureBtn.style.display = "block";       
-closeFrameBtn.style.display = "block";   
-backBtn.style.display = "none";          
+  isFrameActive = true;
+  photoFrameOverlay.style.display = "block"; 
+  captureBtn.style.display = "block";       
+  closeFrameBtn.style.display = "block";   
+  backBtn.style.display = "none";          
 });
 
 targetPhoto.addEventListener("targetLost", ()=>{});

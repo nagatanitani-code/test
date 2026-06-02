@@ -16,7 +16,7 @@ body{
 }
 
 /* ======================
-   メニュー
+   メニュー（スクロール＆画面最適化）
 ====================== */
 
 #menuScreen{
@@ -24,9 +24,10 @@ body{
   inset:0;
   display:flex;
   flex-direction:column;
-  justify-content:center;
   align-items:center;
-  gap:16px; 
+  gap:24px; /* 間隔を少し広げて見やすく */
+  padding: 40px 20px; /* 上下にスクロール用の余白を確保 */
+  box-sizing: border-box;
   background:
   linear-gradient(
     180deg,
@@ -34,6 +35,8 @@ body{
     #1d2d44
   );
   z-index:9999;
+  overflow-y: auto; /* 項目が増えたら縦スクロール可能にする */
+  -webkit-overflow-scrolling: touch; /* iOSでのスクロールを滑らかに */
 }
 
 #gameTitle{
@@ -43,13 +46,16 @@ body{
   margin-bottom: 10px; 
   text-shadow:
   0 0 20px rgba(255,215,0,.7);
+  text-align: center;
 }
 
 .menuGroup{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:6px; 
+  gap:8px; 
+  width: 100%;
+  max-width: 320px; /* ボタンの最大幅に合わせて中央配置 */
 }
 
 .menuGuide{
@@ -61,7 +67,8 @@ body{
 }
 
 .menuBtn{
-  width:260px;
+  width:100%; /* グループの幅いっぱいに広げる */
+  max-width: 280px;
   padding:18px;
   border:none;
   border-radius:18px;
@@ -154,7 +161,7 @@ body{
 }
 
 /* ======================
-   共通画面
+   共通サブ画面（全面スクロール対応に修正）
 ====================== */
 
 #hintScreen,
@@ -163,9 +170,10 @@ body{
   inset:0;
   display:none;
   flex-direction:column;
-  justify-content:center;
   align-items:center;
   gap:25px;
+  padding: 40px 20px;
+  box-sizing: border-box;
   background:
   linear-gradient(
     180deg,
@@ -173,29 +181,33 @@ body{
     #1e293b
   );
   z-index:20000;
+  overflow-y: auto; /* サブ画面も画像が増えたらスクロール可能にする */
+  -webkit-overflow-scrolling: touch;
 }
 
 .screenTitle{
   color:gold;
   font-size:38px;
   margin:0;
+  text-align: center;
 }
 
 /* ======================
-   場所確認
+   場所確認（グリッド配置）
 ====================== */
 
 .hintGrid{
   display:flex;
-  flex-wrap:wrap;
+  flex-wrap:wrap; /* 画面幅に合わせて自動で折り返し */
   justify-content:center;
   gap:20px;
-  max-width:90%;
+  width: 100%;
+  max-width: 600px; /* PCなど大画面でも広がりすぎないように制限 */
 }
 
 .hintGrid img{
-  width:180px;
-  height:180px;
+  width: 140px; /* スマホで2列に並びやすいサイズに微調整 */
+  height: 140px;
   object-fit:cover;
   border-radius:20px;
   background:white;
@@ -204,17 +216,21 @@ body{
 }
 
 /* ======================
-   スタンプ帳
+   スタンプ帳（グリッド配置）
 ====================== */
 
 .stampGrid{
   display:flex;
+  flex-wrap:wrap; /* 横一列ではなく、増えたら自動折り返しにする */
+  justify-content:center;
   gap:20px;
+  width: 100%;
+  max-width: 600px;
 }
 
 .stampGrid img{
-  width:150px;
-  height:150px;
+  width: 120px;
+  height: 120px;
   object-fit:cover;
   border-radius:18px;
   background:white;
@@ -230,6 +246,8 @@ body{
   background:#ff9800;
   color:white;
   cursor: pointer;
+  margin-top: auto; /* 常にコンテンツの最下部に配置 */
+  flex-shrink: 0; /* スクロール時にボタンが潰れるのを防ぐ */
 }
 
 /* ======================
