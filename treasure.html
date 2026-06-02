@@ -26,7 +26,7 @@ body{
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  gap:16px; 
+  gap:16px; /* ボタンと解説が増えたため全体の隙間を少しコンパクトに調整 */
   background:
   linear-gradient(
     180deg,
@@ -40,18 +40,20 @@ body{
   font-size:42px;
   font-weight:bold;
   color:gold;
-  margin-bottom: 10px; 
+  margin-bottom: 10px; /* タイトル下の余白 */
   text-shadow:
   0 0 20px rgba(255,215,0,.7);
 }
 
+/* 説明文とボタンを綺麗に縦並びにするグループ */
 .menuGroup{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:6px; 
+  gap:6px; /* 説明文とボタンの間の隙間 */
 }
 
+/* 各ボタンの解説テキスト用スタイル */
 .menuGuide{
   font-size:14px;
   color:#e0e0e0;
@@ -74,70 +76,68 @@ body{
     #ff9800,
     #ff5722
   );
-  box-shadow:
-  0 6px 18px rgba(0,0,0,.4);
+  box-shadow: 0 6px 18px rgba(0,0,0,.4);
   cursor: pointer;
 }
 
 /* ======================
-   戻る
+   戻るボタン
 ====================== */
 
 #backToMenuBtn{
   position:fixed;
   top:20px;
   left:20px;
+  z-index:9999;
   display:none;
-  z-index:99999;
   padding:12px 20px;
   border:none;
   border-radius:14px;
-  background:
-  rgba(0,0,0,.8);
+  background:rgba(0,0,0,.8);
   color:white;
   font-size:18px;
   cursor: pointer;
 }
 
 /* ======================
-   スタンプBOX
+   お宝BOX
 ====================== */
 
-#stampBox{
+#treasureBox{
   position:fixed;
   top:15px;
   right:15px;
+  z-index:999;
   display:none;
   text-align:center;
   padding:15px;
   border-radius:20px;
   color:white;
-  z-index:999;
   background:
   rgba(0,0,0,.75);
 }
 
-#stampTitle{
+#treasureTitle{
   font-size:12px;
   color:gold;
 }
 
-#stampCount{
+#treasureCount{
   font-size:28px;
   font-weight:bold;
 }
 
-#stampPreview{
+#treasureImage{
   width:120px;
   margin-top:10px;
   border-radius:12px;
 }
 
 /* ======================
-   GET演出
+   発見演出
 ====================== */
 
-#stampEffect{
+#treasureEffect{
   position:fixed;
   bottom:40px;
   left:50%;
@@ -148,17 +148,16 @@ body{
   font-size:24px;
   font-weight:bold;
   padding:12px 24px;
-  border-radius:16px;
+  border-radius:14px;
   display:none;
-  z-index:99999;
+  z-index:9999;
 }
 
 /* ======================
-   共通画面
+   図鑑画面
 ====================== */
 
-#hintScreen,
-#stampScreen{
+#treasureScreen{
   position:fixed;
   inset:0;
   display:none;
@@ -175,51 +174,17 @@ body{
   z-index:20000;
 }
 
-.screenTitle{
-  color:gold;
-  font-size:38px;
-  margin:0;
-}
-
-/* ======================
-   場所確認
-====================== */
-
-.hintGrid{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:20px;
-  max-width:90%;
-}
-
-.hintGrid img{
-  width:180px;
-  height:180px;
-  object-fit:cover;
-  border-radius:20px;
-  background:white;
-  box-shadow:
-  0 6px 18px rgba(0,0,0,.4);
-}
-
-/* ======================
-   スタンプ帳
-====================== */
-
-.stampGrid{
+.treasureGrid{
   display:flex;
   gap:20px;
 }
 
-.stampGrid img{
+.treasureGrid img{
   width:150px;
   height:150px;
-  object-fit:cover;
   border-radius:18px;
   background:white;
-  box-shadow:
-  0 6px 18px rgba(0,0,0,.4);
+  object-fit: cover;
 }
 
 .backBtn{
@@ -233,10 +198,10 @@ body{
 }
 
 /* ======================
-   COMPLETE
+   コンプリート
 ====================== */
 
-#completeWrap{
+#completeTreasure{
   position:fixed;
   inset:0;
   display:none;
@@ -253,36 +218,71 @@ body{
   font-size:42px;
   font-weight:bold;
   color:gold;
-  text-shadow:
-  0 0 20px rgba(255,215,0,.8);
 }
 
-#completeImage{
-  width:320px;
-  max-width:85vw;
-  border-radius:24px;
-  cursor:pointer;
-  box-shadow:
-  0 0 30px rgba(255,180,0,.8);
+#downloadWallpaperBtn{
+  padding:18px 30px;
+  border:none;
+  border-radius:18px;
+  font-size:24px;
+  color:white;
+  background:
+  linear-gradient(
+    135deg,
+    #00c6ff,
+    #0072ff
+  );
+  cursor: pointer;
 }
 
-#closeComplete{
+/* ======================
+   場所確認画面
+====================== */
+
+#hintScreen{
+  position:fixed;
+  inset:0;
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:25px;
+  background:
+    linear-gradient(
+      180deg,
+      #111827,
+      #1e293b
+    );
+  z-index:20000;
+}
+
+.hintGrid{
+  display:flex;
+  gap:20px;
+}
+
+.hintGrid img{
+  width:180px;
+  border-radius:20px;
+  object-fit: cover;
+}
+
+#closeCompleteBtn{
   position:absolute;
   top:20px;
-  left:20px;
-  width:52px;
-  height:52px;
+  right:20px;
+  width:50px;
+  height:50px;
   border-radius:50%;
-  background:
-  rgba(0,0,0,.8);
+  background:rgba(0,0,0,.8);
   color:white;
   font-size:32px;
   font-weight:bold;
   display:flex;
-  justify-content:center;
   align-items:center;
-  border:3px solid white;
+  justify-content:center;
   cursor:pointer;
+  border:2px solid white;
 }
 
 </style>
@@ -293,27 +293,27 @@ body{
 <div id="menuScreen">
 
   <div id="gameTitle">
-    スタンプラリーAR
+    お宝探しAR
   </div>
 
   <div class="menuGroup">
-    <div class="menuGuide">最初はここから読み込んでね！</div>
+    <div class="menuGuide">最初にここから読み込んでね！</div>
     <button id="startBtn" class="menuBtn">
       探索開始
     </button>
   </div>
 
   <div class="menuGroup">
-    <div class="menuGuide">スタンプの場所はここで確認できるよ！</div>
-    <button id="openHintBtn" class="menuBtn">
-      場所確認
+    <div class="menuGuide">ここで取得したお宝を確認できるよ！</div>
+    <button id="openTreasureBtn" class="menuBtn">
+      お宝図鑑
     </button>
   </div>
 
   <div class="menuGroup">
-    <div class="menuGuide">取得したスタンプはここで確認できるよ！</div>
-    <button id="openStampBtn" class="menuBtn">
-      スタンプ帳
+    <div class="menuGuide">ここでお宝の場所を確認できるよ！</div>
+    <button id="openHintBtn" class="menuBtn">
+      場所確認
     </button>
   </div>
 
@@ -323,34 +323,50 @@ body{
 メニューへ戻る
 </button>
 
-<div id="stampBox">
+<div id="treasureBox">
 
-  <div id="stampTitle">
-    スタンプ獲得数
+  <div id="treasureTitle">
+    お宝発見数
   </div>
 
-  <div id="stampCount">
-    0 / 3
+  <div id="treasureCount">
+    0 / 2
   </div>
 
-  <img id="stampPreview" src="">
+  <img id="treasureImage" src="">
 
 </div>
 
-<div id="stampEffect">
-スタンプGET!!
+<div id="treasureEffect">
+宝発見！
+</div>
+
+<div id="treasureScreen">
+
+  <h1 style="color:gold;">
+    お宝図鑑
+  </h1>
+
+  <div class="treasureGrid">
+    <img id="menuTreasure1" src="treasure_unknown.jpg">
+    <img id="menuTreasure2" src="treasure_unknown.jpg">
+  </div>
+
+  <button id="closeTreasureBtn" class="backBtn">
+    戻る
+  </button>
+
 </div>
 
 <div id="hintScreen">
 
-  <h1 class="screenTitle">
+  <h1 style="color:gold;">
     場所確認
   </h1>
 
   <div class="hintGrid">
-    <img src="hint1_t.jpg">
-    <img src="hint2_t.jpg">
-    <img src="hint3_t.jpg">
+    <img src="hint1.jpg">
+    <img src="hint2.jpg">
   </div>
 
   <button id="closeHintBtn" class="backBtn">
@@ -359,240 +375,190 @@ body{
 
 </div>
 
-<div id="stampScreen">
-
-  <h1 class="screenTitle">
-    スタンプ帳
-  </h1>
-
-  <div class="stampGrid">
-    <img id="menuStamp1" src="stamp_unknown.jpg">
-    <img id="menuStamp2" src="stamp_unknown.jpg">
-    <img id="menuStamp3" src="stamp_unknown.jpg">
-  </div>
-
-  <button id="closeStampBtn" class="backBtn">
-    戻る
+<div id="completeTreasure">
+  <div id="closeCompleteBtn">×</div>
+  <div id="completeText">COMPLETE!!</div>
+  <button id="downloadWallpaperBtn">
+    wallpaper入手
   </button>
-
-</div>
-
-<div id="completeWrap">
-  <div id="closeComplete">
-    ×
-  </div>
-  <div id="completeText">
-    COMPLETE!!
-  </div>
-  <img id="completeImage" src="banner.jpg">
 </div>
 
 <a-scene
 id="mainScene"
 style="display:none"
 mindar-image="imageTargetSrc: targets.mind; maxTrack:1; autoStart:false;"
+color-space="sRGB"
 vr-mode-ui="enabled:false"
 device-orientation-permission-ui="enabled:false">
 
 <a-assets>
-  <img id="stamp1Img" src="stamp1.jpg">
-  <img id="stamp2Img" src="stamp2.jpg">
-  <img id="stamp3Img" src="stamp3.jpg">
+  <img id="coinImg" src="coin.jpg">
+  <img id="goldImg" src="gold.jpg">
 </a-assets>
 
 <a-camera camera position="0 0 0" look-controls="enabled:false"></a-camera>
 
-<a-entity id="targetStamp1" mindar-image-target="targetIndex:0">
+<a-entity id="targetCoin" mindar-image-target="targetIndex:3">
   <a-plane width="0.01" height="0.01" visible="false"></a-plane>
 </a-entity>
 
-<a-entity id="targetStamp2" mindar-image-target="targetIndex:1">
-  <a-plane width="0.01" height="0.01" visible="false"></a-plane>
-</a-entity>
-
-<a-entity id="targetStamp3" mindar-image-target="targetIndex:2">
+<a-entity id="targetGold" mindar-image-target="targetIndex:4">
   <a-plane width="0.01" height="0.01" visible="false"></a-plane>
 </a-entity>
 
 </a-scene>
 
+
 <script>
+
 // ======================
-// 要素取得
+// 基本変数
 // ======================
 const menuScreen = document.querySelector("#menuScreen");
 const mainScene = document.querySelector("#mainScene");
 const startBtn = document.querySelector("#startBtn");
 const backToMenuBtn = document.querySelector("#backToMenuBtn");
-const stampBox = document.querySelector("#stampBox");
-const stampPreview = document.querySelector("#stampPreview");
-const stampCount = document.querySelector("#stampCount");
-const stampEffect = document.querySelector("#stampEffect");
-const hintScreen = document.querySelector("#hintScreen");
-const stampScreen = document.querySelector("#stampScreen");
-const completeWrap = document.querySelector("#completeWrap");
+const treasureEffect = document.querySelector("#treasureEffect");
+const treasureCount = document.querySelector("#treasureCount");
+const treasureImage = document.querySelector("#treasureImage");
+const treasureBox = document.querySelector("#treasureBox");
+const completeTreasure = document.querySelector("#completeTreasure");
 
-// ======================
-// 状態
-// ======================
-let stamp1Get = false;
-let stamp2Get = false;
-let stamp3Get = false;
+let coinFound = false;
+let goldFound = false;
 
-let foundStamp = 0;
-const totalStamp = 3;
+let foundTreasure = 0;
+const totalTreasure = 2;
+
 
 // ======================
 // セーブ
 // ======================
 function saveGame(){
   localStorage.setItem(
-    "stampSave",
+    "treasureSave",
     JSON.stringify({
-      stamp1Get,
-      stamp2Get,
-      stamp3Get
+      coinFound,
+      goldFound
     })
   );
 }
+
 
 // ======================
 // ロード
 // ======================
 function loadGame(){
-  const saveData = JSON.parse(localStorage.getItem("stampSave"));
+  const saveData = JSON.parse(localStorage.getItem("treasureSave"));
   if(!saveData) return;
 
-  stamp1Get = saveData.stamp1Get || false;
-  stamp2Get = saveData.stamp2Get || false;
-  stamp3Get = saveData.stamp3Get || false;
+  coinFound = saveData.coinFound || false;
+  goldFound = saveData.goldFound || false;
 
-  foundStamp = 0;
-  if(stamp1Get) foundStamp++;
-  if(stamp2Get) foundStamp++;
-  if(stamp3Get) foundStamp++;
+  foundTreasure = 0;
+  if(coinFound) foundTreasure++;
+  if(goldFound) foundTreasure++;
 
-  updateStampBook();
+  treasureCount.innerHTML = `${foundTreasure} / ${totalTreasure}`;
 }
 
-// ======================
-// スタンプ帳更新
-// ======================
-function updateStampBook(){
-  stampCount.innerHTML = `${foundStamp} / ${totalStamp}`;
-
-  if(stamp1Get){
-    document.querySelector("#menuStamp1").src = "stamp1.jpg";
-  }
-  if(stamp2Get){
-    document.querySelector("#menuStamp2").src = "stamp2.jpg";
-  }
-  if(stamp3Get){
-    document.querySelector("#menuStamp3").src = "stamp3.jpg";
-  }
-}
 
 // ======================
-// COMPLETE判定
+// コンプリート判定
 // ======================
-function checkComplete(){
-  if(foundStamp >= totalStamp){
+function checkCompleteTreasure(){
+  if(foundTreasure >= totalTreasure){
     setTimeout(() => {
-      completeWrap.style.display = "flex";
-      backToMenuBtn.style.display = "none";
-    },1000);
+      completeTreasure.style.display = "flex";
+    }, 1000);
   }
 }
 
-// ======================
-// 演出
-// ======================
-function showStampEffect(text){
-  stampEffect.innerHTML = text;
-  stampEffect.style.display = "block";
 
+// ======================
+// coin
+// ======================
+document.querySelector("#targetCoin").addEventListener("targetFound", () => {
+  treasureBox.style.display = "block";
+  treasureImage.src = "coin.jpg";
+
+  if(!coinFound){
+    coinFound = true;
+    foundTreasure++;
+    treasureCount.innerHTML = `${foundTreasure} / ${totalTreasure}`;
+    treasureEffect.innerHTML = "お宝発見！";
+    saveGame();
+    checkCompleteTreasure();
+  }else{
+    treasureEffect.innerHTML = "発見済みのお宝";
+  }
+
+  treasureEffect.style.display = "block";
   setTimeout(() => {
-    stampEffect.style.display = "none";
-  },1500);
-}
-
-// ======================
-// stamp1
-// ======================
-document.querySelector("#targetStamp1").addEventListener("targetFound",()=>{
-  stampBox.style.display = "block";
-  stampPreview.src = "stamp1.jpg";
-
-  if(!stamp1Get){
-    stamp1Get = true;
-    foundStamp++;
-    saveGame();
-    updateStampBook();
-    showStampEffect("スタンプ1 GET!");
-    checkComplete();
-  }else{
-    showStampEffect("取得済み");
-  }
+    treasureEffect.style.display = "none";
+  }, 1500);
 });
 
-// ======================
-// stamp2
-// ======================
-document.querySelector("#targetStamp2").addEventListener("targetFound",()=>{
-  stampBox.style.display = "block";
-  stampPreview.src = "stamp2.jpg";
 
-  if(!stamp2Get){
-    stamp2Get = true;
-    foundStamp++;
+// ======================
+// gold
+// ======================
+document.querySelector("#targetGold").addEventListener("targetFound", () => {
+  treasureBox.style.display = "block";
+  treasureImage.src = "gold.jpg";
+
+  if(!goldFound){
+    goldFound = true;
+    foundTreasure++;
+    treasureCount.innerHTML = `${foundTreasure} / ${totalTreasure}`;
+    treasureEffect.innerHTML = "大物発見！！";
     saveGame();
-    updateStampBook();
-    showStampEffect("スタンプ2 GET!");
-    checkComplete();
+    checkCompleteTreasure();
   }else{
-    showStampEffect("取得済み");
+    treasureEffect.innerHTML = "発見済みのお宝";
   }
+
+  treasureEffect.style.display = "block";
+  setTimeout(() => {
+    treasureEffect.style.display = "none";
+  }, 1500);
 });
 
-// ======================
-// stamp3
-// ======================
-document.querySelector("#targetStamp3").addEventListener("targetFound",()=>{
-  stampBox.style.display = "block";
-  stampPreview.src = "stamp3.jpg";
 
-  if(!stamp3Get){
-    stamp3Get = true;
-    foundStamp++;
-    saveGame();
-    updateStampBook();
-    showStampEffect("スタンプ3 GET!");
-    checkComplete();
-  }else{
-    showStampEffect("取得済み");
-  }
+// ======================
+// 壁紙DL
+// ======================
+document.querySelector("#downloadWallpaperBtn").addEventListener("click", () => {
+  const link = document.createElement("a");
+  link.href = "wallpaper.jpg";
+  link.download = "wallpaper.jpg";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 });
+
 
 // ======================
 // AR開始（探索開始が押されたタイミングでカメラをONにする）
 // ======================
-startBtn.addEventListener("click", async ()=>{
+startBtn.addEventListener("click", async () => {
   menuScreen.style.display = "none";
   mainScene.style.display = "block";
   backToMenuBtn.style.display = "block";
 
-  await new Promise(resolve => setTimeout(resolve,200));
+  await new Promise(resolve => setTimeout(resolve, 200));
 
   const arSystem = mainScene.systems["mindar-image-system"];
   if(arSystem){
-    await arSystem.start(); // ここでカメラをON
+    await arSystem.start(); // ここでカメラを確実起動
   }
 });
 
+
 // ======================
-// 戻る（メニューに戻るタイミングでカメラを完全にOFFにする）
+// メニューへ戻る（メニューに戻るタイミングでカメラとビデオ要素を完全にOFFにする）
 // ======================
-backToMenuBtn.addEventListener("click", async ()=>{
+backToMenuBtn.addEventListener("click", async () => {
   const arSystem = mainScene.systems["mindar-image-system"];
   if(arSystem){
     try{
@@ -602,65 +568,60 @@ backToMenuBtn.addEventListener("click", async ()=>{
     }
   }
 
-  // ★ 生成されたビデオ要素を削除、デバイスのカメラレンズ自体もクローズする
+  // ★ 生成されたビデオ要素を削除し、デバイスのカメラレンズ自体も完全にクローズ（電源OFF）する
   const video = document.querySelector("video");
   if (video) {
     if (video.srcObject) {
       const tracks = video.srcObject.getTracks();
-      tracks.forEach(track => track.stop()); // 機材の電源を切るイメージ
+      tracks.forEach(track => track.stop()); // スマホのインジケータ（緑の点など）を消す
     }
-    video.remove(); // 画面に残るのを防ぐために要素自体を消去
+    video.remove(); // 画面裏に残る古い描写要素を完全にクリーンアップ
   }
 
   mainScene.style.display = "none";
   menuScreen.style.display = "flex";
   backToMenuBtn.style.display = "none";
-  stampBox.style.display = "none";
+  treasureBox.style.display = "none";
 });
 
 // ======================
-// 場所確認
+// 各画面の切り替えイベント
 // ======================
-document.querySelector("#openHintBtn").addEventListener("click",()=>{
+const treasureScreen = document.querySelector("#treasureScreen");
+
+document.querySelector("#openTreasureBtn").addEventListener("click", () => {
+  treasureScreen.style.display = "flex";
+  if(coinFound){
+    document.querySelector("#menuTreasure1").src = "coin.jpg";
+  }
+  if(goldFound){
+    document.querySelector("#menuTreasure2").src = "gold.jpg";
+  }
+});
+
+document.querySelector("#closeTreasureBtn").addEventListener("click", () => {
+  treasureScreen.style.display = "none";
+});
+
+const hintScreen = document.querySelector("#hintScreen");
+
+document.querySelector("#openHintBtn").addEventListener("click", () => {
   hintScreen.style.display = "flex";
 });
 
-document.querySelector("#closeHintBtn").addEventListener("click",()=>{
+document.querySelector("#closeHintBtn").addEventListener("click", () => {
   hintScreen.style.display = "none";
 });
 
-// ======================
-// スタンプ帳
-// ======================
-document.querySelector("#openStampBtn").addEventListener("click",()=>{
-  updateStampBook();
-  stampScreen.style.display = "flex";
-});
-
-document.querySelector("#closeStampBtn").addEventListener("click",()=>{
-  stampScreen.style.display = "none";
+document.querySelector("#closeCompleteBtn").addEventListener("click", () => {
+  completeTreasure.style.display = "none";
 });
 
 // ======================
-// COMPLETE閉じる
-// ======================
-document.querySelector("#closeComplete").addEventListener("click",(e)=>{
-  e.stopPropagation();
-  completeWrap.style.display = "none";
-  backToMenuBtn.style.display = "block";
-});
-
-// ======================
-// バナータップ
-// ======================
-document.querySelector("#completeImage").addEventListener("click",()=>{
-  window.location.href = "https://nagatanitani-code.github.io/test/stamp.html";
-});
-
-// ======================
-// 起動時
+// 起動時ロード
 // ======================
 loadGame();
+
 </script>
 
 </body>
