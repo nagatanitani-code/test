@@ -114,7 +114,7 @@ cursor: pointer;
 }
 
 /* ======================
-★画面固定フォトフレーム UI（ぎりぎりいっぱいに変更）
+画面固定フォトフレーム UI
 ====================== */
 
 #photoFrameOverlay {
@@ -128,17 +128,12 @@ pointer-events: none;
 #photoFrameOverlay img {
 width: 100%;
 height: 100%;
-
-/* 【パターンの切り替え】
-  初期設定は「cover」にしています。フレームの形状に合わせて選んでください。
-*/
-/*object-fit: cover; */    /* 【おすすめ】縦横比を保ったまま、画面に隙間なく一杯に広げます（端が少しはみ出る場合があります） */
- object-fit: fill;   /* 【歪み許容】画像を引き伸ばして、画面サイズに完璧に変形させて合わせます */
+object-fit: fill;   
 }
 
 #captureBtn{
 position:fixed;
-bottom:50px; /* フル画面で見やすくなるよう、位置を少し下に調整 */
+bottom:50px; 
 left:50%;
 transform:translateX(-50%);
 padding:18px 32px;
@@ -214,7 +209,7 @@ cursor: pointer;
 <a-scene
 id="mainScene"
 style="display:none"
-mindar-image="imageTargetSrc: targets.mind; maxTrack:1;"
+mindar-image="imageTargetSrc: targets.mind; maxTrack:1; autoStart:false;"
 vr-mode-ui="enabled:false"
 device-orientation-permission-ui="enabled:false">
 
@@ -237,7 +232,7 @@ const closeFrameBtn = document.querySelector("#closeFrameBtn");
 let isFrameActive = false;
 
 /* ======================
-AR開始
+AR開始（ボタンを押したタイミングでカメラを起動）
 ====================== */
 startBtn.addEventListener("click", async ()=>{
 menuScreen.style.display="none";
@@ -248,18 +243,29 @@ await new Promise(resolve=> setTimeout(resolve,200));
 
 const arSystem = mainScene.systems["mindar-image-system"];
 if(arSystem){
-await arSystem.start();
+await arSystem.start(); // ここでカメラをオンにする
 }
 });
 
 /* ======================
-戻る（メニューへ）
+戻る（メニューへ：カメラを完全にオフにする）
 ====================== */
 backBtn.addEventListener("click", async ()=>{
 const arSystem = mainScene.systems["mindar-image-system"];
 if(arSystem){
-await arSystem.stop();
+await arSystem.stop(); // ここでカメラとARをストップする
 }
+
+// MindARが生成した不要なビデオ要素やストリームを確実に停止して削除
+const video = document.querySelector("video");
+if (video) {
+if (video.srcObject) {
+const tracks = video.srcObject.getTracks();
+tracks.forEach(track => track.stop()); // スマホのカメラ機材自体を終了
+}
+video.remove(); // 画面に残るビデオ要素を消去
+}
+
 resetPhotoFrame();
 
 mainScene.style.display="none";
@@ -314,7 +320,7 @@ canvas.height = video.videoHeight;
 /* 1. カメラ映像を一杯に描画 */
 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-/* 2. ARフレームを画面いっぱいに合成（CSSの表示方法に連動） */
+/* 2. ARフレームを画面いっぱいに合成 */
 const frame = document.querySelector("#overlayFrameImg");
 if(frame.complete){
 const imgStyle = window.getComputedStyle(frame);
@@ -326,7 +332,6 @@ let drawX = 0;
 let drawY = 0;
 
 if (fitType === "cover") {
-// CSSの object-fit: cover を再現する計算
 const videoAspect = canvas.width / canvas.height;
 const frameAspect = frame.naturalWidth / frame.naturalHeight;
 
@@ -340,7 +345,6 @@ drawH = canvas.width / frameAspect;
 drawY = (canvas.height - drawH) / 2;
 }
 }
-// fitType === "fill" の場合はデフォルトの canvas.width / canvas.height（引き伸ばし）でそのまま描画されます
 
 ctx.drawImage(frame, drawX, drawY, drawW, drawH);
 }

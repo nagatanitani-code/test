@@ -26,7 +26,7 @@ body{
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  gap:16px; /* ボタンと説明文が増えたため、全体の隙間を少しコンパクトに微調整 */
+  gap:16px; 
   background:
   linear-gradient(
     180deg,
@@ -40,20 +40,18 @@ body{
   font-size:42px;
   font-weight:bold;
   color:gold;
-  margin-bottom: 10px; /* タイトル下の余白を微調整 */
+  margin-bottom: 10px; 
   text-shadow:
   0 0 20px rgba(255,215,0,.7);
 }
 
-/* ★追加：説明文とボタンを1つのセットとして綺麗に並べるグループ */
 .menuGroup{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:6px; /* 説明文とボタンの間の隙間 */
+  gap:6px; 
 }
 
-/* ★追加：各ボタンの解説テキスト用スタイル */
 .menuGuide{
   font-size:14px;
   color:#e0e0e0;
@@ -98,6 +96,7 @@ body{
   rgba(0,0,0,.8);
   color:white;
   font-size:18px;
+  cursor: pointer;
 }
 
 /* ======================
@@ -230,6 +229,7 @@ body{
   font-size:22px;
   background:#ff9800;
   color:white;
+  cursor: pointer;
 }
 
 /* ======================
@@ -390,7 +390,7 @@ body{
 <a-scene
 id="mainScene"
 style="display:none"
-mindar-image="imageTargetSrc: targets.mind; maxTrack:1;"
+mindar-image="imageTargetSrc: targets.mind; maxTrack:1; autoStart:false;"
 vr-mode-ui="enabled:false"
 device-orientation-permission-ui="enabled:false">
 
@@ -574,7 +574,7 @@ document.querySelector("#targetStamp3").addEventListener("targetFound",()=>{
 });
 
 // ======================
-// AR開始
+// AR開始（探索開始が押されたタイミングでカメラをONにする）
 // ======================
 startBtn.addEventListener("click", async ()=>{
   menuScreen.style.display = "none";
@@ -585,21 +585,31 @@ startBtn.addEventListener("click", async ()=>{
 
   const arSystem = mainScene.systems["mindar-image-system"];
   if(arSystem){
-    await arSystem.start();
+    await arSystem.start(); // ここでカメラをON
   }
 });
 
 // ======================
-// 戻る
+// 戻る（メニューに戻るタイミングでカメラを完全にOFFにする）
 // ======================
 backToMenuBtn.addEventListener("click", async ()=>{
   const arSystem = mainScene.systems["mindar-image-system"];
   if(arSystem){
     try{
-      await arSystem.stop();
+      await arSystem.stop(); // MindARのシステム停止
     }catch(e){
       console.log(e);
     }
+  }
+
+  // ★ 生成されたビデオ要素を削除、デバイスのカメラレンズ自体もクローズする
+  const video = document.querySelector("video");
+  if (video) {
+    if (video.srcObject) {
+      const tracks = video.srcObject.getTracks();
+      tracks.forEach(track => track.stop()); // 機材の電源を切るイメージ
+    }
+    video.remove(); // 画面に残るのを防ぐために要素自体を消去
   }
 
   mainScene.style.display = "none";

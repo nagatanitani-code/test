@@ -117,7 +117,7 @@
       cursor: pointer;
     }
 
-    /* ★ 左下配置に変更、スマホの下部セーフエリアを考慮 */
+    /* 左下配置に変更、スマホの下部セーフエリアを考慮 */
     #backToMenuBtn {
       position: fixed;
       bottom: calc(20px + env(safe-area-inset-bottom, 0px)); 
@@ -134,7 +134,7 @@
       cursor: pointer;
     }
 
-    /* ★ 戻るボタンの上に綺麗に重なるように bottom を調整 */
+    /* 戻るボタンの上に綺麗に重なるように bottom を調整 */
     #progressBox {
       position: fixed;
       bottom: calc(85px + env(safe-area-inset-bottom, 0px)); 
@@ -287,7 +287,7 @@
 <a-scene
   id="mainScene"
   style="display:none"
-  mindar-image="imageTargetSrc: targets.mind; maxTrack: 1;"
+  mindar-image="imageTargetSrc: targets.mind; maxTrack: 1; autoStart: false;"
   color-space="sRGB"
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: false">
@@ -568,6 +568,9 @@ async function initGame() {
 
 window.addEventListener("DOMContentLoaded", initGame);
 
+/* ==================================
+  スタートボタン：押したときだけカメラをオン
+================================== */
 document.querySelector("#startBtn").addEventListener("click", async () => {
   document.querySelector("#menuScreen").style.display = "none";
   document.querySelector("#mainScene").style.display  = "block";
@@ -579,12 +582,27 @@ document.querySelector("#startBtn").addEventListener("click", async () => {
   }
   
   const ar = sceneEl.systems["mindar-image-system"];
-  if (ar) await ar.start();
+  if (ar) await ar.start(); // ここで確実起動
 });
 
+/* ==================================
+  メニューへ戻る：カメラを完全にオフにする
+================================== */
 document.querySelector("#backToMenuBtn").addEventListener("click", async () => {
   const ar = document.querySelector("#mainScene").systems["mindar-image-system"];
-  if (ar) try { await ar.stop(); } catch(e) {}
+  if (ar) {
+    try { await ar.stop(); } catch(e) {}
+  }
+
+  // ★ 生成されたビデオ要素とカメラ機材(ストリーム)を物理的に切断・削除する
+  const video = document.querySelector("video");
+  if (video) {
+    if (video.srcObject) {
+      const tracks = video.srcObject.getTracks();
+      tracks.forEach(track => track.stop()); // スマホのカメラを停止
+    }
+    video.remove(); // 残った映像タグを消去
+  }
 
   document.querySelector("#mainScene").style.display    = "none";
   document.querySelector("#menuScreen").style.display   = "flex";
