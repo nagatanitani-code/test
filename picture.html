@@ -519,7 +519,7 @@ function createHitPlanes(container, targetList, getScale) {
     ring.setAttribute("position", `${target.x * sx} ${target.y * sy} 0.03`);
     ring.setAttribute("radius-inner", target.guideSize / 2);
     ring.setAttribute("radius-outer", target.guideSize / 2 + 0.02);
-    ring.setAttribute("material", "color: yellow; opacity: 0.8; transparent: true; side: double");
+    ring.setAttribute("material", "color: yellow; opacity: 0; transparent: true; side: double");
     ring.setAttribute("animation", "property: scale; from: 1 1 1; to: 1.15 1.15 1; dir: alternate; dur: 700; loop: true;");
     container.appendChild(ring);
   });
