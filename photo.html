@@ -26,7 +26,7 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-gap:20px; /* 全体の間隔を微調整 */
+gap:20px; 
 background: linear-gradient(180deg, #101820, #1d2d44);
 z-index:9999;
 }
@@ -35,19 +35,17 @@ z-index:9999;
 font-size:42px;
 font-weight:bold;
 color:gold;
-margin-bottom: 20px; /* タイトルの下に少し余白を追加 */
+margin-bottom: 20px; 
 }
 
-/* ★ 追加：説明文のスタイル */
 .menuGuide{
 font-size:16px;
 color:#e0e0e0;
 text-align:center;
-margin-bottom: -5px; /* ボタンとの距離を近づける */
+margin-bottom: -5px; 
 line-height:1.4;
 }
 
-/* ★ 追加：ボタンと説明文をまとめるグループ */
 .menuGroup{
 display:flex;
 flex-direction:column;
@@ -81,6 +79,7 @@ border:none;
 border-radius:14px;
 background:rgba(0,0,0,.8);
 color:white;
+cursor: pointer;
 }
 
 /* ======================
@@ -111,6 +110,7 @@ border-radius:18px;
 background:#ff9800;
 color:white;
 font-size:22px;
+cursor: pointer;
 }
 
 /* ======================
@@ -145,6 +145,7 @@ background:#ff9800;
 color:white;
 z-index:99999;
 display:none;
+cursor: pointer;
 }
 
 </style>
@@ -152,14 +153,12 @@ display:none;
 
 <body>
 
-<!-- メニュー -->
 <div id="menuScreen">
 
 <div id="gameTitle">
 フォトスポットAR
 </div>
 
-<!-- ★ 読み込み開始のグループ -->
 <div class="menuGroup">
 <div class="menuGuide">まずはここで読み込んでね！</div>
 <button id="startBtn" class="menuBtn">
@@ -167,7 +166,6 @@ display:none;
 </button>
 </div>
 
-<!-- ★ 場所確認のグループ -->
 <div class="menuGroup">
 <div class="menuGuide">ここでフォトスポットの場所を確認できるよ！</div>
 <button id="openHintBtn" class="menuBtn">
@@ -177,22 +175,18 @@ display:none;
 
 </div>
 
-<!-- 戻る -->
 <button id="backToMenuBtn">
 メニューへ戻る
 </button>
 
-<!-- 場所確認 -->
 <div id="hintScreen">
 <h1 style="color:gold;">場所確認</h1>
 <img src="hint_p.jpg">
 <button id="closeHintBtn" class="backBtn">戻る</button>
 </div>
 
-<!-- フォト案内 -->
 <button id="captureBtn">📸 撮影する</button>
 
-<!-- AR -->
 <a-scene
 id="mainScene"
 style="display:none"
@@ -220,6 +214,10 @@ const backBtn = document.querySelector("#backToMenuBtn");
 const hintScreen = document.querySelector("#hintScreen");
 const photoMessage = document.querySelector("#photoMessage");
 const captureBtn = document.querySelector("#captureBtn");
+const targetPhoto = document.querySelector("#targetPhoto");
+
+// ★ 追加：マーカーが一度でも発見されたかを記録するフラグ
+let isFrameFixed = false;
 
 /* ======================
 AR開始
@@ -245,10 +243,15 @@ const arSystem = mainScene.systems["mindar-image-system"];
 if(arSystem){
 await arSystem.stop();
 }
+// ★ 追加：メニューに戻る時は固定化フラグをリセット
+isFrameFixed = false;
+targetPhoto.setAttribute("visible", false);
+
 mainScene.style.display="none";
 menuScreen.style.display="flex";
 backBtn.style.display="none";
 photoMessage.style.display="none";
+captureBtn.style.display="none";
 });
 
 /* ======================
@@ -316,12 +319,23 @@ alert("撮影失敗");
 captureBtn.style.display="block";
 });
 
-document.querySelector("#targetPhoto").addEventListener("targetFound", ()=>{
+/* ======================
+★ 修正：ターゲット認識・ロストの制御
+====================== */
+targetPhoto.addEventListener("targetFound", ()=>{
+isFrameFixed = true; // マーカーを見つけたので固定モードをONにする
 captureBtn.style.display = "block";
 });
 
-document.querySelector("#targetPhoto").addEventListener("targetLost", ()=>{
+targetPhoto.addEventListener("targetLost", () => {
+// すでに一度見つけていれば、見失っても消さない
+if (isFrameFixed) {
+setTimeout(() => {
+targetPhoto.setAttribute("visible", true); // Mind-ARによる非表示化を強制上書き
+}, 0);
+} else {
 captureBtn.style.display = "none";
+}
 });
 </script>
 
