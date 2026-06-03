@@ -87,6 +87,12 @@ body{
   cursor: pointer;
 }
 
+/* 【新規追加】コンプリート特典用の特別な金・青グラデーションボタン */
+#openBonusBtn {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  box-shadow: 0 6px 22px rgba(0, 198, 255, 0.4);
+}
+
 /* ======================
    戻るボタン
 ====================== */
@@ -253,7 +259,7 @@ body{
   align-items:center;
   gap:25px;
   background:
-  rgba(0,0,0,.75);
+  rgba(0,0,0,.85);
   z-index:30000;
 }
 
@@ -325,6 +331,13 @@ body{
     <div class="menuGuide">ここでお宝の場所を確認できるよ！</div>
     <button id="openHintBtn" class="menuBtn">
       場所確認
+    </button>
+  </div>
+
+  <div class="menuGroup" id="bonusGroup" style="display: none;">
+    <div class="menuGuide" style="color: gold; font-weight: bold;">🎉 全てのお宝を見つけた特典！</div>
+    <button id="openBonusBtn" class="menuBtn">
+      コンプリート特典
     </button>
   </div>
 
@@ -434,6 +447,7 @@ const treasureCount = document.querySelector("#treasureCount");
 const treasureImage = document.querySelector("#treasureImage");
 const treasureBox = document.querySelector("#treasureBox");
 const completeTreasure = document.querySelector("#completeTreasure");
+const bonusGroup = document.querySelector("#bonusGroup");
 
 let coinFound = false;
 let goldFound = false;
@@ -471,6 +485,21 @@ function loadGame(){
   if(goldFound) foundTreasure++;
 
   treasureCount.innerHTML = `${foundTreasure} / ${totalTreasure}`;
+  
+  // ロード時にコンプリート特典ボタンの表示を更新
+  updateBonusButton();
+}
+
+
+// ======================
+// 【新規追加】コンプリート特典ボタンの表示切り替え
+// ======================
+function updateBonusButton() {
+  if (foundTreasure >= totalTreasure) {
+    bonusGroup.style.display = "flex";
+  } else {
+    bonusGroup.style.display = "none";
+  }
 }
 
 
@@ -479,6 +508,9 @@ function loadGame(){
 // ======================
 function checkCompleteTreasure(){
   if(foundTreasure >= totalTreasure){
+    // メニュー側のボタンも出現させる
+    updateBonusButton();
+    
     setTimeout(() => {
       completeTreasure.style.display = "flex";
     }, 1000);
@@ -626,6 +658,11 @@ document.querySelector("#closeHintBtn").addEventListener("click", () => {
 
 document.querySelector("#closeCompleteBtn").addEventListener("click", () => {
   completeTreasure.style.display = "none";
+});
+
+// 【新規追加】メニューからコンプリート特典画面を開く
+document.querySelector("#openBonusBtn").addEventListener("click", () => {
+  completeTreasure.style.display = "flex";
 });
 
 // ======================

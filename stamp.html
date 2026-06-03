@@ -86,6 +86,12 @@ body{
   cursor: pointer;
 }
 
+/* 【新規追加】コンプリート特典用の特別な青グラデーションボタンスタイル */
+#openBonusBtn {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  box-shadow: 0 6px 22px rgba(0, 198, 255, 0.4);
+}
+
 /* ======================
    戻る
 ====================== */
@@ -335,6 +341,13 @@ body{
     </button>
   </div>
 
+  <div class="menuGroup" id="bonusGroup" style="display: none;">
+    <div class="menuGuide" style="color: gold; font-weight: bold;">🎉 スタンプコンプリート特典！</div>
+    <button id="openBonusBtn" class="menuBtn">
+      コンプリート特典
+    </button>
+  </div>
+
 </div>
 
 <button id="backToMenuBtn">
@@ -449,6 +462,7 @@ const stampEffect = document.querySelector("#stampEffect");
 const hintScreen = document.querySelector("#hintScreen");
 const stampScreen = document.querySelector("#stampScreen");
 const completeWrap = document.querySelector("#completeWrap");
+const bonusGroup = document.querySelector("#bonusGroup");
 
 // ======================
 // 状態
@@ -491,6 +505,9 @@ function loadGame(){
   if(stamp3Get) foundStamp++;
 
   updateStampBook();
+  
+  // ロード完了時にも特典ボタンの表示をチェック
+  updateBonusButton();
 }
 
 // ======================
@@ -511,10 +528,24 @@ function updateStampBook(){
 }
 
 // ======================
+// 【新規追加】コンプリート特典ボタンの表示制御
+// ======================
+function updateBonusButton() {
+  if (foundStamp >= totalStamp) {
+    bonusGroup.style.display = "flex";
+  } else {
+    bonusGroup.style.display = "none";
+  }
+}
+
+// ======================
 // COMPLETE判定
 // ======================
 function checkComplete(){
   if(foundStamp >= totalStamp){
+    // メニュー側の特典ボタンも出現させておく
+    updateBonusButton();
+
     setTimeout(() => {
       completeWrap.style.display = "flex";
       backToMenuBtn.style.display = "none";
@@ -673,6 +704,12 @@ document.querySelector("#closeComplete").addEventListener("click",(e)=>{
 // ======================
 document.querySelector("#completeImage").addEventListener("click",()=>{
   window.location.href = "https://nagatanitani-code.github.io/test/stamp.html";
+});
+
+// 【新規追加】メニューから直接特典ポップアップを開くイベント
+document.querySelector("#openBonusBtn").addEventListener("click",()=>{
+  completeWrap.style.display = "flex";
+  backToMenuBtn.style.display = "none"; // ポップアップに合わせて戻るボタンの表示を調整
 });
 
 // ======================
