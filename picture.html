@@ -69,7 +69,7 @@
     }
 
     /* ======================
-       メニュー（スクロール＆画面最適化）
+        メニュー（スクロール＆画面最適化）
     ====================== */
     #menuScreen {
       position: fixed; inset: 0;
@@ -142,6 +142,23 @@
       cursor: pointer;
     }
 
+    /* 【新規追加】メニューへ戻るボタンの「隣」に並ぶ横並びガイド */
+    #touchGuideBox {
+      position: fixed;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      left: 190px; /* メニューへ戻るボタンの横幅に合わせた位置 */
+      z-index: 50000;
+      padding: 14px 22px;
+      border-radius: 16px;
+      background: rgba(255, 152, 0, 0.9); /* 目立つようにオレンジ系に設定 */
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      display: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      pointer-events: none; /* タップの邪魔をしないように透過 */
+    }
+
     /* 戻るボタンの上に綺麗に重なるように bottom を調整 */
     #progressBox {
       position: fixed;
@@ -200,7 +217,7 @@
     }
 
     /* ======================
-       クリア済み画面（全面スクロール・レスポンシブ）
+        クリア済み画面（全面スクロール・レスポンシブ）
     ====================== */
     #clearScreen {
       position: fixed;
@@ -301,7 +318,7 @@
   
   <div class="menuGroup">
     <div class="menuGuide">
-      上のガイドの絵を探してタップしよう！
+      まずはここで読み込もう！
     </div>
     <button id="startBtn">スタート</button>
   </div>
@@ -313,6 +330,8 @@
 </div>
 
 <button id="backToMenuBtn">メニューへ戻る</button>
+
+<div id="touchGuideBox">上のガイドの部分をタッチしよう！</div>
 
 <div id="progressBox">
   <div class="label">発見数</div>
@@ -476,7 +495,7 @@ function loadGame() {
   if (!data) return;
 
   [
-    [data.targets,       targets],
+    [data.targets,   targets],
     [data.animalTargets, animalTargets],
     [data.alienTargets,  alienTargets]
   ].forEach(([saved, arr]) => {
@@ -499,14 +518,12 @@ function updateProgress() {
   document.querySelector("#progressCount").textContent = `${found} / ${totalCount}`;
 }
 
-// 【新規追加】クリア済み図鑑の表示を更新する関数
 function updateClearScreen() {
   allTargets.forEach(t => {
     const imgEl = document.querySelector("#clearImg_" + t.id);
-    const nameEl = imgEl?.nextElementSibling; // clearNameを取得
+    const nameEl = imgEl?.nextElementSibling; 
     
     if (imgEl && t.found) {
-      // どのイラストに所属しているかで画像ソースを判定
       if (targets.includes(t))      imgEl.src = "girl.jpg";
       if (animalTargets.includes(t)) imgEl.src = "animal.jpg";
       if (alienTargets.includes(t))  imgEl.src = "alien.jpg";
@@ -695,6 +712,7 @@ document.querySelector("#startBtn").addEventListener("click", async () => {
   document.querySelector("#menuScreen").style.display = "none";
   document.querySelector("#mainScene").style.display  = "block";
   document.querySelector("#backToMenuBtn").style.display = "block";
+  document.querySelector("#touchGuideBox").style.display = "block"; // 【新規追加】横並びガイドを表示
 
   const sceneEl = document.querySelector("#mainScene");
   if (!sceneEl.hasLoaded) {
@@ -706,10 +724,10 @@ document.querySelector("#startBtn").addEventListener("click", async () => {
 });
 
 /* ==================================
-  【新規追加】クリア済みボタンの画面遷移
+  クリア済みボタンの画面遷移
 ================================== */
 document.querySelector("#openClearBtn").addEventListener("click", () => {
-  updateClearScreen(); // 最新の発見状況を反映
+  updateClearScreen(); 
   document.querySelector("#clearScreen").style.display = "flex";
 });
 
@@ -738,6 +756,7 @@ document.querySelector("#backToMenuBtn").addEventListener("click", async () => {
   document.querySelector("#mainScene").style.display    = "none";
   document.querySelector("#menuScreen").style.display   = "flex";
   document.querySelector("#backToMenuBtn").style.display = "none";
+  document.querySelector("#touchGuideBox").style.display = "none"; // 【新規追加】メニューに戻ったら非表示
   document.querySelector("#progressBox").style.display  = "none";
   ["#guideUI", "#animalGuideUI", "#alienGuideUI"].forEach(s => {
     document.querySelector(s).style.display = "none";
