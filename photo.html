@@ -95,10 +95,10 @@ body{
 }
 
 /* ======================
-   場所確認（全画面スクロール・レスポンシブ化）
+   場所確認＆操作説明（全画面スクロール・レスポンシブ化）
 ====================== */
 
-#hintScreen{
+#hintScreen, #explainScreen{
   position:fixed;
   inset:0;
   display:none;
@@ -109,7 +109,7 @@ body{
   box-sizing: border-box;
   background: linear-gradient(180deg, #111827, #1e293b);
   z-index:20000;
-  overflow-y: auto; /* 画像が増えたらスクロールできるようにする */
+  overflow-y: auto; /* コンテンツが増えたらスクロールできるようにする */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -129,6 +129,28 @@ body{
   border-radius:20px;
   object-fit: cover;
   box-shadow: 0 6px 18px rgba(0,0,0,.4);
+}
+
+/* 操作説明テキスト用のボックス */
+.explainBox {
+  width: 100%;
+  max-width: 500px;
+  color: #e2e8f0;
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: left;
+}
+.explainBox h3 {
+  color: gold;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  border-left: 4px solid #ff9800;
+  padding-left: 8px;
+  font-size: 18px;
+}
+.explainBox p {
+  margin: 0 0 10px 0;
+  padding-left: 4px;
 }
 
 .backBtn{
@@ -219,6 +241,13 @@ body{
     </button>
   </div>
 
+  <div class="menuGroup">
+    <div class="menuGuide">文字の説明はここで保存の仕方を見れるよ！</div>
+    <button id="openExplainBtn" class="menuBtn">
+      操作説明
+    </button>
+  </div>
+
 </div>
 
 <button id="backToMenuBtn">
@@ -233,6 +262,26 @@ body{
   </div>
   
   <button id="closeHintBtn" class="backBtn">戻る</button>
+</div>
+
+<div id="explainScreen">
+  <h1 style="color:gold; margin: 0; font-size: 38px;">操作説明</h1>
+  
+  <div class="explainBox">
+    <h3>① ARの始め方</h3>
+    <p>「読み込み開始」をタップしてカメラを起動し、指定のフォトスポット（マーカー）にかざしてください。</p>
+
+    <h3>② 写真の保存の仕方</h3>
+    <p>マーカーを認識すると画面にフォトフレームが出現します。<strong>「📸 撮影する」</strong>ボタンを押すと写真が保存されます。</p>
+    
+    <h3>📱 iPhone (iOS) をお使いの方</h3>
+    <p>撮影ボタンを押すと別タブ（白い画面）で写真が開きます。開いた写真を<strong>「長押し」</strong>して「"写真"に追加」または保存を選んでください。</p>
+
+    <h3>🤖 Android をお使いの方</h3>
+    <p>撮影ボタンを押すと、自動的にファイル（photo_spot.jpg）が端末にダウンロードされます。</p>
+  </div>
+  
+  <button id="closeExplainBtn" class="backBtn">戻る</button>
 </div>
 
 <div id="photoFrameOverlay">
@@ -259,6 +308,7 @@ const mainScene = document.querySelector("#mainScene");
 const startBtn = document.querySelector("#startBtn");
 const backBtn = document.querySelector("#backToMenuBtn");
 const hintScreen = document.querySelector("#hintScreen");
+const explainScreen = document.querySelector("#explainScreen"); // 追加
 const captureBtn = document.querySelector("#captureBtn");
 const targetPhoto = document.querySelector("#targetPhoto");
 const photoFrameOverlay = document.querySelector("#photoFrameOverlay");
@@ -321,6 +371,17 @@ document.querySelector("#openHintBtn").addEventListener("click",()=>{
 
 document.querySelector("#closeHintBtn").addEventListener("click",()=>{
   hintScreen.style.display="none";
+});
+
+/* ======================
+【追加】操作説明の開閉処理
+====================== */
+document.querySelector("#openExplainBtn").addEventListener("click",()=>{
+  explainScreen.style.display="flex";
+});
+
+document.querySelector("#closeExplainBtn").addEventListener("click",()=>{
+  explainScreen.style.display="none";
 });
 
 /* ======================
