@@ -16,10 +16,10 @@ body{
 }
 
 /* ======================
-   メニュー（重厚なお宝探し・冒険トレジャー仕様）
+   共通背景（メニュー・図鑑・場所確認）
+   古い羊皮紙の海図や、深いジャングルの神殿を彷彿とさせるミステリアスな背景
 ====================== */
-
-#menuScreen{
+.treasureBg {
   position:fixed;
   inset:0;
   display:flex;
@@ -28,28 +28,33 @@ body{
   gap:24px; 
   padding: 50px 20px; 
   box-sizing: border-box;
-  /* 古い羊皮紙の海図や、深いジャングルの神殿を彷彿とさせるミステリアスな背景 */
   background:
     radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 70%),
     linear-gradient(180deg, #0d261e 0%, #06110d 100%);
   background-color: #06110d;
-  z-index:9999;
   overflow-y: auto; 
   -webkit-overflow-scrolling: touch; 
 }
 
-/* 財宝が眠る洞窟で怪しく、力強く光り輝くようなアンティークゴールドのタイトル */
-#gameTitle{
+#menuScreen{
+  z-index:9999;
+}
+
+/* 財宝が眠る洞窟で怪しく、力強く光り輝くようなアンティークゴールドのタイトル（共通スタイル） */
+.screenTitleStyle{
   font-size:44px;
   font-weight:bold;
   color:#ffd700;
-  margin-bottom: 15px; 
+  margin: 0 0 15px 0; 
   text-shadow:
     0px 3px 0px #8b6508,
     0px 6px 10px rgba(0,0,0,0.8),
     0 0 20px rgba(255, 215, 0, 0.5);
   text-align: center;
   letter-spacing: 3px;
+}
+
+#gameTitle {
   animation: treasureGlow 3.5s infinite ease-in-out;
 }
 
@@ -58,8 +63,8 @@ body{
   50% { text-shadow: 0px 3px 0px #8b6508, 0px 6px 10px rgba(0,0,0,0.8), 0 0 35px rgba(255, 215, 0, 0.8); transform: scale(1.02); }
 }
 
-/* 宝の地図のフレームや古い木箱をイメージした、アンティーク風カード枠 */
-.menuGroup{
+/* 宝の地図のフレームや古い木箱をイメージした、アンティーク風カード枠（共通スタイル） */
+.menuGroup, .contentCard{
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -78,6 +83,13 @@ body{
   box-sizing: border-box;
 }
 
+/* サブ画面のコンテンツカード枠（画像配置用に幅をわずかに調整） */
+.contentCard {
+  max-width: 340px;
+  padding: 24px 14px;
+  gap: 16px;
+}
+
 /* 冒険のガイドテキスト */
 .menuGuide{
   font-size:13px;
@@ -89,7 +101,7 @@ body{
 }
 
 /* ズッシリとした黄金のメダルや財宝を連想させる、重厚な立体ボタン */
-.menuBtn{
+.menuBtn, .backBtn{
   width:100%; 
   max-width: 280px;
   padding:16px;
@@ -104,16 +116,17 @@ body{
   cursor: pointer;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
   transition: all 0.1s ease;
+  text-align: center;
+  box-sizing: border-box;
 }
 
-.menuBtn:active {
+.menuBtn:active, .backBtn:active {
   transform: translateY(4px);
   border-bottom: 1px solid #5a4207;
   box-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
 
-/* 【新規追加】コンプリート特典用の特別な金・青グラデーションボタン */
-/* 深海に眠るサファイアの秘宝をイメージしたディープブルースタイル */
+/* コンプリート特典用の特別なスタイル */
 #openBonusBtn {
   border: 1px solid #00e5ff;
   background: linear-gradient(180deg, #0091ea 0%, #006064 100%);
@@ -128,7 +141,7 @@ body{
 }
 
 /* ======================
-   戻るボタン
+   戻るボタン（AR用）
 ====================== */
 
 #backToMenuBtn{
@@ -160,8 +173,7 @@ body{
   padding:15px;
   border-radius:20px;
   color:white;
-  background:
-  rgba(0,0,0,.75);
+  background: rgba(0,0,0,.75);
 }
 
 #treasureTitle{
@@ -188,8 +200,7 @@ body{
   position:fixed;
   bottom:40px;
   left:50%;
-  transform:
-  translateX(-50%);
+  transform: translateX(-50%);
   background:gold;
   color:black;
   font-size:24px;
@@ -201,83 +212,43 @@ body{
 }
 
 /* ======================
-   共通サブ画面（全面スクロール・レスポンシブ化）
+   共通サブ画面スタイル
 ====================== */
 
 #treasureScreen,
 #hintScreen{
-  position:fixed;
-  inset:0;
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  gap:25px;
-  padding: 40px 20px;
-  box-sizing: border-box;
-  background:
-  linear-gradient(
-    180deg,
-    #111827,
-    #1e293b
-  );
   z-index:20000;
-  overflow-y: auto; 
-  -webkit-overflow-scrolling: touch;
+  display:none;
 }
 
 /* ======================
-   図鑑画面（グリッド配置）
+   図鑑 & 場所確認画面（グリッド配置）
 ====================== */
 
-.treasureGrid{
+.treasureGrid, .hintGrid{
   display:flex;
   flex-wrap: wrap; 
   justify-content: center;
   gap:20px;
   width: 100%;
-  max-width: 600px; 
 }
 
-.treasureGrid img{
-  width:130px; 
-  height:130px;
-  border-radius:18px;
-  background:white;
+.treasureGrid img, .hintGrid img{
+  width:110px; 
+  height:110px;
+  border-radius:10px;
+  background: rgba(13, 38, 30, 0.6);
   object-fit: cover;
-  box-shadow: 0 6px 18px rgba(0,0,0,.4);
+  border: 1px solid #c5a059;
+  box-shadow: 
+    inset 0 0 10px rgba(0,0,0,0.5),
+    0 6px 14px rgba(0,0,0,0.6);
 }
 
-.backBtn{
-  padding:16px 30px;
-  border:none;
-  border-radius:18px;
-  font-size:22px;
-  background:#ff9800;
-  color:white;
-  cursor: pointer;
-  margin-top: auto; 
-  flex-shrink: 0; 
-}
-
-/* ======================
-   場所確認画面（グリッド配置）
-====================== */
-
-.hintGrid{
-  display:flex;
-  flex-wrap: wrap; 
-  justify-content: center;
-  gap:20px;
-  width: 100%;
-  max-width: 600px;
-}
-
-.hintGrid img{
-  width:140px; 
-  height:140px;
-  border-radius:20px;
-  object-fit: cover;
-  box-shadow: 0 6px 18px rgba(0,0,0,.4);
+/* サブ画面用戻るボタンの位置調整 */
+.backBtn {
+  margin-top: 10px;
+  flex-shrink: 0;
 }
 
 /* ======================
@@ -292,8 +263,7 @@ body{
   justify-content:center;
   align-items:center;
   gap:25px;
-  background:
-  rgba(0,0,0,.85);
+  background: rgba(0,0,0,.85);
   z-index:30000;
 }
 
@@ -309,12 +279,7 @@ body{
   border-radius:18px;
   font-size:24px;
   color:white;
-  background:
-  linear-gradient(
-    135deg,
-    #00c6ff,
-    #0072ff
-  );
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
   cursor: pointer;
 }
 
@@ -341,9 +306,9 @@ body{
 
 <body>
 
-<div id="menuScreen">
+<div id="menuScreen" class="treasureBg">
 
-  <div id="gameTitle">
+  <div id="gameTitle" class="screenTitleStyle">
     お宝探しAR
   </div>
 
@@ -369,7 +334,7 @@ body{
   </div>
 
   <div class="menuGroup" id="bonusGroup" style="display: none;">
-    <div class="menuGuide" style="color: gold; font-weight: bold;">🎉 全てのお宝を見つけた特典！</div>
+    <div class="menuGuide" style="color: #ffd700; text-shadow: 0 0 5px rgba(255,215,0,0.5); font-weight: bold;">🎉 全てのお宝を見つけた特典！</div>
     <button id="openBonusBtn" class="menuBtn">
       コンプリート特典
     </button>
@@ -399,15 +364,18 @@ body{
 宝発見！
 </div>
 
-<div id="treasureScreen">
+<div id="treasureScreen" class="treasureBg">
 
-  <h1 style="color:gold; margin: 0; font-size: 38px;">
+  <h1 class="screenTitleStyle">
     お宝図鑑
   </h1>
 
-  <div class="treasureGrid">
-    <img id="menuTreasure1" src="treasure_unknown.jpg">
-    <img id="menuTreasure2" src="treasure_unknown.jpg">
+  <div class="contentCard">
+    <div class="menuGuide">これまでに発見した秘宝の記録だ！</div>
+    <div class="treasureGrid">
+      <img id="menuTreasure1" src="treasure_unknown.jpg">
+      <img id="menuTreasure2" src="treasure_unknown.jpg">
+    </div>
   </div>
 
   <button id="closeTreasureBtn" class="backBtn">
@@ -416,15 +384,18 @@ body{
 
 </div>
 
-<div id="hintScreen">
+<div id="hintScreen" class="treasureBg">
 
-  <h1 style="color:gold; margin: 0; font-size: 38px;">
+  <h1 class="screenTitleStyle">
     場所確認
   </h1>
 
-  <div class="hintGrid">
-    <img src="hint1.jpg">
-    <img src="hint2.jpg">
+  <div class="contentCard">
+    <div class="menuGuide">古文書が示す手がかりの場所だ！</div>
+    <div class="hintGrid">
+      <img src="hint1.jpg">
+      <img src="hint2.jpg">
+    </div>
   </div>
 
   <button id="closeHintBtn" class="backBtn">

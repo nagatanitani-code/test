@@ -16,10 +16,9 @@ body{
 }
 
 /* ======================
-   メニュー（明るいイベント＆青空ラリー仕様）
+   共通青空背景（メニュー・場所確認・スタンプ帳）
 ====================== */
-
-#menuScreen{
+.blueSkyBg {
   position:fixed;
   inset:0;
   display:flex;
@@ -28,27 +27,32 @@ body{
   gap:24px; 
   padding: 50px 20px; 
   box-sizing: border-box;
-  /* 爽やかな青空と、楽しげな太陽の光・広場をイメージした明るい背景 */
   background: 
     radial-gradient(circle at 50% -20%, #fff7d6 0%, transparent 60%),
     linear-gradient(135deg, #7fe3ff 0%, #00b2fe 100%);
   background-color: #00b2fe;
-  z-index:9999;
   overflow-y: auto; 
   -webkit-overflow-scrolling: touch; 
 }
 
-/* 青空に映える、お祭りの看板のようなポップで立体的なタイトル */
-#gameTitle{
+#menuScreen{
+  z-index:9999;
+}
+
+/* 青空に映える、お祭りの看板のようなポップで立体的なタイトル（共通仕様へ） */
+.screenTitleStyle{
   font-size:42px;
   font-weight:900;
   color:#ffffff;
-  margin-bottom: 15px; 
+  margin: 0 0 15px 0; 
   text-shadow:
     3px 3px 0px #e65100,
     5px 5px 12px rgba(0, 74, 124, 0.4);
   text-align: center;
   letter-spacing: 2px;
+}
+
+#gameTitle {
   animation: joyfulJump 2.5s infinite ease-in-out;
 }
 
@@ -58,7 +62,7 @@ body{
 }
 
 /* 紙の「スタンプラリー台紙」をイメージした、白基調の明るいカードデザイン */
-.menuGroup{
+.menuGroup, .contentCard{
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -73,6 +77,13 @@ body{
   box-sizing: border-box;
 }
 
+/* 場所確認とスタンプ帳用のカード枠（画像が並ぶため少しだけ横幅を調整） */
+.contentCard {
+  max-width: 340px;
+  padding: 20px 14px;
+  gap: 16px;
+}
+
 /* 文字は明るい背景でもハッキリ読めるように濃い焦げ茶（アースカラー）に */
 .menuGuide{
   font-size:14px;
@@ -84,7 +95,7 @@ body{
 }
 
 /* もぎたての果実のような元気なビタミンカラーの立体ボタン */
-.menuBtn{
+.menuBtn, .backBtn{
   width:100%; 
   max-width: 280px;
   padding:16px;
@@ -98,16 +109,17 @@ body{
   box-shadow: 0 6px 12px rgba(255, 111, 0, 0.3);
   cursor: pointer;
   transition: all 0.1s ease;
+  text-align: center;
+  box-sizing: border-box;
 }
 
-.menuBtn:active {
+.menuBtn:active, .backBtn:active {
   transform: translateY(4px);
   border-bottom: 1px solid #b71c1c;
   box-shadow: 0 2px 4px rgba(255, 111, 0, 0.3);
 }
 
-/* 【新規追加】コンプリート特典用の特別な青グラデーションボタンスタイル */
-/* 明るい世界観に合わせた爽快なネオングリーングラデーションに変更 */
+/* 特典用のネオングリーングラデーションボタン */
 #openBonusBtn {
   background: linear-gradient(180deg, #00e676 0%, #00c853 100%);
   border-bottom: 5px solid #006020;
@@ -121,7 +133,7 @@ body{
 }
 
 /* ======================
-   戻る
+   戻る (AR画面上)
 ====================== */
 
 #backToMenuBtn{
@@ -133,15 +145,14 @@ body{
   padding:12px 20px;
   border:none;
   border-radius:14px;
-  background:
-  rgba(0,0,0,.8);
+  background: rgba(0,0,0,.8);
   color:white;
   font-size:18px;
   cursor: pointer;
 }
 
 /* ======================
-   スタンプBOX
+   スタンプBOX (AR画面上)
 ====================== */
 
 #stampBox{
@@ -154,8 +165,7 @@ body{
   border-radius:20px;
   color:white;
   z-index:999;
-  background:
-  rgba(0,0,0,.75);
+  background: rgba(0,0,0,.75);
 }
 
 #stampTitle{
@@ -182,8 +192,7 @@ body{
   position:fixed;
   bottom:40px;
   left:50%;
-  transform:
-  translateX(-50%);
+  transform: translateX(-50%);
   background:gold;
   color:black;
   font-size:24px;
@@ -195,92 +204,50 @@ body{
 }
 
 /* ======================
-   共通サブ画面（全面スクロール対応に修正）
+   共通サブ画面（メニューと同じポップデザインに統合）
 ====================== */
 
 #hintScreen,
 #stampScreen{
-  position:fixed;
-  inset:0;
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  gap:25px;
-  padding: 40px 20px;
-  box-sizing: border-box;
-  background:
-  linear-gradient(
-    180deg,
-    #111827,
-    #1e293b
-  );
   z-index:20000;
-  overflow-y: auto; 
-  -webkit-overflow-scrolling: touch;
-}
-
-.screenTitle{
-  color:gold;
-  font-size:38px;
-  margin:0;
-  text-align: center;
+  display:none;
 }
 
 /* ======================
-   場所確認（グリッド配置）
+   場所確認 & スタンプ帳（グリッド配置）
 ====================== */
 
-.hintGrid{
+.hintGrid, .stampGrid{
   display:flex;
   flex-wrap:wrap; 
   justify-content:center;
-  gap:20px;
+  gap:14px;
   width: 100%;
-  max-width: 600px; 
 }
 
 .hintGrid img{
-  width: 140px; 
-  height: 140px;
+  width: 86px; 
+  height: 86px;
   object-fit:cover;
-  border-radius:20px;
-  background:white;
-  box-shadow:
-  0 6px 18px rgba(0,0,0,.4);
-}
-
-/* ======================
-   スタンプ帳（グリッド配置）
-====================== */
-
-.stampGrid{
-  display:flex;
-  flex-wrap:wrap; 
-  justify-content:center;
-  gap:20px;
-  width: 100%;
-  max-width: 600px;
+  border-radius:16px;
+  background:#f5f5f5;
+  border: 2px solid #ffe082;
+  box-shadow: 0 4px 10px rgba(0, 64, 112, 0.1);
 }
 
 .stampGrid img{
-  width: 120px;
-  height: 120px;
+  width: 86px;
+  height: 86px;
   object-fit:cover;
-  border-radius:18px;
-  background:white;
-  box-shadow:
-  0 6px 18px rgba(0,0,0,.4);
+  border-radius:16px;
+  background:#f5f5f5;
+  border: 2px solid #ffe082;
+  box-shadow: 0 4px 10px rgba(0, 64, 112, 0.1);
 }
 
-.backBtn{
-  padding:16px 30px;
-  border:none;
-  border-radius:18px;
-  font-size:22px;
-  background:#ff9800;
-  color:white;
-  cursor: pointer;
-  margin-top: auto; 
+/* サブ画面用の戻るボタン調整 */
+.backBtn {
+  margin-top: 10px;
   flex-shrink: 0; 
 }
 
@@ -296,8 +263,7 @@ body{
   justify-content:center;
   align-items:center;
   gap:25px;
-  background:
-  rgba(0,0,0,.75);
+  background: rgba(0,0,0,.75);
   z-index:30000;
 }
 
@@ -305,8 +271,7 @@ body{
   font-size:42px;
   font-weight:bold;
   color:gold;
-  text-shadow:
-  0 0 20px rgba(255,215,0,.8);
+  text-shadow: 0 0 20px rgba(255,215,0,.8);
 }
 
 #completeImage{
@@ -314,8 +279,7 @@ body{
   max-width:85vw;
   border-radius:24px;
   cursor:pointer;
-  box-shadow:
-  0 0 30px rgba(255,180,0,.8);
+  box-shadow: 0 0 30px rgba(255,180,0,.8);
 }
 
 #closeComplete{
@@ -325,8 +289,7 @@ body{
   width:52px;
   height:52px;
   border-radius:50%;
-  background:
-  rgba(0,0,0,.8);
+  background: rgba(0,0,0,.8);
   color:white;
   font-size:32px;
   font-weight:bold;
@@ -342,9 +305,9 @@ body{
 
 <body>
 
-<div id="menuScreen">
+<div id="menuScreen" class="blueSkyBg">
 
-  <div id="gameTitle">
+  <div id="gameTitle" class="screenTitleStyle">
     スタンプラリーAR
   </div>
 
@@ -370,7 +333,7 @@ body{
   </div>
 
   <div class="menuGroup" id="bonusGroup" style="display: none;">
-    <div class="menuGuide" style="color: gold; font-weight: bold;">🎉 スタンプコンプリート特典！</div>
+    <div class="menuGuide" style="color: #d32f2f; font-weight: bold;">🎉 スタンプコンプリート特典！</div>
     <button id="openBonusBtn" class="menuBtn">
       コンプリート特典
     </button>
@@ -400,16 +363,19 @@ body{
 スタンプGET!!
 </div>
 
-<div id="hintScreen">
+<div id="hintScreen" class="blueSkyBg">
 
-  <h1 class="screenTitle">
+  <h1 class="screenTitleStyle">
     場所確認
   </h1>
 
-  <div class="hintGrid">
-    <img src="hint1_t.jpg">
-    <img src="hint2_t.jpg">
-    <img src="hint3_t.jpg">
+  <div class="contentCard">
+    <div class="menuGuide">ここを探してみてね！</div>
+    <div class="hintGrid">
+      <img src="hint1_t.jpg">
+      <img src="hint2_t.jpg">
+      <img src="hint3_t.jpg">
+    </div>
   </div>
 
   <button id="closeHintBtn" class="backBtn">
@@ -418,16 +384,19 @@ body{
 
 </div>
 
-<div id="stampScreen">
+<div id="stampScreen" class="blueSkyBg">
 
-  <h1 class="screenTitle">
+  <h1 class="screenTitleStyle">
     スタンプ帳
   </h1>
 
-  <div class="stampGrid">
-    <img id="menuStamp1" src="stamp_unknown.jpg">
-    <img id="menuStamp2" src="stamp_unknown.jpg">
-    <img id="menuStamp3" src="stamp_unknown.jpg">
+  <div class="contentCard">
+    <div class="menuGuide">あつめたスタンプの記録だよ！</div>
+    <div class="stampGrid">
+      <img id="menuStamp1" src="stamp_unknown.jpg">
+      <img id="menuStamp2" src="stamp_unknown.jpg">
+      <img id="menuStamp3" src="stamp_unknown.jpg">
+    </div>
   </div>
 
   <button id="closeStampBtn" class="backBtn">
