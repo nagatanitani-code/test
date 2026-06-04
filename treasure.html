@@ -12,11 +12,11 @@
 body{
   margin:0;
   overflow:hidden;
-  font-family:sans-serif;
+  font-family: 'Georgia', 'Times New Roman', 'Hiragino Mincho ProN', 'serif';
 }
 
 /* ======================
-   メニュー（スクロール＆画面最適化）
+   メニュー（重厚なお宝探し・冒険トレジャー仕様）
 ====================== */
 
 #menuScreen{
@@ -24,73 +24,107 @@ body{
   inset:0;
   display:flex;
   flex-direction:column;
-  align-items:center; /* 中央揃え */
-  gap:24px; /* 各グループの間隔を少し広げてスッキリと */
-  padding: 40px 20px; /* 上下にスクロールした際の余白を確保 */
+  align-items:center; 
+  gap:24px; 
+  padding: 50px 20px; 
   box-sizing: border-box;
+  /* 古い羊皮紙の海図や、深いジャングルの神殿を彷彿とさせるミステリアスな背景 */
   background:
-  linear-gradient(
-    180deg,
-    #101820,
-    #1d2d44
-  );
+    radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 70%),
+    linear-gradient(180deg, #0d261e 0%, #06110d 100%);
+  background-color: #06110d;
   z-index:9999;
-  overflow-y: auto; /* 項目が増えたら自動で縦スクロール可能にする */
-  -webkit-overflow-scrolling: touch; /* iOSでのスクロールを滑らかに */
+  overflow-y: auto; 
+  -webkit-overflow-scrolling: touch; 
 }
 
+/* 財宝が眠る洞窟で怪しく、力強く光り輝くようなアンティークゴールドのタイトル */
 #gameTitle{
-  font-size:42px;
+  font-size:44px;
   font-weight:bold;
-  color:gold;
-  margin-bottom: 10px; 
+  color:#ffd700;
+  margin-bottom: 15px; 
   text-shadow:
-  0 0 20px rgba(255,215,0,.7);
+    0px 3px 0px #8b6508,
+    0px 6px 10px rgba(0,0,0,0.8),
+    0 0 20px rgba(255, 215, 0, 0.5);
   text-align: center;
+  letter-spacing: 3px;
+  animation: treasureGlow 3.5s infinite ease-in-out;
 }
 
-/* 説明文とボタンを綺麗に縦並びにするグループ */
+@keyframes treasureGlow {
+  0%, 100% { text-shadow: 0px 3px 0px #8b6508, 0px 6px 10px rgba(0,0,0,0.8), 0 0 15px rgba(255, 215, 0, 0.4); }
+  50% { text-shadow: 0px 3px 0px #8b6508, 0px 6px 10px rgba(0,0,0,0.8), 0 0 35px rgba(255, 215, 0, 0.8); transform: scale(1.02); }
+}
+
+/* 宝の地図のフレームや古い木箱をイメージした、アンティーク風カード枠 */
 .menuGroup{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:8px; 
+  gap:10px; 
   width: 100%;
-  max-width: 320px; /* ボタン全体の最大幅 */
+  max-width: 320px; 
+  background: rgba(14, 36, 28, 0.7);
+  border: 2px solid #c5a059;
+  outline: 1px solid #c5a059;
+  outline-offset: -6px; /* 二重線のようなクラシックな縁取り */
+  padding: 20px 16px;
+  border-radius: 12px; /* 渋みを持たせるため角丸は少しタイトに */
+  box-shadow: 
+    inset 0 0 15px rgba(0, 0, 0, 0.6),
+    0 10px 25px rgba(0, 0, 0, 0.7);
+  box-sizing: border-box;
 }
 
-/* 各ボタンの解説テキスト用スタイル */
+/* 冒険のガイドテキスト */
 .menuGuide{
-  font-size:14px;
-  color:#e0e0e0;
+  font-size:13px;
+  color:#dfd5be; /* くすんだレトロなゴールドベージュ */
   text-align:center;
-  line-height:1.4;
-  letter-spacing: 0.5px;
+  line-height:1.5;
+  letter-spacing: 0.8px;
+  font-weight: bold;
 }
 
+/* ズッシリとした黄金のメダルや財宝を連想させる、重厚な立体ボタン */
 .menuBtn{
-  width:100%; /* グループの幅（max-width）いっぱいに広げる */
+  width:100%; 
   max-width: 280px;
-  padding:18px;
-  border:none;
-  border-radius:18px;
-  font-size:24px;
+  padding:16px;
+  border:1px solid #ffcc00;
+  border-radius:8px;
+  font-size:22px;
   font-weight:bold;
-  color:white;
-  background:
-  linear-gradient(
-    135deg,
-    #ff9800,
-    #ff5722
-  );
-  box-shadow: 0 6px 18px rgba(0,0,0,.4);
+  color:#ffffff;
+  background: linear-gradient(180deg, #d4af37 0%, #aa7c11 100%);
+  border-bottom: 5px solid #5a4207; /* 重みのある3Dシャドウ */
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
   cursor: pointer;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+  transition: all 0.1s ease;
+}
+
+.menuBtn:active {
+  transform: translateY(4px);
+  border-bottom: 1px solid #5a4207;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
 
 /* 【新規追加】コンプリート特典用の特別な金・青グラデーションボタン */
+/* 深海に眠るサファイアの秘宝をイメージしたディープブルースタイル */
 #openBonusBtn {
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
-  box-shadow: 0 6px 22px rgba(0, 198, 255, 0.4);
+  border: 1px solid #00e5ff;
+  background: linear-gradient(180deg, #0091ea 0%, #006064 100%);
+  border-bottom: 5px solid #00363a;
+  box-shadow: 0 6px 16px rgba(0, 229, 255, 0.2);
+}
+
+#openBonusBtn:active {
+  transform: translateY(4px);
+  border-bottom: 1px solid #00363a;
+  box-shadow: 0 2px 5px rgba(0, 229, 255, 0.2);
 }
 
 /* ======================
@@ -187,7 +221,7 @@ body{
     #1e293b
   );
   z-index:20000;
-  overflow-y: auto; /* 画像が増えたらスクロールできるようにする */
+  overflow-y: auto; 
   -webkit-overflow-scrolling: touch;
 }
 
@@ -197,15 +231,15 @@ body{
 
 .treasureGrid{
   display:flex;
-  flex-wrap: wrap; /* 横幅が足りなくなったら自動で折り返す */
+  flex-wrap: wrap; 
   justify-content: center;
   gap:20px;
   width: 100%;
-  max-width: 600px; /* 大画面でも広がりすぎないように制限 */
+  max-width: 600px; 
 }
 
 .treasureGrid img{
-  width:130px; /* スマホで2列に並びやすいサイズに変更 */
+  width:130px; 
   height:130px;
   border-radius:18px;
   background:white;
@@ -221,8 +255,8 @@ body{
   background:#ff9800;
   color:white;
   cursor: pointer;
-  margin-top: auto; /* コンテンツが少ないときは最下部、多いときは下に押し出される */
-  flex-shrink: 0; /* スクロール時にボタンが潰れるのを防ぐ */
+  margin-top: auto; 
+  flex-shrink: 0; 
 }
 
 /* ======================
@@ -231,7 +265,7 @@ body{
 
 .hintGrid{
   display:flex;
-  flex-wrap: wrap; /* 自動折り返し */
+  flex-wrap: wrap; 
   justify-content: center;
   gap:20px;
   width: 100%;
@@ -239,7 +273,7 @@ body{
 }
 
 .hintGrid img{
-  width:140px; /* 横幅に合わせて綺麗にフィット */
+  width:140px; 
   height:140px;
   border-radius:20px;
   object-fit: cover;

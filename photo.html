@@ -12,7 +12,7 @@
 body{
   margin:0;
   overflow:hidden;
-  font-family:sans-serif;
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
 }
 
 /* ======================
@@ -25,54 +25,93 @@ body{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:24px; /* 各グループの間隔を広げて見やすく */
-  padding: 40px 20px; /* 上下にスクロールした際の余白を確保 */
+  gap:24px; 
+  padding: 60px 24px; 
   box-sizing: border-box;
-  background: linear-gradient(180deg, #101820, #1d2d44);
+  /* 爽やかな青空と白い雲をイメージしたグラデーション */
+  background: linear-gradient(180deg, #4da0ff 0%, #a6d2ff 60%, #e6f2ff 100%);
   z-index:9999;
-  overflow-y: auto; /* 項目が増えたら自動で縦スクロール可能にする */
-  -webkit-overflow-scrolling: touch; /* iOSでのスクロールを滑らかに */
+  overflow-y: auto; 
+  -webkit-overflow-scrolling: touch; 
 }
 
+/* タイトル：青空に映える太陽とゴールドの輝き */
 #gameTitle{
-  font-size:42px;
-  font-weight:bold;
-  color:gold;
-  margin-bottom: 10px; 
-  text-shadow: 0 0 20px rgba(255,215,0,.7);
+  font-size:44px;
+  font-weight:900;
+  letter-spacing: 1.5px;
+  background: linear-gradient(to bottom, #ffffff 0%, #ffdf6d 40%, #ff7b00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 20px; 
+  filter: drop-shadow(0 4px 6px rgba(0, 40, 100, 0.25));
   text-align: center;
+  position: relative;
 }
 
-/* 説明文とボタンを綺麗に縦並びにするグループ */
+/* タイトルの後ろの柔らかな光彩（文字をくっきり見せる効果） */
+#gameTitle::after {
+  content: "フォトスポットAR";
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(to bottom, #ff9800, #ffea00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  z-index: -1;
+  filter: blur(12px);
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+/* 説明文とボタンを包む、雲のような白すりガラス風カード */
 .menuGroup{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:8px;
+  gap:12px;
   width: 100%;
-  max-width: 320px; /* ボタン全体の最大幅 */
+  max-width: 340px; 
+  background: rgba(255, 255, 255, 0.65); /* 明るい半透明白 */
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+  padding: 20px;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 48, 120, 0.12);
 }
 
+/* 明るい背景でも文字がハッキリ読めるように濃い目のブルーグレーに変更 */
 .menuGuide{
-  font-size:14px; /* 少しコンパクトにして画面に収まりやすく */
-  color:#e0e0e0;
+  font-size:14px; 
+  color: #2c445e;
   text-align:center;
-  line-height:1.4;
+  line-height:1.5;
   letter-spacing: 0.5px;
+  font-weight: bold;
 }
 
+/* ボタン：元気いっぱいのビタミンオレンジグラデーション */
 .menuBtn{
-  width:100%; /* グループの幅いっぱいに広げる */
+  width:100%; 
   max-width: 280px;
-  padding:18px;
+  padding:15px;
   border:none;
-  border-radius:18px;
-  font-size:24px;
+  border-radius:16px;
+  font-size:22px;
   font-weight:bold;
   color:white;
-  background: linear-gradient(135deg, #ff9800, #ff5722);
-  box-shadow: 0 6px 18px rgba(0,0,0,.4);
+  background: linear-gradient(135deg, #ffaa00 0%, #ff5500 100%);
+  box-shadow: 0 6px 16px rgba(255, 85, 0, 0.35), inset 0 2px 4px rgba(255,255,255,0.4);
   cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* ボタンをタップした時のエフェクト */
+.menuBtn:active {
+  transform: scale(0.96);
+  box-shadow: 0 3px 8px rgba(255, 85, 0, 0.35);
 }
 
 /* ======================
@@ -107,44 +146,50 @@ body{
   gap:25px;
   padding: 40px 20px;
   box-sizing: border-box;
-  background: linear-gradient(180deg, #111827, #1e293b);
+  background: linear-gradient(180deg, #e6f2ff 0%, #ffffff 100%); /* 中の画面も明るい青空ベースに統一 */
   z-index:20000;
-  overflow-y: auto; /* コンテンツが増えたらスクロールできるようにする */
+  overflow-y: auto; 
   -webkit-overflow-scrolling: touch;
+}
+
+/* 閉じる画面のタイトル文字も暗い背景用から明るい背景用に変更 */
+#hintScreen h1, #explainScreen h1 {
+  color: #ff6a00 !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* 今後、画像が複数に増えても自動で折り返して並ぶグリッド */
 .hintGrid {
   display: flex;
-  flex-wrap: wrap; /* 横幅が足りなくなったら自動で折り返す */
+  flex-wrap: wrap; 
   justify-content: center;
   gap: 20px;
   width: 100%;
-  max-width: 600px; /* PCなどの大画面で広がりすぎないように制限 */
+  max-width: 600px; 
 }
 
 .hintGrid img{
-  width: 140px; /* スマホで2列に並びやすいサイズに変更 */
+  width: 140px; 
   height: 140px;
   border-radius:20px;
   object-fit: cover;
-  box-shadow: 0 6px 18px rgba(0,0,0,.4);
+  box-shadow: 0 6px 18px rgba(0,0,0,.15);
 }
 
 /* 操作説明テキスト用のボックス */
 .explainBox {
   width: 100%;
   max-width: 500px;
-  color: #e2e8f0;
+  color: #334155;
   font-size: 16px;
   line-height: 1.6;
   text-align: left;
 }
 .explainBox h3 {
-  color: gold;
+  color: #ff5500;
   margin-top: 20px;
   margin-bottom: 8px;
-  border-left: 4px solid #ff9800;
+  border-left: 4px solid #ffaa00;
   padding-left: 8px;
   font-size: 18px;
 }
@@ -157,12 +202,13 @@ body{
   padding:16px 30px;
   border:none;
   border-radius:18px;
-  background:#ff9800;
+  background:#ffaa00;
   color:white;
   font-size:22px;
   cursor: pointer;
-  margin-top: auto; /* コンテンツが少ないときは最下部、多いときは下に押し出される */
-  flex-shrink: 0; /* スクロール時にボタンが潰れるのを防ぐ */
+  margin-top: auto; 
+  flex-shrink: 0; 
+  box-shadow: 0 4px 12px rgba(255, 170, 0, 0.3);
 }
 
 /* ======================
@@ -228,6 +274,13 @@ body{
   </div>
 
   <div class="menuGroup">
+    <div class="menuGuide">文字の説明はここで保存の仕方を見れるよ！</div>
+    <button id="openExplainBtn" class="menuBtn">
+      操作説明
+    </button>
+  </div>
+
+  <div class="menuGroup">
     <div class="menuGuide">まずはここで読み込んでね！</div>
     <button id="startBtn" class="menuBtn">
       読み込み開始
@@ -241,13 +294,6 @@ body{
     </button>
   </div>
 
-  <div class="menuGroup">
-    <div class="menuGuide">文字の説明はここで保存の仕方を見れるよ！</div>
-    <button id="openExplainBtn" class="menuBtn">
-      操作説明
-    </button>
-  </div>
-
 </div>
 
 <button id="backToMenuBtn">
@@ -255,7 +301,7 @@ body{
 </button>
 
 <div id="hintScreen">
-  <h1 style="color:gold; margin: 0; font-size: 38px;">場所確認</h1>
+  <h1 style="margin: 0; font-size: 38px;">場所確認</h1>
   
   <div class="hintGrid">
     <img src="hint_p.jpg">
@@ -265,7 +311,7 @@ body{
 </div>
 
 <div id="explainScreen">
-  <h1 style="color:gold; margin: 0; font-size: 38px;">操作説明</h1>
+  <h1 style="margin: 0; font-size: 38px;">操作説明</h1>
   
   <div class="explainBox">
     <h3>① ARの始め方</h3>
@@ -308,7 +354,7 @@ const mainScene = document.querySelector("#mainScene");
 const startBtn = document.querySelector("#startBtn");
 const backBtn = document.querySelector("#backToMenuBtn");
 const hintScreen = document.querySelector("#hintScreen");
-const explainScreen = document.querySelector("#explainScreen"); // 追加
+const explainScreen = document.querySelector("#explainScreen"); 
 const captureBtn = document.querySelector("#captureBtn");
 const targetPhoto = document.querySelector("#targetPhoto");
 const photoFrameOverlay = document.querySelector("#photoFrameOverlay");
@@ -328,7 +374,7 @@ startBtn.addEventListener("click", async ()=>{
 
   const arSystem = mainScene.systems["mindar-image-system"];
   if(arSystem){
-    await arSystem.start(); // ここでカメラをオンにする
+    await arSystem.start(); 
   }
 });
 
@@ -339,20 +385,19 @@ backBtn.addEventListener("click", async ()=>{
   const arSystem = mainScene.systems["mindar-image-system"];
   if(arSystem){
     try{
-      await arSystem.stop(); // ここでカメラとARをストップする
+      await arSystem.stop(); 
     }catch(e){
       console.log(e);
     }
   }
 
-  // MindARが生成した不要なビデオ要素やストリームを確実に停止して削除
   const video = document.querySelector("video");
   if (video) {
     if (video.srcObject) {
       const tracks = video.srcObject.getTracks();
-      tracks.forEach(track => track.stop()); // スマホのカメラ機材自体を終了
+      tracks.forEach(track => track.stop()); 
     }
-    video.remove(); // 画面に残るビデオ要素を消去
+    video.remove(); 
   }
 
   resetPhotoFrame();
@@ -374,7 +419,7 @@ document.querySelector("#closeHintBtn").addEventListener("click",()=>{
 });
 
 /* ======================
-【追加】操作説明の開閉処理
+操作説明の開閉処理
 ====================== */
 document.querySelector("#openExplainBtn").addEventListener("click",()=>{
   explainScreen.style.display="flex";

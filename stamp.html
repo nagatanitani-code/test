@@ -12,11 +12,11 @@
 body{
   margin:0;
   overflow:hidden;
-  font-family:sans-serif;
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
 }
 
 /* ======================
-   メニュー（スクロール＆画面最適化）
+   メニュー（明るいイベント＆青空ラリー仕様）
 ====================== */
 
 #menuScreen{
@@ -25,71 +25,99 @@ body{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:24px; /* 間隔を少し広げて見やすく */
-  padding: 40px 20px; /* 上下にスクロール用の余白を確保 */
+  gap:24px; 
+  padding: 50px 20px; 
   box-sizing: border-box;
-  background:
-  linear-gradient(
-    180deg,
-    #101820,
-    #1d2d44
-  );
+  /* 爽やかな青空と、楽しげな太陽の光・広場をイメージした明るい背景 */
+  background: 
+    radial-gradient(circle at 50% -20%, #fff7d6 0%, transparent 60%),
+    linear-gradient(135deg, #7fe3ff 0%, #00b2fe 100%);
+  background-color: #00b2fe;
   z-index:9999;
-  overflow-y: auto; /* 項目が増えたら縦スクロール可能にする */
-  -webkit-overflow-scrolling: touch; /* iOSでのスクロールを滑らかに */
+  overflow-y: auto; 
+  -webkit-overflow-scrolling: touch; 
 }
 
+/* 青空に映える、お祭りの看板のようなポップで立体的なタイトル */
 #gameTitle{
   font-size:42px;
-  font-weight:bold;
-  color:gold;
-  margin-bottom: 10px; 
+  font-weight:900;
+  color:#ffffff;
+  margin-bottom: 15px; 
   text-shadow:
-  0 0 20px rgba(255,215,0,.7);
+    3px 3px 0px #e65100,
+    5px 5px 12px rgba(0, 74, 124, 0.4);
   text-align: center;
+  letter-spacing: 2px;
+  animation: joyfulJump 2.5s infinite ease-in-out;
 }
 
+@keyframes joyfulJump {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.02); }
+}
+
+/* 紙の「スタンプラリー台紙」をイメージした、白基調の明るいカードデザイン */
 .menuGroup{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:8px; 
+  gap:10px; 
   width: 100%;
-  max-width: 320px; /* ボタンの最大幅に合わせて中央配置 */
+  max-width: 320px; 
+  background: #ffffff;
+  border: 3px dotted #ffb300; /* 親しみやすいドットの縁取り */
+  padding: 16px;
+  border-radius: 24px;
+  box-shadow: 0 8px 20px rgba(0, 64, 112, 0.2);
+  box-sizing: border-box;
 }
 
+/* 文字は明るい背景でもハッキリ読めるように濃い焦げ茶（アースカラー）に */
 .menuGuide{
   font-size:14px;
-  color:#e0e0e0;
+  color:#4e342e;
   text-align:center;
-  line-height:1.4;
+  line-height:1.5;
   letter-spacing: 0.5px;
+  font-weight: bold;
 }
 
+/* もぎたての果実のような元気なビタミンカラーの立体ボタン */
 .menuBtn{
-  width:100%; /* グループの幅いっぱいに広げる */
+  width:100%; 
   max-width: 280px;
-  padding:18px;
+  padding:16px;
   border:none;
-  border-radius:18px;
+  border-radius:20px;
   font-size:24px;
   font-weight:bold;
   color:white;
-  background:
-  linear-gradient(
-    135deg,
-    #ff9800,
-    #ff5722
-  );
-  box-shadow:
-  0 6px 18px rgba(0,0,0,.4);
+  background: linear-gradient(180deg, #ffb300 0%, #ff6f00 100%);
+  border-bottom: 5px solid #b71c1c; /* しっかりとした3Dの押し下げ床 */
+  box-shadow: 0 6px 12px rgba(255, 111, 0, 0.3);
   cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.menuBtn:active {
+  transform: translateY(4px);
+  border-bottom: 1px solid #b71c1c;
+  box-shadow: 0 2px 4px rgba(255, 111, 0, 0.3);
 }
 
 /* 【新規追加】コンプリート特典用の特別な青グラデーションボタンスタイル */
+/* 明るい世界観に合わせた爽快なネオングリーングラデーションに変更 */
 #openBonusBtn {
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
-  box-shadow: 0 6px 22px rgba(0, 198, 255, 0.4);
+  background: linear-gradient(180deg, #00e676 0%, #00c853 100%);
+  border-bottom: 5px solid #006020;
+  box-shadow: 0 6px 15px rgba(0, 200, 83, 0.4);
+}
+
+#openBonusBtn:active {
+  transform: translateY(4px);
+  border-bottom: 1px solid #006020;
+  box-shadow: 0 2px 5px rgba(0, 200, 83, 0.4);
 }
 
 /* ======================
@@ -187,7 +215,7 @@ body{
     #1e293b
   );
   z-index:20000;
-  overflow-y: auto; /* サブ画面も画像が増えたらスクロール可能にする */
+  overflow-y: auto; 
   -webkit-overflow-scrolling: touch;
 }
 
@@ -204,15 +232,15 @@ body{
 
 .hintGrid{
   display:flex;
-  flex-wrap:wrap; /* 画面幅に合わせて自動で折り返し */
+  flex-wrap:wrap; 
   justify-content:center;
   gap:20px;
   width: 100%;
-  max-width: 600px; /* PCなど大画面でも広がりすぎないように制限 */
+  max-width: 600px; 
 }
 
 .hintGrid img{
-  width: 140px; /* スマホで2列に並びやすいサイズに微調整 */
+  width: 140px; 
   height: 140px;
   object-fit:cover;
   border-radius:20px;
@@ -227,7 +255,7 @@ body{
 
 .stampGrid{
   display:flex;
-  flex-wrap:wrap; /* 横一列ではなく、増えたら自動折り返しにする */
+  flex-wrap:wrap; 
   justify-content:center;
   gap:20px;
   width: 100%;
@@ -252,8 +280,8 @@ body{
   background:#ff9800;
   color:white;
   cursor: pointer;
-  margin-top: auto; /* 常にコンテンツの最下部に配置 */
-  flex-shrink: 0; /* スクロール時にボタンが潰れるのを防ぐ */
+  margin-top: auto; 
+  flex-shrink: 0; 
 }
 
 /* ======================
