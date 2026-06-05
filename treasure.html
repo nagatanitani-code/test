@@ -90,7 +90,7 @@ body{
   gap: 16px;
 }
 
-/* 冒険のガイドテキスト */
+/* 冒メントのガイドテキスト */
 .menuGuide{
   font-size:13px;
   color:#dfd5be; /* くすんだレトロなゴールドベージュ */
@@ -98,6 +98,27 @@ body{
   line-height:1.5;
   letter-spacing: 0.8px;
   font-weight: bold;
+}
+
+/* 【新規追加】操作説明のリスト用スタイル */
+.howToSteps {
+  font-size: 13px;
+  color: #dfd5be;
+  line-height: 1.6;
+  font-weight: bold;
+  margin: 0;
+  padding-left: 20px;
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.howToSteps li {
+  margin-bottom: 10px;
+}
+
+.howToSteps li:last-child {
+  margin-bottom: 0;
 }
 
 /* ズッシリとした黄金のメダルや財宝を連想させる、重厚な立体ボタン */
@@ -215,6 +236,7 @@ body{
    共通サブ画面スタイル
 ====================== */
 
+#howToScreen,
 #treasureScreen,
 #hintScreen{
   z-index:20000;
@@ -313,6 +335,13 @@ body{
   </div>
 
   <div class="menuGroup">
+    <div class="menuGuide">冒険の進め方はここを確認しよう！</div>
+    <button id="openHowToBtn" class="menuBtn">
+      操作説明
+    </button>
+  </div>
+
+  <div class="menuGroup">
     <div class="menuGuide">最初にここから読み込んでね！</div>
     <button id="startBtn" class="menuBtn">
       探索開始
@@ -362,6 +391,28 @@ body{
 
 <div id="treasureEffect">
 宝発見！
+</div>
+
+<div id="howToScreen" class="treasureBg">
+
+  <h1 class="screenTitleStyle">
+    操作説明
+  </h1>
+
+  <div class="contentCard">
+    <div class="menuGuide">📜 探索の手引き 📜</div>
+    <ol class="howToSteps">
+      <li>「探索開始」ボタンを押し、スマートフォンのカメラアクセスを許可します。</li>
+      <li>「場所確認」に眠る古文書の手がかりを頼りに、怪しい場所（マーカー）を探しましょう。</li>
+      <li>見つけた場所にカメラをまっすぐかざすと、空間から隠された「秘宝」がその姿を現します！</li>
+      <li>全てのお宝を発見すると、特別な「コンプリート特典」が開放されます。</li>
+    </ol>
+  </div>
+
+  <button id="closeHowToBtn" class="backBtn">
+    戻る
+  </button>
+
 </div>
 
 <div id="treasureScreen" class="treasureBg">
@@ -598,7 +649,7 @@ startBtn.addEventListener("click", async () => {
 
   const arSystem = mainScene.systems["mindar-image-system"];
   if(arSystem){
-    await arSystem.start(); // ここでカメラを確実起動
+    await arSystem.start(); // ここでカメラを確実に起動
   }
 });
 
@@ -665,9 +716,20 @@ document.querySelector("#closeCompleteBtn").addEventListener("click", () => {
   completeTreasure.style.display = "none";
 });
 
-// 【新規追加】メニューからコンプリート特典画面を開く
+// メニューからコンプリート特典画面を開く
 document.querySelector("#openBonusBtn").addEventListener("click", () => {
   completeTreasure.style.display = "flex";
+});
+
+// 【新規追加】操作説明画面の開閉イベント
+const howToScreen = document.querySelector("#howToScreen");
+
+document.querySelector("#openHowToBtn").addEventListener("click", () => {
+  howToScreen.style.display = "flex";
+});
+
+document.querySelector("#closeHowToBtn").addEventListener("click", () => {
+  howToScreen.style.display = "none";
 });
 
 // ======================

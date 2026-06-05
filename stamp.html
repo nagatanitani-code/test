@@ -39,7 +39,7 @@ body{
   z-index:9999;
 }
 
-/* 青空に映える、お祭りの看板のようなポップで立体的なタイトル（共通仕様へ） */
+/* 青空に映える、お祭りの看板のようなポップで立体的なタイトル */
 .screenTitleStyle{
   font-size:42px;
   font-weight:900;
@@ -92,6 +92,27 @@ body{
   line-height:1.5;
   letter-spacing: 0.5px;
   font-weight: bold;
+}
+
+/* 【新規追加】操作説明の箇条書き用スタイル（左寄せにして読みやすく） */
+.howToSteps {
+  font-size: 14px;
+  color: #4e342e;
+  line-height: 1.7;
+  font-weight: bold;
+  margin: 0;
+  padding-left: 20px;
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.howToSteps li {
+  margin-bottom: 8px;
+}
+
+.howToSteps li:last-child {
+  margin-bottom: 0;
 }
 
 /* もぎたての果実のような元気なビタミンカラーの立体ボタン */
@@ -207,6 +228,7 @@ body{
    共通サブ画面（メニューと同じポップデザインに統合）
 ====================== */
 
+#howToScreen,
 #hintScreen,
 #stampScreen{
   z-index:20000;
@@ -312,6 +334,13 @@ body{
   </div>
 
   <div class="menuGroup">
+    <div class="menuGuide">ゲームの遊び方はここを見てね！</div>
+    <button id="openHowToBtn" class="menuBtn">
+      操作説明
+    </button>
+  </div>
+
+  <div class="menuGroup">
     <div class="menuGuide">最初はここから読み込んでね！</div>
     <button id="startBtn" class="menuBtn">
       探索開始
@@ -361,6 +390,28 @@ body{
 
 <div id="stampEffect">
 スタンプGET!!
+</div>
+
+<div id="howToScreen" class="blueSkyBg">
+
+  <h1 class="screenTitleStyle">
+    操作説明
+  </h1>
+
+  <div class="contentCard">
+    <div class="menuGuide">★ あそびかたの手順 ★</div>
+    <ol class="howToSteps">
+      <li>「場所確認」を開いて、スタンプが隠されているヒント写真を確認します。</li>
+      <li>「探索開始」ボタンを押し、カメラへのアクセスを許可します。</li>
+      <li>ヒントの場所を見つけたら、対象にカメラをまっすぐかざします。</li>
+      <li>自動的にスタンプが検出され、スタンプ帳に記録されます！</li>
+    </ol>
+  </div>
+
+  <button id="closeHowToBtn" class="backBtn">
+    戻る
+  </button>
+
 </div>
 
 <div id="hintScreen" class="blueSkyBg">
@@ -461,6 +512,11 @@ const stampScreen = document.querySelector("#stampScreen");
 const completeWrap = document.querySelector("#completeWrap");
 const bonusGroup = document.querySelector("#bonusGroup");
 
+// 【新規追加】操作説明画面の要素
+const howToScreen = document.querySelector("#howToScreen");
+const openHowToBtn = document.querySelector("#openHowToBtn");
+const closeHowToBtn = document.querySelector("#closeHowToBtn");
+
 // ======================
 // 状態
 // ======================
@@ -525,7 +581,7 @@ function updateStampBook(){
 }
 
 // ======================
-// 【新規追加】コンプリート特典ボタンの表示制御
+// コンプリート特典ボタンの表示制御
 // ======================
 function updateBonusButton() {
   if (foundStamp >= totalStamp) {
@@ -664,6 +720,15 @@ backToMenuBtn.addEventListener("click", async ()=>{
   stampBox.style.display = "none";
 });
 
+// 【新規追加】操作説明の開閉イベント
+openHowToBtn.addEventListener("click",()=>{
+  howToScreen.style.display = "flex";
+});
+
+closeHowToBtn.addEventListener("click",()=>{
+  howToScreen.style.display = "none";
+});
+
 // ======================
 // 場所確認
 // ======================
@@ -703,7 +768,7 @@ document.querySelector("#completeImage").addEventListener("click",()=>{
   window.location.href = "https://nagatanitani-code.github.io/test/stamp.html";
 });
 
-// 【新規追加】メニューから直接特典ポップアップを開くイベント
+// メニューから直接特典ポップアップを開くイベント
 document.querySelector("#openBonusBtn").addEventListener("click",()=>{
   completeWrap.style.display = "flex";
   backToMenuBtn.style.display = "none"; // ポップアップに合わせて戻るボタンの表示を調整

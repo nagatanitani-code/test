@@ -153,6 +153,27 @@
       width: 100%;
     }
 
+    /* 【新規追加】操作説明の箇条書き用スタイル */
+    .howToSteps {
+      font-size: 14px;
+      color: #6d4c41;
+      line-height: 1.7;
+      font-weight: bold;
+      margin: 0;
+      padding-left: 20px;
+      text-align: left;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .howToSteps li {
+      margin-bottom: 8px;
+    }
+
+    .howToSteps li:last-child {
+      margin-bottom: 0;
+    }
+
     /* ぷっくりとした立体感のある、おもちゃ（トイポップ）風ボタン */
     .popBtnStyle {
       width: 100%;
@@ -222,7 +243,7 @@
       cursor: pointer;
     }
 
-    /* 【新規追加】メニューへ戻るボタンの「隣」に並ぶ横並びガイド */
+    /* メニューへ戻るボタンの「隣」に並ぶ横並びガイド */
     #touchGuideBox {
       position: fixed;
       bottom: calc(20px + env(safe-area-inset-bottom, 0px));
@@ -297,8 +318,9 @@
     }
 
     /* ======================
-        クリア済み画面（メニューと同じポップスタイルへ統合）
+        サブ画面（操作説明・クリア済み共通）
     ====================== */
+    #howToScreen,
     #clearScreen {
       z-index: 20000;
       display: none;
@@ -381,6 +403,11 @@
   <div id="gameTitle" class="gameTitleStyle">絵探しゲーム</div>
   
   <div class="menuGroup">
+    <div class="menuGuide">ゲームの遊び方はここを見てね！</div>
+    <button id="openHowToBtn" class="popBtnStyle backBtnColor">操作説明</button>
+  </div>
+  
+  <div class="menuGroup">
     <div class="menuGuide">
       まずはここで読み込もう！
     </div>
@@ -403,6 +430,22 @@
 </div>
 
 <div id="effect">発見!!</div>
+
+<div id="howToScreen" class="popBgStyle">
+  <div class="gameTitleStyle" style="font-size: 38px;">操作説明</div>
+  
+  <div class="clearGrid" style="flex-direction: column; align-items: center; gap: 10px;">
+    <div class="menuGuide">★ あそびかたの手順 ★</div>
+    <ol class="howToSteps">
+      <li>「スタート」ボタンを押し、カメラへのアクセスを許可します。</li>
+      <li>ポスターやイラストなどの対象（マーカー）にカメラをまっすぐかざします。</li>
+      <li>画面上に「探すパーツ」のガイド画像がひょっこり出現します。</li>
+      <li>イラストの中からそのパーツを見つけたら、画面上部に出ている同じガイド画像をタッチ（タップ）してね！</li>
+    </ol>
+  </div>
+  
+  <button id="closeHowToBtn" class="popBtnStyle backBtnColor">メニューに戻る</button>
+</div>
 
 <div id="guideUI" class="guideUI">
   <div class="guideItem">
@@ -770,13 +813,24 @@ async function initGame() {
 window.addEventListener("DOMContentLoaded", initGame);
 
 /* ==================================
+  操作説明ボタン：開閉
+================================== */
+document.querySelector("#openHowToBtn").addEventListener("click", () => {
+  document.querySelector("#howToScreen").style.display = "flex";
+});
+
+document.querySelector("#closeHowToBtn").addEventListener("click", () => {
+  document.querySelector("#howToScreen").style.display = "none";
+});
+
+/* ==================================
   スタートボタン：押したときだけカメラをオン
 ================================== */
 document.querySelector("#startBtn").addEventListener("click", async () => {
   document.querySelector("#menuScreen").style.display = "none";
   document.querySelector("#mainScene").style.display  = "block";
   document.querySelector("#backToMenuBtn").style.display = "block";
-  document.querySelector("#touchGuideBox").style.display = "block"; // 【新規追加】横並びガイドを表示
+  document.querySelector("#touchGuideBox").style.display = "block";
 
   const sceneEl = document.querySelector("#mainScene");
   if (!sceneEl.hasLoaded) {
@@ -820,7 +874,7 @@ document.querySelector("#backToMenuBtn").addEventListener("click", async () => {
   document.querySelector("#mainScene").style.display    = "none";
   document.querySelector("#menuScreen").style.display   = "flex";
   document.querySelector("#backToMenuBtn").style.display = "none";
-  document.querySelector("#touchGuideBox").style.display = "none"; // 【新規追加】メニューに戻ったら非表示
+  document.querySelector("#touchGuideBox").style.display = "none";
   document.querySelector("#progressBox").style.display  = "none";
   ["#guideUI", "#animalGuideUI", "#alienGuideUI"].forEach(s => {
     document.querySelector(s).style.display = "none";
