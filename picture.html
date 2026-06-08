@@ -117,14 +117,32 @@
     #howToScreen, #clearScreen { z-index: 20000; display: none; }
 
     /* 図鑑（クリア画面）構造化スタイル */
-    .clearCategoryTitle { font-size: 18px; color: #d84315; font-weight: bold; margin: 10px 0 2px 0; align-self: flex-start; padding-left: 10px; }
+    .clearCategoryTitle { font-size: 18px; color: #d84315; font-weight: bold; margin: 18px 0 2px 0; align-self: flex-start; padding-left: 10px; }
+    
+    /* 一枚絵（全体イラスト）のコンテナ */
+    .clearWholeImageContainer {
+      width: 100%; max-width: 340px; background: #ffffff; border: 3px solid #ffb74d;
+      padding: 10px; border-radius: 20px; box-shadow: 0 6px 12px rgba(216, 67, 21, 0.05);
+      box-sizing: border-box; text-align: center; margin-bottom: -6px;
+    }
+    .clearWholeImageContainer img {
+      width: 100%; max-height: 160px; object-fit: contain; border-radius: 10px; background: #f5f5f5;
+    }
+
     .clearGrid {
       display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px;
       width: 100%; max-width: 340px; background: #ffffff; border: 3px solid #ffb74d;
       padding: 14px; border-radius: 20px; box-shadow: 0 10px 20px rgba(216, 67, 21, 0.08); box-sizing: border-box;
     }
     .clearItem { display: flex; flex-direction: column; align-items: center; gap: 6px; background: #fdfaf6; padding: 6px; border: 2px solid #ffe0b2; border-radius: 14px; box-sizing: border-box; width: calc(33.33% - 7px); }
-    .clearItem img { width: 100%; aspect-ratio: 1; border-radius: 10px; object-fit: cover; background: #e0e0e0; }
+    
+    /* 図鑑内の切り抜き用四角形（imgタグからdivタグの背景表示に変更） */
+    .clearCropBox { 
+      width: 100%; aspect-ratio: 1; border-radius: 10px; 
+      background-repeat: no-repeat; background-color: #e0e0e0; 
+      background-image: url("clear_unknown.jpg"); background-size: cover; background-position: center;
+    }
+    
     .clearName { font-size: 11px; color: #6d4c41; font-weight: bold; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   </style>
 
@@ -243,23 +261,32 @@
   <div class="gameTitleStyle" style="font-size: 38px;">クリア済み</div>
   
   <div class="clearCategoryTitle">🖼️ イラスト：女の子</div>
+  <div class="clearWholeImageContainer">
+    <img id="wholeImg_girl" src="clear_unknown.jpg">
+  </div>
   <div class="clearGrid">
-    <div class="clearItem"><img id="clearImg_heart" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
-    <div class="clearItem"><img id="clearImg_eye" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
-    <div class="clearItem"><img id="clearImg_ribbon" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+    <div class="clearItem"><div id="clearImg_heart" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem"><div id="clearImg_eye" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem"><div id="clearImg_ribbon" class="clearCropBox"></div><div class="clearName">？？？</div></div>
   </div>
 
   <div class="clearCategoryTitle">🐾 イラスト：どうぶつ</div>
+  <div class="clearWholeImageContainer">
+    <img id="wholeImg_animal" src="clear_unknown.jpg">
+  </div>
   <div class="clearGrid">
-    <div class="clearItem"><img id="clearImg_ear" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
-    <div class="clearItem"><img id="clearImg_nose" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
-    <div class="clearItem"><img id="clearImg_tail" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+    <div class="clearItem"><div id="clearImg_ear" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem"><div id="clearImg_nose" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem"><div id="clearImg_tail" class="clearCropBox"></div><div class="clearName">？？？</div></div>
   </div>
 
   <div class="clearCategoryTitle">👽 イラスト：エイリアン</div>
+  <div class="clearWholeImageContainer">
+    <img id="wholeImg_alien" src="clear_unknown.jpg">
+  </div>
   <div class="clearGrid">
-    <div class="clearItem"><img id="clearImg_alienEye" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
-    <div class="clearItem"><img id="clearImg_alienMouth" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+    <div class="clearItem"><div id="clearImg_alienEye" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem"><div id="clearImg_alienMouth" class="clearCropBox"></div><div class="clearName">？？？</div></div>
   </div>
 
   <button id="closeClearBtn" class="popBtnStyle backBtnColor" style="margin-top:15px;">メニューに戻る</button>
@@ -299,6 +326,9 @@ let currentGroup = "";
 
 // 全ターゲットフラット配列（一括集計用）
 const getAllTargets = () => Object.values(targetGroups).flatMap(g => g.list);
+
+// 各画像のサイズ情報を保持するキャッシュ
+const imageMetaCache = {};
 
 // DOMキャッシュ
 const UI = {
@@ -354,15 +384,43 @@ function updateProgress() {
   UI.progressCount.textContent = `${found} / ${currentList.length}`;
 }
 
+// 図鑑画面の描画更新（一枚絵のオープンとCSS切り抜きの同期）
 function updateClearScreen() {
   Object.keys(targetGroups).forEach(key => {
     const group = targetGroups[key];
+    const meta = imageMetaCache[key];
+    
+    // 1つでも見つけていたら一枚絵（全体像）を表示
+    const anyFound = group.list.some(t => t.found);
+    const wholeImgEl = document.querySelector("#wholeImg_" + key);
+    if (wholeImgEl && anyFound) {
+      wholeImgEl.src = group.img;
+    }
+
     group.list.forEach(t => {
-      const imgEl = document.querySelector("#clearImg_" + t.id);
-      if (imgEl && t.found) {
-        imgEl.src = group.img;
-        const nameEl = imgEl.nextElementSibling;
+      const cropEl = document.querySelector("#clearImg_" + t.id);
+      if (cropEl && t.found) {
+        const nameEl = cropEl.nextElementSibling;
         if (nameEl) nameEl.textContent = t.name;
+
+        // 計算ロジックが初期化完了している場合、図鑑のdivにも切り抜きCSSを適用
+        if (meta) {
+          const boxSize = cropEl.clientWidth || 94; // 既存グリッド幅の近似値
+          const iw = meta.img.width, ih = meta.img.height;
+          
+          const imageX = ((t.x * meta.w) + meta.w / 2) / meta.w * iw;
+          const imageY = ((meta.h / 2) - (t.y * meta.h)) / meta.h * ih;
+          const cropW = (t.guideSize / meta.w) * iw;
+          const cropH = (t.guideSize / meta.h) * ih;
+          const bgW = iw * (boxSize / cropW);
+          const bgH = ih * (boxSize / cropH);
+          const posX = boxSize / 2 - imageX * (boxSize / cropW);
+          const posY = boxSize / 2 - imageY * (boxSize / cropH);
+
+          cropEl.style.backgroundImage = `url("${group.img}")`;
+          cropEl.style.backgroundSize = `${bgW}px ${bgH}px`;
+          cropEl.style.backgroundPosition = `${posX}px ${posY}px`;
+        }
       }
     });
   });
@@ -516,6 +574,7 @@ function setupGuideCropAuto(groupKey, imgInfo) {
 async function initGame() {
   for (const key of Object.keys(targetGroups)) {
     const res = await autoFitPlane(key);
+    imageMetaCache[key] = res; // 図鑑用にキャッシュを保存
     createHitPlanes(key);
     setupGuideCropAuto(key, res);
     
