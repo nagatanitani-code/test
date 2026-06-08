@@ -161,9 +161,18 @@
           currentGroup = this.el.dataset.group;
           document.querySelector("#progressBox").style.display = "block";
           document.querySelector(`#${currentGroup}GuideUI`).style.display = "flex";
+          
+          // --- 【追加】見つかったグループの3Dコンテナを表示する ---
+          const group = targetGroups[currentGroup];
+          if (group) {
+            document.querySelector(group.containerId).setAttribute("visible", "true");
+          }
+          // ------------------------------------------------------
+          
           updateProgress();
         });
         this.el.addEventListener("targetLost", () => {
+          if (!currentGroup) return; // メニュー戻り時の考慮
           document.querySelector(`#${currentGroup}GuideUI`).style.display = "none";
           document.querySelector("#progressBox").style.display = "none";
           currentGroup = "";
@@ -625,7 +634,7 @@ document.querySelector("#startBtn").addEventListener("click", async () => {
   if (ar) await ar.start(); 
 });
 
-// メニュアルに戻る（AR停止）
+// メニューに戻る（AR停止）
 UI.backToMenuBtn.addEventListener("click", async () => {
   const ar = UI.mainScene.systems["mindar-image-system"];
   if (ar) { try { await ar.stop(); } catch(e) {} }
@@ -636,6 +645,15 @@ UI.backToMenuBtn.addEventListener("click", async () => {
     video.remove(); 
   }
 
+  // --- 【追加・修正】3Dオブジェクトのコンテナをすべて非表示にする ---
+  Object.keys(targetGroups).forEach(key => {
+    const container = document.querySelector(targetGroups[key].containerId);
+    if (container) {
+      container.setAttribute("visible", "false");
+    }
+  });
+  // -------------------------------------------------------------
+
   UI.mainScene.style.display     = "none";
   UI.menuScreen.style.display    = "flex";
   UI.backToMenuBtn.style.display = "none";
@@ -645,6 +663,7 @@ UI.backToMenuBtn.addEventListener("click", async () => {
     document.querySelector(s).style.display = "none";
   });
 });
+
 </script>
 
 </body>
