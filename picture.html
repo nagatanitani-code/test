@@ -12,21 +12,12 @@
 
     /* 発見エフェクト */
     #effect {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      display: none;
-      padding: 16px 30px;
-      border-radius: 26px;
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      display: none; padding: 16px 30px; border-radius: 26px;
       background: linear-gradient(135deg, rgba(255,220,0,0.95), rgba(255,140,0,0.95));
-      color: white;
-      font-size: 34px;
-      font-weight: bold;
-      letter-spacing: 3px;
-      text-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      box-shadow: 0 0 40px rgba(255,180,0,0.8);
-      z-index: 9999;
-      animation: pop 0.8s ease;
+      color: white; font-size: 34px; font-weight: bold; letter-spacing: 3px;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.4); box-shadow: 0 0 40px rgba(255,180,0,0.8);
+      z-index: 9999; animation: pop 0.8s ease;
     }
 
     @keyframes pop {
@@ -37,36 +28,17 @@
 
     /* 上部ガイドUI */
     .guideUI {
-      position: fixed;
-      top: env(safe-area-inset-top, 0px);
-      left: 50%;
-      transform: translateX(-50%);
-      display: none;
-      gap: 14px;
-      z-index: 9999;
+      position: fixed; top: env(safe-area-inset-top, 0px); left: 50%; transform: translateX(-50%);
+      display: none; gap: 14px; z-index: 9999;
     }
 
     .guideItem {
-      position: relative;
-      width: 90px; height: 90px;
-      border: 4px solid yellow;
-      border-radius: 16px;
-      overflow: hidden;
-      background: rgba(0,0,0,0.7);
+      position: relative; width: 90px; height: 90px;
+      border: 4px solid yellow; border-radius: 16px; overflow: hidden; background: rgba(0,0,0,0.7);
     }
 
-    .guideCrop {
-      width: 100%; height: 100%;
-      background-repeat: no-repeat;
-      background-color: black;
-    }
-
-    .guideCheck {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      display: none;
-    }
+    .guideCrop { width: 100%; height: 100%; background-repeat: no-repeat; background-color: black; }
+    .guideCheck { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; }
 
     /* 共通ポップ背景 */
     .popBgStyle {
@@ -74,31 +46,19 @@
       background: 
         radial-gradient(circle at 50% 30%, rgba(255, 235, 160, 0.2), transparent 60%),
         linear-gradient(45deg, #f7ede2 25%, #f5e1d3 25%, #f5e1d3 50%, #f7ede2 50%, #f7ede2 75%, #f5e1d3 75%, #f5e1d3 100%);
-      background-size: 40px 40px;
-      background-color: #f7ede2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 30px;
-      padding: 60px 20px;
-      box-sizing: border-box;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
+      background-size: 40px 40px; background-color: #f7ede2;
+      display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 40px 20px;
+      box-sizing: border-box; overflow-y: auto; -webkit-overflow-scrolling: touch;
     }
 
     #menuScreen { z-index: 20000; }
 
     .gameTitleStyle {
-      font-size: 48px;
-      color: #ff7043;
-      font-weight: 900;
-      margin-bottom: 10px;
+      font-size: 48px; color: #ff7043; font-weight: 900; margin-bottom: 10px;
       text-shadow: 
         3px 3px 0px #fff, -3px -3px 0px #fff, 3px -3px 0px #fff, -3px 3px 0px #fff,
         4px 6px 0px #d84315, 4px 6px 15px rgba(216, 67, 21, 0.3);
-      text-align: center;
-      letter-spacing: 4px;
-      animation: titleBounce 2s infinite alternate ease-in-out;
+      text-align: center; letter-spacing: 4px; animation: titleBounce 2s infinite alternate ease-in-out;
     }
 
     @keyframes titleBounce {
@@ -107,160 +67,80 @@
     }
 
     .menuGroup {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      width: 100%;
-      max-width: 320px;
-      background: #ffffff;
-      border: 3px solid #ffb74d;
-      padding: 24px 20px;
-      border-radius: 20px;
-      box-shadow: 0 10px 20px rgba(216, 67, 21, 0.08);
-      position: relative;
-      box-sizing: border-box;
+      display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; max-width: 320px;
+      background: #ffffff; border: 3px solid #ffb74d; padding: 24px 20px; border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(216, 67, 21, 0.08); position: relative; box-sizing: border-box;
     }
 
-    .menuGroup::before, .menuGroup::after {
-      content: "★"; position: absolute; color: #ffb74d; font-size: 14px;
-    }
+    .menuGroup::before, .menuGroup::after { content: "★"; position: absolute; color: #ffb74d; font-size: 14px; }
     .menuGroup::before { top: 6px; left: 10px; }
     .menuGroup::after { bottom: 6px; right: 10px; }
 
-    .menuGuide {
-      font-size: 14px;
-      color: #6d4c41;
-      font-weight: bold;
-      text-align: center;
-      line-height: 1.5;
-      letter-spacing: 0.5px;
-      border-bottom: 2px dotted #ffb74d;
-      padding-bottom: 10px;
-      width: 100%;
-    }
-
-    .howToSteps {
-      font-size: 14px;
-      color: #6d4c41;
-      line-height: 1.7;
-      font-weight: bold;
-      margin: 0;
-      padding-left: 20px;
-      text-align: left;
-      width: 100%;
-      box-sizing: border-box;
-    }
+    .menuGuide { font-size: 14px; color: #6d4c41; font-weight: bold; text-align: center; line-height: 1.5; letter-spacing: 0.5px; border-bottom: 2px dotted #ffb74d; padding-bottom: 10px; width: 100%; }
+    .howToSteps { font-size: 14px; color: #6d4c41; line-height: 1.7; font-weight: bold; margin: 0; padding-left: 20px; text-align: left; width: 100%; box-sizing: border-box; }
     .howToSteps li { margin-bottom: 8px; }
 
     .popBtnStyle {
-      width: 100%; max-width: 280px; padding: 16px;
-      border: 2px solid #ff7043; border-radius: 14px;
-      font-size: 22px; font-weight: bold; color: #ffffff;
-      background: linear-gradient(180deg, #ff8a65 0%, #ff5722 100%);
-      border-bottom: 6px solid #d84315;
-      box-shadow: 0 6px 12px rgba(216, 67, 21, 0.2);
-      cursor: pointer; letter-spacing: 3px;
-      transition: all 0.1s ease;
-      text-shadow: 1px 1px 1px rgba(0,0,0,0.15);
-      text-align: center; box-sizing: border-box;
+      width: 100%; max-width: 280px; padding: 16px; border: 2px solid #ff7043; border-radius: 14px;
+      font-size: 22px; font-weight: bold; color: #ffffff; background: linear-gradient(180deg, #ff8a65 0%, #ff5722 100%);
+      border-bottom: 6px solid #d84315; box-shadow: 0 6px 12px rgba(216, 67, 21, 0.2);
+      cursor: pointer; letter-spacing: 3px; transition: all 0.1s ease; text-shadow: 1px 1px 1px rgba(0,0,0,0.15); text-align: center; box-sizing: border-box;
     }
     .popBtnStyle:hover { background: linear-gradient(180deg, #ff9e80 0%, #ff7043 100%); }
-    .popBtnStyle:active {
-      transform: translateY(4px);
-      border-bottom: 2px solid #d84315;
-      box-shadow: 0 2px 4px rgba(216, 67, 21, 0.2);
-    }
+    .popBtnStyle:active { transform: translateY(4px); border-bottom: 2px solid #d84315; box-shadow: 0 2px 4px rgba(216, 67, 21, 0.2); }
 
-    #openClearBtn {
-      border: 2px solid #26a69a !important;
-      background: linear-gradient(180deg, #4db6ac 0%, #00897b 100%) !important;
-      border-bottom: 6px solid #00695c !important;
-    }
+    #openClearBtn { border: 2px solid #26a69a !important; background: linear-gradient(180deg, #4db6ac 0%, #00897b 100%) !important; border-bottom: 6px solid #00695c !important; }
     #openClearBtn:active { border-bottom: 2px solid #00695c !important; }
-
-    .backBtnColor {
-      border: 2px solid #5c6bc0 !important;
-      background: linear-gradient(180deg, #7986cb 0%, #3f51b5 100%) !important;
-      border-bottom: 6px solid #283593 !important;
-    }
+    .backBtnColor { border: 2px solid #5c6bc0 !important; background: linear-gradient(180deg, #7986cb 0%, #3f51b5 100%) !important; border-bottom: 6px solid #283593 !important; }
     .backBtnColor:active { border-bottom: 2px solid #283593 !important; }
 
     #backToMenuBtn {
-      position: fixed;
-      bottom: calc(20px + env(safe-area-inset-bottom, 0px)); 
-      left: 20px;
-      z-index: 50000;
-      padding: 14px 22px;
-      border: none; border-radius: 16px;
-      background: rgba(0,0,0,0.75); color: white;
-      font-size: 18px; font-weight: bold;
-      display: none; cursor: pointer;
-    }
-
-    #touchGuideBox {
-      position: fixed;
-      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-      left: 190px;
-      z-index: 50000;
-      padding: 14px 22px; border-radius: 16px;
-      background: rgba(255, 152, 0, 0.9); color: white;
-      font-size: 18px; font-weight: bold;
-      display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      pointer-events: none;
+      position: fixed; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); left: 20px; z-index: 50000;
+      padding: 14px 22px; border: none; border-radius: 16px; background: rgba(0,0,0,0.75); color: white; font-size: 18px; font-weight: bold; display: none; cursor: pointer;
     }
 
     #progressBox {
-      position: fixed;
-      bottom: calc(85px + env(safe-area-inset-bottom, 0px)); 
-      left: 20px;
-      background: rgba(0,0,0,0.75);
-      border: 2px solid rgba(255,255,255,0.15); border-radius: 18px;
-      padding: 14px 20px; color: white;
-      z-index: 9999; display: none; font-size: 18px;
+      position: fixed; bottom: calc(85px + env(safe-area-inset-bottom, 0px)); left: 20px;
+      background: rgba(0,0,0,0.75); border: 2px solid rgba(255,255,255,0.15); border-radius: 18px;
+      padding: 14px 20px; color: white; z-index: 9999; display: none; font-size: 18px;
     }
     #progressBox .label { font-size: 12px; color: #ffe066; letter-spacing: 2px; margin-bottom: 4px; }
     #progressCount { font-size: 26px; font-weight: bold; }
 
     #completeScreen {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 30000; display: none;
-      flex-direction: column; justify-content: center; align-items: center; gap: 24px;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 30000;
+      display: none; flex-direction: column; justify-content: center; align-items: center; gap: 24px;
     }
     #completeText { font-size: 42px; font-weight: bold; color: gold; text-shadow: 0 0 20px rgba(255,215,0,0.8); }
     #completeClose { padding: 16px 34px; border: none; border-radius: 18px; font-size: 22px; font-weight: bold; background: #ff9800; color: white; cursor: pointer; }
 
     #howToScreen, #clearScreen { z-index: 20000; display: none; }
 
+    /* 図鑑（クリア画面）構造化スタイル */
+    .clearCategoryTitle { font-size: 18px; color: #d84315; font-weight: bold; margin: 10px 0 2px 0; align-self: flex-start; padding-left: 10px; }
     .clearGrid {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 14px;
-      width: 100%; max-width: 340px; background: #ffffff;
-      border: 3px solid #ffb74d; padding: 20px 14px; border-radius: 20px;
-      box-shadow: 0 10px 20px rgba(216, 67, 21, 0.08); box-sizing: border-box;
+      display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px;
+      width: 100%; max-width: 340px; background: #ffffff; border: 3px solid #ffb74d;
+      padding: 14px; border-radius: 20px; box-shadow: 0 10px 20px rgba(216, 67, 21, 0.08); box-sizing: border-box;
     }
-
-    .clearItem { display: flex; flex-direction: column; align-items: center; gap: 6px; background: #fdfaf6; padding: 8px; border: 2px solid #ffe0b2; border-radius: 14px; box-sizing: border-box; }
-    .clearItem img { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; background: #e0e0e0; }
-    .clearName { font-size: 11px; color: #6d4c41; font-weight: bold; text-align: center; max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .clearItem { display: flex; flex-direction: column; align-items: center; gap: 6px; background: #fdfaf6; padding: 6px; border: 2px solid #ffe0b2; border-radius: 14px; box-sizing: border-box; width: calc(33.33% - 7px); }
+    .clearItem img { width: 100%; aspect-ratio: 1; border-radius: 10px; object-fit: cover; background: #e0e0e0; }
+    .clearName { font-size: 11px; color: #6d4c41; font-weight: bold; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   </style>
 
   <script>
     AFRAME.registerComponent("markerhandler", {
       init() {
-        const effect = document.querySelector("#effect");
-        const prog = document.querySelector("#progressBox");
         this.el.addEventListener("targetFound", () => {
-          if(effect) effect.style.display = "none";
-          if(prog) prog.style.display = "block";
-          if (this.el.id === "targetGirl")   document.querySelector("#guideUI").style.display       = "flex";
-          if (this.el.id === "targetAnimal") document.querySelector("#animalGuideUI").style.display = "flex";
-          if (this.el.id === "targetAlien")  document.querySelector("#alienGuideUI").style.display  = "flex";
+          currentGroup = this.el.dataset.group;
+          document.querySelector("#progressBox").style.display = "block";
+          document.querySelector(`#${currentGroup}GuideUI`).style.display = "flex";
+          updateProgress();
         });
         this.el.addEventListener("targetLost", () => {
-          if (this.el.id === "targetGirl")   document.querySelector("#guideUI").style.display       = "none";
-          if (this.el.id === "targetAnimal") document.querySelector("#animalGuideUI").style.display = "none";
-          if (this.el.id === "targetAlien")  document.querySelector("#alienGuideUI").style.display  = "none";
+          document.querySelector(`#${currentGroup}GuideUI`).style.display = "none";
+          document.querySelector("#progressBox").style.display = "none";
+          currentGroup = "";
         });
       }
     });
@@ -283,15 +163,16 @@
     <img id="checkImg"   src="check.png" />
   </a-assets>
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-  <a-entity id="targetGirl" markerhandler mindar-image-target="targetIndex: 5">
+  
+  <a-entity id="targetGirl" markerhandler data-group="girl" mindar-image-target="targetIndex: 5">
     <a-plane id="girlPlane" src="#girlImg" width="1" height="1" material="shader: flat; transparent: true;"></a-plane>
-    <a-entity id="guideContainer"></a-entity>
+    <a-entity id="girlGuideContainer"></a-entity>
   </a-entity>
-  <a-entity id="targetAnimal" markerhandler mindar-image-target="targetIndex: 6">
+  <a-entity id="targetAnimal" markerhandler data-group="animal" mindar-image-target="targetIndex: 6">
     <a-plane id="animalPlane" src="#animalImg" width="1" height="1" material="shader: flat; transparent: true;"></a-plane>
     <a-entity id="animalGuideContainer"></a-entity>
   </a-entity>
-  <a-entity id="targetAlien" markerhandler mindar-image-target="targetIndex: 7">
+  <a-entity id="targetAlien" markerhandler data-group="alien" mindar-image-target="targetIndex: 7">
     <a-plane id="alienPlane" src="#alienImg" width="1" height="1" material="shader: flat; transparent: true;"></a-plane>
     <a-entity id="alienGuideContainer"></a-entity>
   </a-entity>
@@ -314,68 +195,43 @@
 </div>
 
 <button id="backToMenuBtn">メニューへ戻る</button>
-<div id="touchGuideBox">上のガイドの部分をタッチしよう！</div>
 
 <div id="progressBox">
-  <div class="label">発見数</div>
-  <div id="progressCount">0 / 8</div>
+  <div class="label">イラスト内の発見数</div>
+  <div id="progressCount">0 / 0</div>
 </div>
 
 <div id="effect">発見!!</div>
 
 <div id="howToScreen" class="popBgStyle">
   <div class="gameTitleStyle" style="font-size: 38px;">操作説明</div>
-  <div class="clearGrid" style="flex-direction: column; align-items: center; gap: 10px;">
+  <div class="clearGrid" style="flex-direction: column; align-items: center; gap: 10px; max-width:320px;">
     <div class="menuGuide">★ あそびかたの手順 ★</div>
     <ol class="howToSteps">
       <li>「スタート」ボタンを押し、カメラへのアクセスを許可します。</li>
       <li>ポスターやイラストなどの対象（マーカー）にカメラをまっすぐかざします。</li>
       <li>画面上に「探すパーツ」のガイド画像がひょっこり出現します。</li>
-      <li>イラストの中からそのパーツを見つけたら、画面上部に出ている同じガイド画像をタッチ（タップ）してね！</li>
+      <li>イラストの中からそのパーツを見つけたら、**画面に映るイラスト内のその部分**を直接タッチしてね！</li>
     </ol>
   </div>
   <button id="closeHowToBtn" class="popBtnStyle backBtnColor">メニューに戻る</button>
 </div>
 
-<div id="guideUI" class="guideUI">
-  <div class="guideItem">
-    <div class="guideCrop" id="guideCrop_heart"></div>
-    <img class="guideCheck" id="guideCheck_heart" src="check.png">
-  </div>
-  <div class="guideItem">
-    <div class="guideCrop" id="guideCrop_eye"></div>
-    <img class="guideCheck" id="guideCheck_eye" src="check.png">
-  </div>
-  <div class="guideItem">
-    <div class="guideCrop" id="guideCrop_ribbon"></div>
-    <img class="guideCheck" id="guideCheck_ribbon" src="check.png">
-  </div>
+<div id="girlGuideUI" class="guideUI">
+  <div class="guideItem"><div class="guideCrop" id="guideCrop_heart"></div><img class="guideCheck" id="guideCheck_heart" src="check.png"></div>
+  <div class="guideItem"><div class="guideCrop" id="guideCrop_eye"></div><img class="guideCheck" id="guideCheck_eye" src="check.png"></div>
+  <div class="guideItem"><div class="guideCrop" id="guideCrop_ribbon"></div><img class="guideCheck" id="guideCheck_ribbon" src="check.png"></div>
 </div>
 
 <div id="animalGuideUI" class="guideUI">
-  <div class="guideItem">
-    <div class="guideCrop" id="animalGuideCrop_ear"></div>
-    <img class="guideCheck" id="guideCheck_ear" src="check.png">
-  </div>
-  <div class="guideItem">
-    <div class="guideCrop" id="animalGuideCrop_nose"></div>
-    <img class="guideCheck" id="guideCheck_nose" src="check.png">
-  </div>
-  <div class="guideItem">
-    <div class="guideCrop" id="animalGuideCrop_tail"></div>
-    <img class="guideCheck" id="guideCheck_tail" src="check.png">
-  </div>
+  <div class="guideItem"><div class="guideCrop" id="animalGuideCrop_ear"></div><img class="guideCheck" id="guideCheck_ear" src="check.png"></div>
+  <div class="guideItem"><div class="guideCrop" id="animalGuideCrop_nose"></div><img class="guideCheck" id="guideCheck_nose" src="check.png"></div>
+  <div class="guideItem"><div class="guideCrop" id="animalGuideCrop_tail"></div><img class="guideCheck" id="guideCheck_tail" src="check.png"></div>
 </div>
 
 <div id="alienGuideUI" class="guideUI">
-  <div class="guideItem">
-    <div class="guideCrop" id="alienGuideCrop_alienEye"></div>
-    <img class="guideCheck" id="guideCheck_alienEye" src="check.png">
-  </div>
-  <div class="guideItem">
-    <div class="guideCrop" id="alienGuideCrop_alienMouth"></div>
-    <img class="guideCheck" id="guideCheck_alienMouth" src="check.png">
-  </div>
+  <div class="guideItem"><div class="guideCrop" id="alienGuideCrop_alienEye"></div><img class="guideCheck" id="guideCheck_alienEye" src="check.png"></div>
+  <div class="guideItem"><div class="guideCrop" id="alienGuideCrop_alienMouth"></div><img class="guideCheck" id="guideCheck_alienMouth" src="check.png"></div>
 </div>
 
 <div id="completeScreen">
@@ -385,74 +241,97 @@
 
 <div id="clearScreen" class="popBgStyle">
   <div class="gameTitleStyle" style="font-size: 38px;">クリア済み</div>
+  
+  <div class="clearCategoryTitle">🖼️ イラスト：女の子</div>
   <div class="clearGrid">
     <div class="clearItem"><img id="clearImg_heart" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
     <div class="clearItem"><img id="clearImg_eye" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
     <div class="clearItem"><img id="clearImg_ribbon" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+  </div>
+
+  <div class="clearCategoryTitle">🐾 イラスト：どうぶつ</div>
+  <div class="clearGrid">
     <div class="clearItem"><img id="clearImg_ear" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
     <div class="clearItem"><img id="clearImg_nose" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
     <div class="clearItem"><img id="clearImg_tail" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
+  </div>
+
+  <div class="clearCategoryTitle">👽 イラスト：エイリアン</div>
+  <div class="clearGrid">
     <div class="clearItem"><img id="clearImg_alienEye" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
     <div class="clearItem"><img id="clearImg_alienMouth" src="clear_unknown.jpg"><div class="clearName">？？？</div></div>
   </div>
-  <button id="closeClearBtn" class="popBtnStyle backBtnColor">メニューに戻る</button>
+
+  <button id="closeClearBtn" class="popBtnStyle backBtnColor" style="margin-top:15px;">メニューに戻る</button>
 </div>
 
 <script>
 // ========================
-// ターゲット定義
+// データ構造
 // ========================
-const targets = [
-  { id: "heart",  name: "ワニ",    x:  0.13, y: -0.15, guideSize: 0.3, hitSize: 0.45, found: false },
-  { id: "eye",    name: "ロボ",    x: -0.11, y:  0.15, guideSize: 0.3, hitSize: 0.45, found: false },
-  { id: "ribbon", name: "鬼",      x:  0.38, y:  0.39, guideSize: 0.3, hitSize: 0.45, found: false }
-];
-const animalTargets = [
-  { id: "ear",  name: "紫キャラクター", x: -0.2,  y:  0.25, guideSize: 0.2, hitSize: 0.35, found: false },
-  { id: "nose", name: "緑キャラクター", x:  0.1,  y:  0.0,  guideSize: 0.2, hitSize: 0.35, found: false },
-  { id: "tail", name: "山キャラクター", x:  0.36, y: -0.24, guideSize: 0.2, hitSize: 0.35, found: false }
-];
-const alienTargets = [
-  { id: "alienEye",   name: "白猫",       x: -0.25, y:  0.22, guideSize: 0.25, hitSize: 0.4, found: false },
-  { id: "alienMouth", name: "ハチワレ猫", x:  0.21, y: -0.14, guideSize: 0.25, hitSize: 0.4, found: false }
-];
+const targetGroups = {
+  girl: {
+    maxSize: 2.5, planeId: "#girlPlane", containerId: "#girlGuideContainer", cropPrefix: "#guideCrop_", img: "girl.jpg", scales: {x:1, y:1},
+    list: [
+      { id: "heart",  name: "ワニ",    x:  0.13, y: -0.15, guideSize: 0.3, hitSize: 0.45, found: false },
+      { id: "eye",    name: "ロボ",    x: -0.11, y:  0.15, guideSize: 0.3, hitSize: 0.45, found: false },
+      { id: "ribbon", name: "鬼",      x:  0.38, y:  0.39, guideSize: 0.3, hitSize: 0.45, found: false }
+    ]
+  },
+  animal: {
+    maxSize: 2.5, planeId: "#animalPlane", containerId: "#animalGuideContainer", cropPrefix: "#animalGuideCrop_", img: "animal.jpg", scales: {x:1, y:1},
+    list: [
+      { id: "ear",  name: "紫キャラ", x: -0.2,  y:  0.25, guideSize: 0.2, hitSize: 0.35, found: false },
+      { id: "nose", name: "緑キャラ", x:  0.1,  y:  0.0,  guideSize: 0.2, hitSize: 0.35, found: false },
+      { id: "tail", name: "山キャラ", x:  0.36, y: -0.24, guideSize: 0.2, hitSize: 0.35, found: false }
+    ]
+  },
+  alien: {
+    maxSize: 2.5, planeId: "#alienPlane", containerId: "#alienGuideContainer", cropPrefix: "#alienGuideCrop_", img: "alien.jpg", scales: {x:1, y:1},
+    list: [
+      { id: "alienEye",   name: "白猫",       x: -0.25, y:  0.22, guideSize: 0.25, hitSize: 0.4, found: false },
+      { id: "alienMouth", name: "ハチワレ猫", x:  0.21, y: -0.14, guideSize: 0.25, hitSize: 0.4, found: false }
+    ]
+  }
+};
 
-const allTargets = [...targets, ...animalTargets, ...alienTargets];
-const totalCount = allTargets.length;
+let currentGroup = ""; 
 
-let girlScaleX = 1, girlScaleY = 1, animalScaleX = 1, animalScaleY = 1, alienScaleX = 1, alienScaleY = 1;
+// 全ターゲットフラット配列（一括集計用）
+const getAllTargets = () => Object.values(targetGroups).flatMap(g => g.list);
 
-// 要素キャッシュ（軽量化）
-const menuScreen = document.querySelector("#menuScreen");
-const mainScene = document.querySelector("#mainScene");
-const backToMenuBtn = document.querySelector("#backToMenuBtn");
-const touchGuideBox = document.querySelector("#touchGuideBox");
-const progressBox = document.querySelector("#progressBox");
-const progressCount = document.querySelector("#progressCount");
-const effect = document.querySelector("#effect");
-const completeScreen = document.querySelector("#completeScreen");
-const howToScreen = document.querySelector("#howToScreen");
-const clearScreen = document.querySelector("#clearScreen");
+// DOMキャッシュ
+const UI = {
+  menuScreen: document.querySelector("#menuScreen"),
+  mainScene: document.querySelector("#mainScene"),
+  backToMenuBtn: document.querySelector("#backToMenuBtn"),
+  progressBox: document.querySelector("#progressBox"),
+  progressCount: document.querySelector("#progressCount"),
+  effect: document.querySelector("#effect"),
+  completeScreen: document.querySelector("#completeScreen"),
+  howToScreen: document.querySelector("#howToScreen"),
+  clearScreen: document.querySelector("#clearScreen")
+};
 
 // ========================
-// セーブ / ロード
+// セーブ / ロード / 進捗更新
 // ========================
 function saveGame() {
-  localStorage.setItem("arPicSearch", JSON.stringify({
-    targets: targets.map(t => ({ id: t.id, found: t.found })),
-    animalTargets: animalTargets.map(t => ({ id: t.id, found: t.found })),
-    alienTargets: alienTargets.map(t => ({ id: t.id, found: t.found }))
-  }));
+  const saveData = {};
+  Object.keys(targetGroups).forEach(key => {
+    saveData[key] = targetGroups[key].list.map(t => ({ id: t.id, found: t.found }));
+  });
+  localStorage.setItem("arPicSearch_v2", JSON.stringify(saveData));
 }
 
 function loadGame() {
   let data;
-  try { data = JSON.parse(localStorage.getItem("arPicSearch")); } catch(e) {}
+  try { data = JSON.parse(localStorage.getItem("arPicSearch_v2")); } catch(e) {}
   if (!data) return;
 
-  [[data.targets, targets], [data.animalTargets, animalTargets], [data.alienTargets, alienTargets]].forEach(([saved, arr]) => {
-    saved?.forEach(s => {
-      const t = arr.find(t => t.id === s.id);
+  Object.keys(targetGroups).forEach(key => {
+    data[key]?.forEach(s => {
+      const t = targetGroups[key].list.find(t => t.id === s.id);
       if (t && s.found) {
         t.found = true;
         const el = document.querySelector("#guideCheck_" + t.id);
@@ -464,43 +343,50 @@ function loadGame() {
   updateClearScreen();
 }
 
+// 読み込んでいるイラスト内だけのカウント表示に更新
 function updateProgress() {
-  const found = allTargets.filter(t => t.found).length;
-  progressCount.textContent = `${found} / ${totalCount}`;
+  if (!currentGroup || !targetGroups[currentGroup]) {
+    UI.progressCount.textContent = "- / -";
+    return;
+  }
+  const currentList = targetGroups[currentGroup].list;
+  const found = currentList.filter(t => t.found).length;
+  UI.progressCount.textContent = `${found} / ${currentList.length}`;
 }
 
 function updateClearScreen() {
-  allTargets.forEach(t => {
-    const imgEl = document.querySelector("#clearImg_" + t.id);
-    const nameEl = imgEl?.nextElementSibling; 
-    if (imgEl && t.found) {
-      if (targets.includes(t))      imgEl.src = "girl.jpg";
-      if (animalTargets.includes(t)) imgEl.src = "animal.jpg";
-      if (alienTargets.includes(t))  imgEl.src = "alien.jpg";
-      if (nameEl) nameEl.textContent = t.name;
-    }
+  Object.keys(targetGroups).forEach(key => {
+    const group = targetGroups[key];
+    group.list.forEach(t => {
+      const imgEl = document.querySelector("#clearImg_" + t.id);
+      if (imgEl && t.found) {
+        imgEl.src = group.img;
+        const nameEl = imgEl.nextElementSibling;
+        if (nameEl) nameEl.textContent = t.name;
+      }
+    });
   });
 }
 
 function showEffect(message) {
-  effect.innerHTML = message;
-  effect.style.display = "block";
-  void effect.offsetWidth;
-  setTimeout(() => { effect.style.display = "none"; }, 1200);
+  UI.effect.innerHTML = message;
+  UI.effect.style.display = "block";
+  void UI.effect.offsetWidth;
+  setTimeout(() => { UI.effect.style.display = "none"; }, 1200);
 }
 
 function checkComplete() {
-  if (allTargets.every(t => t.found)) {
-    setTimeout(() => { completeScreen.style.display = "flex"; }, 1500);
+  if (getAllTargets().every(t => t.found)) {
+    setTimeout(() => { UI.completeScreen.style.display = "flex"; }, 1500);
   }
 }
 
 // ========================
-// タッチ・クリック処理（3D交差判定）
+// タッチ判定（3D交差）
 // ========================
 function handleTouch(event) {
   const camera = document.querySelector("[camera]");
-  if (!camera) return;
+  if (!camera || !currentGroup) return;
 
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
@@ -523,9 +409,11 @@ function handleTouch(event) {
   const hitEl = intersects[0].object.el || intersects[0].object.parent?.el;
   if (!hitEl) return;
 
-  const target = allTargets.find(t => t.id === hitEl.id);
+  const group = targetGroups[currentGroup];
+  const target = group.list.find(t => t.id === hitEl.id);
   if (!target || target.found) return;
 
+  // 発見処理
   target.found = true;
   saveGame();
   updateProgress();
@@ -534,68 +422,65 @@ function handleTouch(event) {
   const checkUI = document.querySelector("#guideCheck_" + target.id);
   if (checkUI) checkUI.style.display = "block";
 
-  const isAnimal = animalTargets.includes(target);
-  const isAlien  = alienTargets.includes(target);
-  const sx = isAnimal ? animalScaleX : isAlien ? alienScaleX : girlScaleX;
-  const sy = isAnimal ? animalScaleY : isAlien ? alienScaleY : girlScaleY;
-
+  // 現地にチェックマークを生成
   const check = document.createElement("a-plane");
   check.setAttribute("src", "#checkImg");
-  check.setAttribute("position", `${target.x * sx} ${target.y * sy} 0.08`);
+  check.setAttribute("position", `${target.x * group.scales.x} ${target.y * group.scales.y} 0.08`);
   const cs = target.guideSize * 1.6;
   check.setAttribute("width", cs);
   check.setAttribute("height", cs);
   check.setAttribute("material", "shader: flat; transparent: true");
 
-  const containerSel = isAnimal ? "#animalGuideContainer" : isAlien ? "#alienGuideContainer" : "#guideContainer";
-  document.querySelector(containerSel).appendChild(check);
-
+  document.querySelector(group.containerId).appendChild(check);
   checkComplete();
 }
 
 document.addEventListener("touchstart", handleTouch);
 document.addEventListener("click", handleTouch);
 
-// 平面サイズ自動調整
-function autoFitPlane(imagePath, planeId, maxSize, type) {
+// ========================
+// 初期化・切り抜きロジック
+// ========================
+function autoFitPlane(groupKey) {
   return new Promise((resolve) => {
+    const group = targetGroups[groupKey];
     const img = new Image();
     img.onload = () => {
       const aspect = img.width / img.height;
-      const plane = document.querySelector(planeId);
-      let w = maxSize, h = maxSize;
+      const plane = document.querySelector(group.planeId);
+      let w = group.maxSize, h = group.maxSize;
        
       if (plane) {
-        if (aspect >= 1) { w = maxSize; h = maxSize / aspect; }
-        else             { h = maxSize; w = maxSize * aspect;  }
+        if (aspect >= 1) { w = group.maxSize; h = group.maxSize / aspect; }
+        else             { h = group.maxSize; w = group.maxSize * aspect;  }
         plane.setAttribute("width",  w);
         plane.setAttribute("height", h);
       }
-
-      if (type === "girl")   { girlScaleX  = w; girlScaleY  = h; }
-      if (type === "animal") { animalScaleX = w; animalScaleY = h; }
-      if (type === "alien")  { alienScaleX  = w; alienScaleY  = h; }
-      resolve({ img, scaleX: w, scaleY: h });
+      group.scales.x = w;
+      group.scales.y = h;
+      resolve({ img, w, h });
     };
-    img.src = imagePath;
+    img.src = group.img;
   });
 }
 
-// ヒットエリア（透明なplane）作成
-function createHitPlanes(container, targetList, getScale) {
-  targetList.forEach(target => {
-    const { sx, sy } = getScale();
+function createHitPlanes(groupKey) {
+  const group = targetGroups[groupKey];
+  const container = document.querySelector(group.containerId);
+  if (!container) return;
+
+  group.list.forEach(target => {
     const touch = document.createElement("a-plane");
     touch.setAttribute("class", "clickable");
     touch.setAttribute("id", target.id);
-    touch.setAttribute("position", `${target.x * sx} ${target.y * sy} 0.05`);
+    touch.setAttribute("position", `${target.x * group.scales.x} ${target.y * group.scales.y} 0.05`);
     touch.setAttribute("width",  target.hitSize);
     touch.setAttribute("height", target.hitSize);
     touch.setAttribute("material", "color: red; opacity: 0; transparent: true; side: double; depthTest: false;");
     container.appendChild(touch);
 
     const ring = document.createElement("a-ring");
-    ring.setAttribute("position", `${target.x * sx} ${target.y * sy} 0.03`);
+    ring.setAttribute("position", `${target.x * group.scales.x} ${target.y * group.scales.y} 0.03`);
     ring.setAttribute("radius-inner", target.guideSize / 2);
     ring.setAttribute("radius-outer", target.guideSize / 2 + 0.02);
     ring.setAttribute("material", "color: yellow; opacity: 0; transparent: true; side: double");
@@ -604,73 +489,78 @@ function createHitPlanes(container, targetList, getScale) {
   });
 }
 
-// ガイド切り抜き
-function setupGuideCropAuto({ img, cropSelector, targets, imageUrl, scaleX, scaleY }) {
-  const iw = img.width, ih = img.height;
+function setupGuideCropAuto(groupKey, imgInfo) {
+  const group = targetGroups[groupKey];
+  const iw = imgInfo.img.width, ih = imgInfo.img.height;
   const boxSize = 90;
 
-  targets.forEach(target => {
-    const crop = document.querySelector(cropSelector + target.id);
+  group.list.forEach(target => {
+    const crop = document.querySelector(group.cropPrefix + target.id);
     if (!crop) return;
 
-    const imageX = ((target.x * scaleX) + scaleX / 2) / scaleX * iw;
-    const imageY = ((scaleY / 2) - (target.y * scaleY))  / scaleY * ih;
-    const cropW = (target.guideSize / scaleX) * iw;
-    const cropH = (target.guideSize / scaleY) * ih;
+    const imageX = ((target.x * imgInfo.w) + imgInfo.w / 2) / imgInfo.w * iw;
+    const imageY = ((imgInfo.h / 2) - (target.y * imgInfo.h)) / imgInfo.h * ih;
+    const cropW = (target.guideSize / imgInfo.w) * iw;
+    const cropH = (target.guideSize / imgInfo.h) * ih;
     const bgW = iw * (boxSize / cropW);
     const bgH = ih * (boxSize / cropH);
     const posX = boxSize / 2 - imageX * (boxSize / cropW);
     const posY = boxSize / 2 - imageY * (boxSize / cropH);
 
-    crop.style.backgroundImage    = `url("${imageUrl}")`;
+    crop.style.backgroundImage    = `url("${group.img}")`;
     crop.style.backgroundSize     = `${bgW}px ${bgH}px`;
     crop.style.backgroundPosition = `${posX}px ${posY}px`;
   });
 }
 
-// 初期化
 async function initGame() {
-  const girlResult   = await autoFitPlane("girl.jpg",   "#girlPlane",   2.5, "girl");
-  const animalResult = await autoFitPlane("animal.jpg", "#animalPlane", 2.5, "animal");
-  const alienResult  = await autoFitPlane("alien.jpg",  "#alienPlane",  2.5, "alien");
-
-  createHitPlanes(document.querySelector("#guideContainer"), targets, () => ({ sx: girlScaleX, sy: girlScaleY }));
-  createHitPlanes(document.querySelector("#animalGuideContainer"), animalTargets, () => ({ sx: animalScaleX, sy: animalScaleY }));
-  createHitPlanes(document.querySelector("#alienGuideContainer"), alienTargets, () => ({ sx: alienScaleX, sy: alienScaleY }));
-
+  for (const key of Object.keys(targetGroups)) {
+    const res = await autoFitPlane(key);
+    createHitPlanes(key);
+    setupGuideCropAuto(key, res);
+    
+    // ロード前の初期お宝チェックマーク再現
+    targetGroups[key].list.forEach(t => {
+      if(t.found) {
+        const group = targetGroups[key];
+        const check = document.createElement("a-plane");
+        check.setAttribute("src", "#checkImg");
+        check.setAttribute("position", `${t.x * group.scales.x} ${t.y * group.scales.y} 0.08`);
+        const cs = t.guideSize * 1.6;
+        check.setAttribute("width", cs); check.setAttribute("height", cs);
+        check.setAttribute("material", "shader: flat; transparent: true");
+        document.querySelector(group.containerId).appendChild(check);
+      }
+    });
+  }
   loadGame();
-
-  setupGuideCropAuto({ img: girlResult.img,   cropSelector: "#guideCrop_",       targets,       imageUrl: "girl.jpg",   scaleX: girlScaleX,   scaleY: girlScaleY   });
-  setupGuideCropAuto({ img: animalResult.img, cropSelector: "#animalGuideCrop_", targets: animalTargets, imageUrl: "animal.jpg", scaleX: animalScaleX, scaleY: animalScaleY });
-  setupGuideCropAuto({ img: alienResult.img,  cropSelector: "#alienGuideCrop_",  targets: alienTargets,  imageUrl: "alien.jpg",  scaleX: alienScaleX,  scaleY: alienScaleY  });
 }
 
 window.addEventListener("DOMContentLoaded", initGame);
 
 // UIイベント設定
-document.querySelector("#openHowToBtn").addEventListener("click", () => { howToScreen.style.display = "flex"; });
-document.querySelector("#closeHowToBtn").addEventListener("click", () => { howToScreen.style.display = "none"; });
-document.querySelector("#openClearBtn").addEventListener("click", () => { updateClearScreen(); clearScreen.style.display = "flex"; });
-document.querySelector("#closeClearBtn").addEventListener("click", () => { clearScreen.style.display = "none"; });
-completeScreen.addEventListener("click", () => { completeScreen.style.display = "none"; });
+document.querySelector("#openHowToBtn").addEventListener("click", () => { UI.howToScreen.style.display = "flex"; });
+document.querySelector("#closeHowToBtn").addEventListener("click", () => { UI.howToScreen.style.display = "none"; });
+document.querySelector("#openClearBtn").addEventListener("click", () => { updateClearScreen(); UI.clearScreen.style.display = "flex"; });
+document.querySelector("#closeClearBtn").addEventListener("click", () => { UI.clearScreen.style.display = "none"; });
+UI.completeScreen.addEventListener("click", () => { UI.completeScreen.style.display = "none"; });
 
 // スタート（AR起動）
 document.querySelector("#startBtn").addEventListener("click", async () => {
-  menuScreen.style.display = "none";
-  mainScene.style.display  = "block";
-  backToMenuBtn.style.display = "block";
-  touchGuideBox.style.display = "block";
+  UI.menuScreen.style.display = "none";
+  UI.mainScene.style.display  = "block";
+  UI.backToMenuBtn.style.display = "block";
 
-  if (!mainScene.hasLoaded) {
-    await new Promise(r => mainScene.addEventListener("loaded", r));
+  if (!UI.mainScene.hasLoaded) {
+    await new Promise(r => UI.mainScene.addEventListener("loaded", r));
   }
-  const ar = mainScene.systems["mindar-image-system"];
+  const ar = UI.mainScene.systems["mindar-image-system"];
   if (ar) await ar.start(); 
 });
 
-// メニューに戻る（AR完全停止）
-backToMenuBtn.addEventListener("click", async () => {
-  const ar = mainScene.systems["mindar-image-system"];
+// メニュアルに戻る（AR停止）
+UI.backToMenuBtn.addEventListener("click", async () => {
+  const ar = UI.mainScene.systems["mindar-image-system"];
   if (ar) { try { await ar.stop(); } catch(e) {} }
 
   const video = document.querySelector("video");
@@ -679,12 +569,12 @@ backToMenuBtn.addEventListener("click", async () => {
     video.remove(); 
   }
 
-  mainScene.style.display     = "none";
-  menuScreen.style.display    = "flex";
-  backToMenuBtn.style.display = "none";
-  touchGuideBox.style.display = "none";
-  progressBox.style.display   = "none";
-  ["#guideUI", "#animalGuideUI", "#alienGuideUI"].forEach(s => {
+  UI.mainScene.style.display     = "none";
+  UI.menuScreen.style.display    = "flex";
+  UI.backToMenuBtn.style.display = "none";
+  UI.progressBox.style.display   = "none";
+  currentGroup = "";
+  ["#girlGuideUI", "#animalGuideUI", "#alienGuideUI"].forEach(s => {
     document.querySelector(s).style.display = "none";
   });
 });
