@@ -63,13 +63,13 @@ body{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:12px;
+  gap:16px; /* 文字拡大に伴い、ボタンとの間隔を微調整 */
   width: 100%;
   max-width: 340px; 
   background: rgba(255, 255, 255, 0.65); 
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 24px;
-  padding: 20px;
+  padding: 24px 20px;
   box-sizing: border-box;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -77,10 +77,10 @@ body{
 }
 
 .menuGuide{
-  font-size:14px; 
+  font-size:16px; /* 14px から 16px へ大きく変更 */
   color: #2c445e;
   text-align:center;
-  line-height:1.5;
+  line-height:1.6; /* 行間を少し広く */
   letter-spacing: 0.5px;
   font-weight: bold;
 }
@@ -91,7 +91,7 @@ body{
   padding:15px;
   border:none;
   border-radius:16px;
-  font-size:22px;
+  font-size:24px; /* 22px から 24px へ大きく変更 */
   font-weight:bold;
   color:white;
   background: linear-gradient(135deg, #ffaa00 0%, #ff5500 100%);
@@ -164,30 +164,30 @@ body{
   width: 100%;
   max-width: 500px;
   color: #334155;
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 18px; /* 16px から 18px へ大きく変更 */
+  line-height: 1.7; /* 行間をさらにゆったりと */
   text-align: left;
 }
 .explainBox h3 {
   color: #ff5500;
-  margin-top: 20px;
-  margin-bottom: 8px;
-  border-left: 4px solid #ffaa00;
-  padding-left: 8px;
-  font-size: 18px;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  border-left: 5px solid #ffaa00;
+  padding-left: 10px;
+  font-size: 22px; /* 18px から 22px へ大きく変更 */
 }
 .explainBox p {
-  margin: 0 0 10px 0;
+  margin: 0 0 14px 0;
   padding-left: 4px;
 }
 
-/* 【追加】操作説明内の画像用スタイル */
+/* 操作説明内の画像用スタイル */
 .explainImg {
   display: block;
   width: 100%;
   max-width: 240px;
   height: auto;
-  margin: 12px auto;
+  margin: 16px auto;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   border: 2px solid #ffaa00;
@@ -199,7 +199,7 @@ body{
   border-radius:18px;
   background:#ffaa00;
   color:white;
-  font-size:22px;
+  font-size:24px; /* 22px から 24px へ大きく変更 */
   cursor: pointer;
   margin-top: auto; 
   flex-shrink: 0; 
@@ -304,7 +304,7 @@ device-orientation-permission-ui="enabled:false">
   <div class="explainBox">
     <h3>① ARの始め方</h3>
     <p>「読み込み開始」をタップしてカメラへのアクセスを許可します。指定のフォトスポット（マーカー）にかざしてください。下のような絵がマーカーです。</p>
-    
+     
     <img src="photo_img.jpg" class="explainImg" alt="マーカーの例">
 
     <h3>② 写真の保存の仕方</h3>
