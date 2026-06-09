@@ -84,6 +84,18 @@
     .howToSteps { font-size: 14px; color: #6d4c41; line-height: 1.7; font-weight: bold; margin: 0; padding-left: 20px; text-align: left; width: 100%; box-sizing: border-box; }
     .howToSteps li { margin-bottom: 8px; }
 
+    /* 【追加】操作説明の中に入れるマーカー画像のスタイル */
+    .explainMarkerImg {
+      display: block;
+      width: 100%;
+      max-width: 180px; /* ポップな枠に収まるサイズに制限 */
+      height: auto;
+      margin: 10px auto;
+      border: 3px solid #ffb74d;
+      border-radius: 14px;
+      box-shadow: 0 4px 8px rgba(216, 67, 21, 0.1);
+    }
+
     .popBtnStyle {
       width: 100%; max-width: 280px; padding: 16px; border: 2px solid #ff7043; border-radius: 14px;
       font-size: 22px; font-weight: bold; color: #ffffff; background: linear-gradient(180deg, #ff8a65 0%, #ff5722 100%);
@@ -138,7 +150,7 @@
       width: 100%; max-width: 340px; background: #ffffff; border: 3px solid #ffb74d;
       padding: 14px; border-radius: 20px; box-shadow: 0 10px 20px rgba(216, 67, 21, 0.08); box-sizing: border-box;
     }
-    .clearItem { display: flex; flex-direction: column; align-items: center; gap: 6px; background: #fdfaf6; padding: 6px; border: 2px solid #ffe0b2; border-radius: 14px; box-sizing: border-box; width: calc(33.33% - 7px); min-width: 0; /* フレックスアイテムの縮小を許可 */ }
+    .clearItem { display: flex; flex-direction: column; align-items: center; gap: 6px; background: #fdfaf6; padding: 6px; border: 2px solid #ffe0b2; border-radius: 14px; box-sizing: border-box; width: calc(33.33% - 7px); min-width: 0; }
     
     /* 図鑑内の切り抜き用四角形 */
     .clearCropBox { 
@@ -162,17 +174,15 @@
           document.querySelector("#progressBox").style.display = "block";
           document.querySelector(`#${currentGroup}GuideUI`).style.display = "flex";
           
-          // --- 【追加】見つかったグループの3Dコンテナを表示する ---
           const group = targetGroups[currentGroup];
           if (group) {
             document.querySelector(group.containerId).setAttribute("visible", "true");
           }
-          // ------------------------------------------------------
           
           updateProgress();
         });
         this.el.addEventListener("targetLost", () => {
-          if (!currentGroup) return; // メニュー戻り時の考慮
+          if (!currentGroup) return;
           document.querySelector(`#${currentGroup}GuideUI`).style.display = "none";
           document.querySelector("#progressBox").style.display = "none";
           currentGroup = "";
@@ -245,6 +255,9 @@
     <ol class="howToSteps">
       <li>「スタート」ボタンを押し、カメラへのアクセスを許可します。</li>
       <li>ポスターやイラストなどの対象（マーカー）にカメラをまっすぐかざします。</li>
+      
+      <img src="picture_img.jpg" class="explainMarkerImg" alt="マーカーの例">
+
       <li>画面上に「探すパーツ」のガイド画像がひょっこり出現します。</li>
       <li>イラストの中からそのパーツを見つけたら、**画面に映るイラスト内のその部分**を直接タッチしてね！</li>
     </ol>
@@ -310,9 +323,6 @@
 </div>
 
 <script>
-// ========================
-// データ構造
-// ========================
 const targetGroups = {
   girl: {
     maxSize: 2.5, planeId: "#girlPlane", containerId: "#girlGuideContainer", cropPrefix: "#guideCrop_", img: "girl.jpg", scales: {x:1, y:1},
@@ -341,13 +351,9 @@ const targetGroups = {
 
 let currentGroup = ""; 
 
-// 全ターゲットフラット配列（一括集計用）
 const getAllTargets = () => Object.values(targetGroups).flatMap(g => g.list);
-
-// 各画像のサイズ情報を保持するキャッシュ
 const imageMetaCache = {};
 
-// DOMキャッシュ
 const UI = {
   menuScreen: document.querySelector("#menuScreen"),
   mainScene: document.querySelector("#mainScene"),
@@ -360,9 +366,6 @@ const UI = {
   clearScreen: document.querySelector("#clearScreen")
 };
 
-// ========================
-// セーブ / ロード / 進捗更新
-// ========================
 function saveGame() {
   const saveData = {};
   Object.keys(targetGroups).forEach(key => {
@@ -390,7 +393,6 @@ function loadGame() {
   updateClearScreen();
 }
 
-// 読み込んでいるイラスト内だけのカウント表示に更新
 function updateProgress() {
   if (!currentGroup || !targetGroups[currentGroup]) {
     UI.progressCount.textContent = "- / -";
@@ -401,13 +403,11 @@ function updateProgress() {
   UI.progressCount.textContent = `${found} / ${currentList.length}`;
 }
 
-// 図鑑画面の描画更新（一枚絵のオープンとCSS切り抜きの同期）
 function updateClearScreen() {
   Object.keys(targetGroups).forEach(key => {
     const group = targetGroups[key];
     const meta = imageMetaCache[key];
     
-    // 1つでも見つけていたら一枚絵（全体像）を表示
     const anyFound = group.list.some(t => t.found);
     const wholeImgEl = document.querySelector("#wholeImg_" + key);
     if (wholeImgEl && anyFound) {
@@ -420,9 +420,8 @@ function updateClearScreen() {
         const nameEl = cropEl.nextElementSibling;
         if (nameEl) nameEl.textContent = t.name;
 
-        // 計算ロジックが初期化完了している場合、図鑑のdivにも切り抜きCSSを適用
         if (meta) {
-          const boxSize = cropEl.clientWidth || 94; // 既存グリッド幅の近似値
+          const boxSize = cropEl.clientWidth || 94; 
           const iw = meta.img.width, ih = meta.img.height;
           
           const imageX = ((t.x * meta.w) + meta.w / 2) / meta.w * iw;
@@ -456,9 +455,6 @@ function checkComplete() {
   }
 }
 
-// ========================
-// タッチ判定（3D交差）
-// ========================
 function handleTouch(event) {
   const camera = document.querySelector("[camera]");
   if (!camera || !currentGroup) return;
@@ -488,7 +484,6 @@ function handleTouch(event) {
   const target = group.list.find(t => t.id === hitEl.id);
   if (!target || target.found) return;
 
-  // 発見処理
   target.found = true;
   saveGame();
   updateProgress();
@@ -497,7 +492,6 @@ function handleTouch(event) {
   const checkUI = document.querySelector("#guideCheck_" + target.id);
   if (checkUI) checkUI.style.display = "block";
 
-  // 現地にチェックマークを生成
   const check = document.createElement("a-plane");
   check.setAttribute("src", "#checkImg");
   check.setAttribute("position", `${target.x * group.scales.x} ${target.y * group.scales.y} 0.08`);
@@ -513,9 +507,6 @@ function handleTouch(event) {
 document.addEventListener("touchstart", handleTouch);
 document.addEventListener("click", handleTouch);
 
-// ========================
-// 初期化・切り抜きロジック
-// ========================
 function autoFitPlane(groupKey) {
   return new Promise((resolve) => {
     const group = targetGroups[groupKey];
@@ -591,11 +582,10 @@ function setupGuideCropAuto(groupKey, imgInfo) {
 async function initGame() {
   for (const key of Object.keys(targetGroups)) {
     const res = await autoFitPlane(key);
-    imageMetaCache[key] = res; // 図鑑用にキャッシュを保存
+    imageMetaCache[key] = res; 
     createHitPlanes(key);
     setupGuideCropAuto(key, res);
     
-    // ロード前の初期お宝チェックマーク再現
     targetGroups[key].list.forEach(t => {
       if(t.found) {
         const group = targetGroups[key];
@@ -614,14 +604,12 @@ async function initGame() {
 
 window.addEventListener("DOMContentLoaded", initGame);
 
-// UIイベント設定
 document.querySelector("#openHowToBtn").addEventListener("click", () => { UI.howToScreen.style.display = "flex"; });
 document.querySelector("#closeHowToBtn").addEventListener("click", () => { UI.howToScreen.style.display = "none"; });
 document.querySelector("#openClearBtn").addEventListener("click", () => { updateClearScreen(); UI.clearScreen.style.display = "flex"; });
 document.querySelector("#closeClearBtn").addEventListener("click", () => { UI.clearScreen.style.display = "none"; });
 UI.completeScreen.addEventListener("click", () => { UI.completeScreen.style.display = "none"; });
 
-// スタート（AR起動）
 document.querySelector("#startBtn").addEventListener("click", async () => {
   UI.menuScreen.style.display = "none";
   UI.mainScene.style.display  = "block";
@@ -634,7 +622,6 @@ document.querySelector("#startBtn").addEventListener("click", async () => {
   if (ar) await ar.start(); 
 });
 
-// メニューに戻る（AR停止）
 UI.backToMenuBtn.addEventListener("click", async () => {
   const ar = UI.mainScene.systems["mindar-image-system"];
   if (ar) { try { await ar.stop(); } catch(e) {} }
@@ -645,14 +632,12 @@ UI.backToMenuBtn.addEventListener("click", async () => {
     video.remove(); 
   }
 
-  // --- 【追加・修正】3Dオブジェクトのコンテナをすべて非表示にする ---
   Object.keys(targetGroups).forEach(key => {
     const container = document.querySelector(targetGroups[key].containerId);
     if (container) {
       container.setAttribute("visible", "false");
     }
   });
-  // -------------------------------------------------------------
 
   UI.mainScene.style.display     = "none";
   UI.menuScreen.style.display    = "flex";
@@ -663,7 +648,6 @@ UI.backToMenuBtn.addEventListener("click", async () => {
     document.querySelector(s).style.display = "none";
   });
 });
-
 </script>
 
 </body>
