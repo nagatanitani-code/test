@@ -181,6 +181,18 @@ body{
   padding-left: 4px;
 }
 
+/* 【追加】操作説明内の画像用スタイル */
+.explainImg {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  margin: 12px auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 2px solid #ffaa00;
+}
+
 .backBtn{
   padding:16px 30px;
   border:none;
@@ -291,7 +303,10 @@ device-orientation-permission-ui="enabled:false">
   <h1 style="margin: 0; font-size: 38px;">操作説明</h1>
   <div class="explainBox">
     <h3>① ARの始め方</h3>
-    <p>「読み込み開始」をタップしてカメラへのアクセスを許可します。指定 of フォトスポット（マーカー）にかざしてください。</p>
+    <p>「読み込み開始」をタップしてカメラへのアクセスを許可します。指定のフォトスポット（マーカー）にかざしてください。</p>
+    
+    <img src="photo_img.jpg" class="explainImg" alt="マーカーの例">
+
     <h3>② 写真の保存の仕方</h3>
     <p>マーカーを認識すると画面にフォトフレームが出現します。<strong>「📸 撮影する」</strong>ボタンを押すと写真が保存されます。</p>
     <h3>📱 iPhone (iOS) をお使いの方</h3>
