@@ -54,6 +54,18 @@ body {
 .howToSteps { font-size: 14px; color: #4e342e; line-height: 1.7; font-weight: bold; margin: 0; padding-left: 20px; text-align: left; width: 100%; box-sizing: border-box; }
 .howToSteps li { margin-bottom: 8px; }
 
+/* 【追加】操作説明内に入れるマーカー画像のスタイル */
+.explainMarkerImg {
+  display: block;
+  width: 100%;
+  max-width: 160px; /* カード内にきれいに収まるサイズ */
+  height: auto;
+  margin: 12px auto;
+  border: 3px solid #ffb300;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 64, 112, 0.1);
+}
+
 /* ビタミンカラー立体ボタン */
 .menuBtn, .backBtn {
   width: 100%; max-width: 280px; padding: 16px; border: none; border-radius: 20px;
@@ -195,6 +207,9 @@ body {
       <li>「場所確認」を開いて、スタンプが隠されているヒント写真を確認します。</li>
       <li>「探索開始」ボタンを押し、カメラへのアクセスを許可します。</li>
       <li>ヒントの場所を見つけたら、対象にカメラをまっすぐかざします。</li>
+      
+      <img src="stamp_img.jpg" class="explainMarkerImg" alt="スタンプの例">
+
       <li>自動的にスタンプが検出され、スタンプ帳に記録されます！</li>
     </ol>
   </div>
@@ -238,7 +253,7 @@ body {
 // 状態管理と要素キャッシュ
 // ======================
 const state = {
-  stamps: [false, false, false], // スタンプ1, 2, 3 の獲得フラグ
+  stamps: [false, false, false], 
   get foundCount() { return state.stamps.filter(Boolean).length; },
   total: 3
 };
@@ -293,7 +308,6 @@ function updateStampBook() {
   });
 }
 
-// 【変更点②】一番上でのレイアウト崩れを防ぐため、"flex" から "block" に修正しました
 function updateBonusButton() {
   UI.bonusGroup.style.display = state.foundCount >= state.total ? "block" : "none";
 }
@@ -333,7 +347,6 @@ function registerStampListener(index) {
     }
   });
 }
-// ループでイベントリスナーを軽量登録
 for (let i = 0; i < state.total; i++) { registerStampListener(i); }
 
 // ======================
@@ -365,7 +378,6 @@ UI.backToMenuBtn.addEventListener("click", async () => {
   UI.stampBox.style.display = "none";
 });
 
-// 各種簡単開閉イベント
 document.querySelector("#openHowToBtn").addEventListener("click", () => { UI.howToScreen.style.display = "flex"; });
 document.querySelector("#closeHowToBtn").addEventListener("click", () => { UI.howToScreen.style.display = "none"; });
 document.querySelector("#openHintBtn").addEventListener("click", () => { UI.hintScreen.style.display = "flex"; });
@@ -388,7 +400,6 @@ document.querySelector("#openBonusBtn").addEventListener("click", () => {
   UI.backToMenuBtn.style.display = "none";
 });
 
-// 起動時処理
 loadGame();
 </script>
 
