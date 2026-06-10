@@ -3,54 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>サイトリンク集</title>
+    <title>マイ リンクポータル</title>
     <style>
+        /* ========================================================
+           全体背景・リセット
+        ======================================================== */
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f4f7f6;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
+            /* 深みのあるスタイリッシュなグラデーション */
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBg 15s ease infinite;
             color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
+
+        /* 背景が滑らかに動くアニメーション */
+        @keyframes gradientBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ========================================================
+           メインコンテナ（すりガラス風：グラスモフィリズム）
+        ======================================================== */
         .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15),
+                        inset 0 1px 1px rgba(255, 255, 255, 0.3);
             text-align: center;
-            max-width: 400px;
+            max-width: 440px;
             width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
         }
+
         h1 {
-            font-size: 24px;
-            margin-bottom: 25px;
+            font-size: 26px;
+            font-weight: 800;
+            margin-top: 0;
+            margin-bottom: 30px;
             color: #2c3e50;
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
         }
+
+        /* タイトルの下線デコレーション */
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 4px;
+            background: linear-gradient(90deg, #23a6d5, #23d5ab);
+            border-radius: 2px;
+        }
+
+        /* ========================================================
+           リンク・ボタンのスタイリング
+        ======================================================== */
         .link-list {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
         }
+
         .link-item {
-            display: block;
-            padding: 12px;
-            background-color: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* 左右に綺麗に分散配置 */
+            padding: 16px 22px;
+            /* グラデーションと光沢を放つ背景 */
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 16px;
             font-weight: bold;
-            transition: background 0.3s, transform 0.2s;
+            font-size: 16px;
+            box-shadow: 0 8px 20px rgba(41, 128, 185, 0.25);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
         }
+
+        /* 左側のアイコンとテキストをまとめる要素 */
+        .link-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .link-icon {
+            font-size: 22px; /* 絵文字を少し大きめに */
+        }
+
+        /* 右側の矢印（>） */
+        .link-arrow {
+            font-size: 14px;
+            opacity: 0.7;
+            transition: transform 0.3s ease;
+        }
+
+        /* ========================================================
+           ホバー＆アクティブ（タップ）時のエフェクト
+        ======================================================== */
         .link-item:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
+            background: linear-gradient(135deg, #4aa3df 0%, #2e8ece 100%);
+            transform: translateY(-4px); /* 上にふわっと浮き上がる */
+            box-shadow: 0 12px 28px rgba(41, 128, 185, 0.4);
         }
+
+        /* ホバー時に右側の矢印だけを少し右に動かす */
+        .link-item:hover .link-arrow {
+            transform: translateX(5px);
+            opacity: 1;
+        }
+
+        /* クリック（タップ）した瞬間に沈み込む */
         .link-item:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3);
         }
+
+        /* 4つのボタンにそれぞれ少し違う色味（テーマ）を割り当ててさらに華やかに */
+        .link-item.treasure { background: linear-gradient(135deg, #f39c12 0%, #d35400 100%); box-shadow: 0 8px 20px rgba(211, 84, 0, 0.3); }
+        .link-item.treasure:hover { background: linear-gradient(135deg, #f5ab35 0%, #e67e22 100%); }
+
+        .link-item.photo { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); box-shadow: 0 8px 20px rgba(142, 68, 173, 0.3); }
+        .link-item.photo:hover { background: linear-gradient(135deg, #af7ac5 0%, #9b59b6 100%); }
+
+        .link-item.stamp { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3); }
+        .link-item.stamp:hover { background: linear-gradient(135deg, #58d68d 0%, #2ecc71 100%); }
+
+        .link-item.picture { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); box-shadow: 0 8px 20px rgba(192, 57, 43, 0.3); }
+        .link-item.picture:hover { background: linear-gradient(135deg, #ec7063 0%, #e74c3c 100%); }
     </style>
 </head>
 <body>
@@ -58,10 +158,37 @@
 <div class="container">
     <h1>マイ リンク集</h1>
     <div class="link-list">
-        <a class="link-item" href="https://nagatanitani-code.github.io/test/treasure.html" target="_blank" rel="noopener noreferrer">お宝さがし</a>
-        <a class="link-item" href="https://nagatanitani-code.github.io/test/photo.html" target="_blank" rel="noopener noreferrer">フォトスポット</a>
-        <a class="link-item" href="https://nagatanitani-code.github.io/test/stamp.html" target="_blank" rel="noopener noreferrer">スタンプラリー</a>
-        <a class="link-item" href="https://nagatanitani-code.github.io/test/picture.html" target="_blank" rel="noopener noreferrer">絵探し</a>
+        <a class="link-item treasure" href="https://nagatanitani-code.github.io/test/treasure.html" target="_blank" rel="noopener noreferrer">
+            <div class="link-content">
+                <span class="link-icon">💎</span>
+                <span>お宝さがし</span>
+            </div>
+            <span class="link-arrow">▶</span>
+        </a>
+        
+        <a class="link-item photo" href="https://nagatanitani-code.github.io/test/photo.html" target="_blank" rel="noopener noreferrer">
+            <div class="link-content">
+                <span class="link-icon">📸</span>
+                <span>フォトスポット</span>
+            </div>
+            <span class="link-arrow">▶</span>
+        </a>
+        
+        <a class="link-item stamp" href="https://nagatanitani-code.github.io/test/stamp.html" target="_blank" rel="noopener noreferrer">
+            <div class="link-content">
+                <span class="link-icon">🗺️</span>
+                <span>スタンプラリー</span>
+            </div>
+            <span class="link-arrow">▶</span>
+        </a>
+        
+        <a class="link-item picture" href="https://nagatanitani-code.github.io/test/picture.html" target="_blank" rel="noopener noreferrer">
+            <div class="link-content">
+                <span class="link-icon">🔍</span>
+                <span>絵探し</span>
+            </div>
+            <span class="link-arrow">▶</span>
+        </a>
     </div>
 </div>
 
