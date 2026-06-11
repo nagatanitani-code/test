@@ -53,7 +53,7 @@ body {
   box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6), 0 10px 25px rgba(0, 0, 0, 0.7);
   box-sizing: border-box;
 }
-.contentCard { max-width: 340px; padding: 24px 14px; gap: 16px; }
+.contentCard { max-width: 360px; padding: 24px 16px; gap: 16px; }
 
 .menuGuide { 
   font-size: 16px; 
@@ -77,7 +77,6 @@ body {
 }
 .howToSteps li { margin-bottom: 12px; }
 
-/* 操作説明内に入れるマーカー画像のスタイル */
 .explainMarkerImg {
   display: block;
   width: 100%;
@@ -170,66 +169,71 @@ body {
 
 #howToScreen, #treasureScreen, #hintScreen { z-index: 20000; display: none; }
 
-/* お宝図鑑・場所確認のグリッドベース */
-.treasureGrid, .hintGrid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; }
+/* お宝図鑑・場所確認のグリッドベース（2カラム均等配置） */
+.treasureGrid, .hintGrid { 
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px; 
+  width: 100%; 
+}
 .backBtn { margin-top: 10px; flex-shrink: 0; }
 
 /* ========================================================
-   【共通枠】お宝図鑑用カード ＆ 場所確認用カード
+   サイズアップ＆常時下部テキストカード
 ======================================================== */
-.treasure-card, .hint-card {
-  position: relative;
-  width: 110px;
-  height: 110px;
-  border-radius: 10px;
-  overflow: hidden;
+.treasureCardContainer, .hintCardContainer {
+  display: flex;
+  flex-direction: column;
+  background: rgba(6, 17, 13, 0.9);
   border: 1px solid #c5a059;
+  border-radius: 12px;
+  overflow: hidden;
   box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 6px 14px rgba(0,0,0,0.6);
+  width: 140px;
+  justify-self: center;
   -webkit-tap-highlight-color: transparent;
 }
 
-.treasure-card img, .hint-card img {
+.cardImgWrap {
+  width: 140px;
+  height: 140px;
+  overflow: hidden;
+  background: rgba(13, 38, 30, 0.6);
+}
+.cardImgWrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background: rgba(13, 38, 30, 0.6);
   transition: transform 0.3s ease;
 }
 
-.treasure-overlay, .hint-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(6, 17, 13, 0.85);
+.cardBottomBar {
+  padding: 8px 6px;
+  background: rgba(14, 36, 28, 0.8);
+  border-top: 1px solid rgba(197, 160, 89, 0.4);
+  flex-grow: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
-  box-sizing: border-box;
-  opacity: 0;
-  transition: opacity 0.3s ease;
 }
-
-.treasure-text, .hint-text {
+.cardBottomText {
   color: #dfd5be;
   font-size: 11px;
   font-weight: bold;
   line-height: 1.4;
   text-align: center;
-  transform: translateY(10px);
-  transition: transform 0.3s ease;
+  word-break: break-all;
 }
 
-/* ========================================================
-   ホバー＆タップギミックの連動
-======================================================== */
-.hint-card:hover .hint-overlay { opacity: 1; }
-.hint-card:hover .hint-text { transform: translateY(0); }
-.hint-card:hover img { transform: scale(1.08); }
+/* 未発見時のテキストカラー調整用（お好みで！） */
+.cardBottomText.not-found-text {
+  color: #8fa399;
+}
 
-.treasure-card.is-found { cursor: pointer; }
-.treasure-card.is-found:hover .treasure-overlay { opacity: 1; }
-.treasure-card.is-found:hover .treasure-text { transform: translateY(0); }
-.treasure-card.is-found:hover img { transform: scale(1.08); }
+.hintCardContainer:hover .cardImgWrap img { transform: scale(1.06); }
+.treasureCardContainer.is-found { cursor: pointer; }
+.treasureCardContainer.is-found:hover .cardImgWrap img { transform: scale(1.06); }
+/* ======================================================== */
 
 /* COMPLETE画面 */
 #completeTreasure {
@@ -328,17 +332,21 @@ body {
     <div class="menuGuide">これまでに発見した秘宝の記録だ！</div>
     <div class="treasureGrid">
       
-      <div id="cardTreasure1" class="treasure-card">
-        <img id="menuTreasure1" src="treasure_unknown.jpg">
-        <div class="treasure-overlay">
-          <div class="treasure-text">1 金貨のコインだ！</div>
+      <div id="cardTreasure1" class="treasureCardContainer">
+        <div class="cardImgWrap">
+          <img id="menuTreasure1" src="treasure_unknown.jpg">
+        </div>
+        <div class="cardBottomBar">
+          <div id="treasureText1" class="cardBottomText not-found-text">このお宝はまだ見つけてないよ！</div>
         </div>
       </div>
       
-      <div id="cardTreasure2" class="treasure-card">
-        <img id="menuTreasure2" src="treasure_unknown.jpg">
-        <div class="treasure-overlay">
-          <div class="treasure-text">2 宝箱いっぱいの金貨だ！</div>
+      <div id="cardTreasure2" class="treasureCardContainer">
+        <div class="cardImgWrap">
+          <img id="menuTreasure2" src="treasure_unknown.jpg">
+        </div>
+        <div class="cardBottomBar">
+          <div id="treasureText2" class="cardBottomText not-found-text">このお宝はまだ見つけてないよ！</div>
         </div>
       </div>
 
@@ -353,17 +361,21 @@ body {
     <div class="menuGuide">古文書が示す手がかりの場所だ！</div>
     <div class="hintGrid">
       
-      <div class="hint-card">
-        <img src="hint1.jpg">
-        <div class="hint-overlay">
-          <div class="hint-text">1 茂みの奥にあるかも？</div>
+      <div class="hintCardContainer">
+        <div class="cardImgWrap">
+          <img src="hint1.jpg">
+        </div>
+        <div class="cardBottomBar">
+          <div class="cardBottomText">1 茂みの奥にあるかも？</div>
         </div>
       </div>
       
-      <div class="hint-card">
-        <img src="hint2.jpg">
-        <div class="hint-overlay">
-          <div class="hint-text">2 看板の裏にあるかも？</div>
+      <div class="hintCardContainer">
+        <div class="cardImgWrap">
+          <img src="hint2.jpg">
+        </div>
+        <div class="cardBottomBar">
+          <div class="cardBottomText">2 看板の裏にあるかも？</div>
         </div>
       </div>
 
@@ -387,8 +399,8 @@ const state = {
   get foundCount() { return state.treasures.filter(Boolean).length; },
   total: 2,
   config: [
-    { id: "Coin", src: "coin.jpg", msg: "お宝発見！" },
-    { id: "Gold", src: "gold.jpg", msg: "大物発見！！" }
+    { id: "Coin", src: "coin.jpg", msg: "お宝発見！", desc: "1 金貨のコインだ！" },
+    { id: "Gold", src: "gold.jpg", msg: "大物発見！！", desc: "2 宝箱いっぱいの金貨だ！" }
   ]
 };
 
@@ -413,6 +425,11 @@ const UI = {
   cardTreasures: [
     document.querySelector("#cardTreasure1"),
     document.querySelector("#cardTreasure2")
+  ],
+  // 【追加】お宝説明テキストの要素キャッシュ
+  treasureTexts: [
+    document.querySelector("#treasureText1"),
+    document.querySelector("#treasureText2")
   ]
 };
 
@@ -444,6 +461,15 @@ function updateTreasureUI() {
     if (isGet) {
       UI.menuTreasures[index].src = state.config[index].src;
       UI.cardTreasures[index].classList.add("is-found");
+      // 【変更】発見したお宝だけ、本来の説明文を代入して未発見用スタイルを外す
+      UI.treasureTexts[index].textContent = state.config[index].desc;
+      UI.treasureTexts[index].classList.remove("not-found-text");
+    } else {
+      // ロード時やリセット等に対応するため未発見時の状態を維持・適用
+      UI.menuTreasures[index].src = "treasure_unknown.jpg";
+      UI.cardTreasures[index].classList.remove("is-found");
+      UI.treasureTexts[index].textContent = "このお宝はまだ見つけてないよ！";
+      UI.treasureTexts[index].classList.add("not-found-text");
     }
   });
 }
@@ -457,7 +483,7 @@ function checkCompleteTreasure() {
     updateBonusButton();
     setTimeout(() => {
       UI.completeTreasure.style.display = "flex";
-      UI.backToMenuBtn.style.display = "none"; // 【追加】コンプリート画面が出たらボタンを消す
+      UI.backToMenuBtn.style.display = "none";
     }, 1000);
   }
 }
@@ -525,16 +551,13 @@ document.querySelector("#closeTreasureBtn").addEventListener("click", () => { UI
 document.querySelector("#openHintBtn").addEventListener("click", () => { UI.hintScreen.style.display = "flex"; });
 document.querySelector("#closeHintBtn").addEventListener("click", () => { UI.hintScreen.style.display = "none"; });
 
-// 【変更】コンプリート画面を閉じた時、AR画面中ならボタンを復活させる
 document.querySelector("#closeCompleteBtn").addEventListener("click", () => { 
   UI.completeTreasure.style.display = "none"; 
-  // メニュー画面が開いていない（＝まだARカメラ画面にいる）場合だけ再表示
   if (UI.menuScreen.style.display === "none") {
     UI.backToMenuBtn.style.display = "block"; 
   }
 });
 
-// メニューから特典ボタンを押した時は、最初からメニューに戻るボタンは無いので非表示のままでOK
 document.querySelector("#openBonusBtn").addEventListener("click", () => { UI.completeTreasure.style.display = "flex"; });
 
 // 壁紙ダウンロード
@@ -547,7 +570,6 @@ document.querySelector("#downloadWallpaperBtn").addEventListener("click", () => 
   document.body.removeChild(link);
 });
 
-// 初期ロード実行
 loadGame();
 </script>
 
