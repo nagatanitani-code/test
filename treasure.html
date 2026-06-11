@@ -457,11 +457,11 @@ function checkCompleteTreasure() {
     updateBonusButton();
     setTimeout(() => {
       UI.completeTreasure.style.display = "flex";
+      UI.backToMenuBtn.style.display = "none"; // 【追加】コンプリート画面が出たらボタンを消す
     }, 1000);
   }
 }
 
-// 【新規追加】エラーの原因になっていたエフェクト関数
 function showEffect(text) {
   UI.treasureEffect.textContent = text;
   UI.treasureEffect.style.display = "block";
@@ -480,7 +480,7 @@ state.config.forEach((item, index) => {
       state.treasures[index] = true;
       saveGame();
       updateTreasureUI();
-      showEffect(item.msg); // これが動くようになります
+      showEffect(item.msg);
       checkCompleteTreasure();
     } else {
       showEffect("発見済みのお宝");
@@ -524,7 +524,17 @@ document.querySelector("#openTreasureBtn").addEventListener("click", () => { upd
 document.querySelector("#closeTreasureBtn").addEventListener("click", () => { UI.treasureScreen.style.display = "none"; });
 document.querySelector("#openHintBtn").addEventListener("click", () => { UI.hintScreen.style.display = "flex"; });
 document.querySelector("#closeHintBtn").addEventListener("click", () => { UI.hintScreen.style.display = "none"; });
-document.querySelector("#closeCompleteBtn").addEventListener("click", () => { UI.completeTreasure.style.display = "none"; });
+
+// 【変更】コンプリート画面を閉じた時、AR画面中ならボタンを復活させる
+document.querySelector("#closeCompleteBtn").addEventListener("click", () => { 
+  UI.completeTreasure.style.display = "none"; 
+  // メニュー画面が開いていない（＝まだARカメラ画面にいる）場合だけ再表示
+  if (UI.menuScreen.style.display === "none") {
+    UI.backToMenuBtn.style.display = "block"; 
+  }
+});
+
+// メニューから特典ボタンを押した時は、最初からメニューに戻るボタンは無いので非表示のままでOK
 document.querySelector("#openBonusBtn").addEventListener("click", () => { UI.completeTreasure.style.display = "flex"; });
 
 // 壁紙ダウンロード
