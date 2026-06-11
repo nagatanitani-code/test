@@ -118,7 +118,6 @@ body {
   padding: 12px 20px; border: none; border-radius: 14px; background: rgba(0,0,0,.8); color: white; font-size: 18px; cursor: pointer;
 }
 
-/* 【改善】発見時の情報カード：絶対に2行にさせず、綺麗に中央ポップアップする */
 #treasureBox {
   position: fixed; top: 15px; right: 15px; z-index: 9999; 
   display: none; flex-direction: column; align-items: center; justify-content: center;
@@ -140,7 +139,7 @@ body {
   color: #ffd700; 
   font-weight: bold;
   letter-spacing: 1px;
-  white-space: nowrap; /* 絶対に改行させない */
+  white-space: nowrap; 
   text-align: center;
   margin-bottom: 2px;
 }
@@ -149,7 +148,7 @@ body {
   font-weight: bold; 
   color: #ffffff;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  white-space: nowrap; /* 絶対に改行させない */
+  white-space: nowrap; 
   text-align: center;
 }
 #treasureImage { 
@@ -171,12 +170,68 @@ body {
 
 #howToScreen, #treasureScreen, #hintScreen { z-index: 20000; display: none; }
 
+/* お宝図鑑・場所確認のグリッドベース */
 .treasureGrid, .hintGrid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; }
-.treasureGrid img, .hintGrid img {
-  width: 110px; height: 110px; border-radius: 10px; background: rgba(13, 38, 30, 0.6);
-  object-fit: cover; border: 1px solid #c5a059; box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 6px 14px rgba(0,0,0,0.6);
-}
 .backBtn { margin-top: 10px; flex-shrink: 0; }
+
+/* ========================================================
+   【共通枠】お宝図鑑用カード ＆ 場所確認用カード
+======================================================== */
+.treasure-card, .hint-card {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #c5a059;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 6px 14px rgba(0,0,0,0.6);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.treasure-card img, .hint-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: rgba(13, 38, 30, 0.6);
+  transition: transform 0.3s ease;
+}
+
+.treasure-overlay, .hint-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 17, 13, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.treasure-text, .hint-text {
+  color: #dfd5be;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1.4;
+  text-align: center;
+  transform: translateY(10px);
+  transition: transform 0.3s ease;
+}
+
+/* ========================================================
+   ホバー＆タップギミックの連動
+======================================================== */
+/* 【場所確認】はいつでも見られるので常時有効 */
+.hint-card:hover .hint-overlay { opacity: 1; }
+.hint-card:hover .hint-text { transform: translateY(0); }
+.hint-card:hover img { transform: scale(1.08); }
+
+/* 【お宝図鑑】JavaScriptで「.is-found」クラスが付いた時（取得後）のみホバーが有効化する */
+.treasure-card.is-found { cursor: pointer; }
+.treasure-card.is-found:hover .treasure-overlay { opacity: 1; }
+.treasure-card.is-found:hover .treasure-text { transform: translateY(0); }
+.treasure-card.is-found:hover img { transform: scale(1.08); }
 
 /* COMPLETE画面 */
 #completeTreasure {
@@ -274,8 +329,21 @@ body {
   <div class="contentCard">
     <div class="menuGuide">これまでに発見した秘宝の記録だ！</div>
     <div class="treasureGrid">
-      <img id="menuTreasure1" src="treasure_unknown.jpg">
-      <img id="menuTreasure2" src="treasure_unknown.jpg">
+      
+      <div id="cardTreasure1" class="treasure-card">
+        <img id="menuTreasure1" src="treasure_unknown.jpg">
+        <div class="treasure-overlay">
+          <div class="treasure-text">1 金貨のコインだ！</div>
+        </div>
+      </div>
+      
+      <div id="cardTreasure2" class="treasure-card">
+        <img id="menuTreasure2" src="treasure_unknown.jpg">
+        <div class="treasure-overlay">
+          <div class="treasure-text">2 宝箱いっぱいの金貨だ！</div>
+        </div>
+      </div>
+
     </div>
   </div>
   <button id="closeTreasureBtn" class="backBtn">戻る</button>
@@ -286,8 +354,21 @@ body {
   <div class="contentCard">
     <div class="menuGuide">古文書が示す手がかりの場所だ！</div>
     <div class="hintGrid">
-      <img src="hint1.jpg">
-      <img src="hint2.jpg">
+      
+      <div class="hint-card">
+        <img src="hint1.jpg">
+        <div class="hint-overlay">
+          <div class="hint-text">1 茂みの奥にあるかも？</div>
+        </div>
+      </div>
+      
+      <div class="hint-card">
+        <img src="hint2.jpg">
+        <div class="hint-overlay">
+          <div class="hint-text">2 看板の裏にあるかも？</div>
+        </div>
+      </div>
+
     </div>
   </div>
   <button id="closeHintBtn" class="backBtn">戻る</button>
@@ -330,6 +411,11 @@ const UI = {
   menuTreasures: [
     document.querySelector("#menuTreasure1"),
     document.querySelector("#menuTreasure2")
+  ],
+  // 【新規】お宝カード全体の枠（クラス付与用）
+  cardTreasures: [
+    document.querySelector("#cardTreasure1"),
+    document.querySelector("#cardTreasure2")
   ]
 };
 
@@ -358,7 +444,12 @@ function loadGame() {
 function updateTreasureUI() {
   UI.treasureCount.textContent = `${state.foundCount} / ${state.total}`;
   state.treasures.forEach((isGet, index) => {
-    if (isGet) UI.menuTreasures[index].src = state.config[index].src;
+    if (isGet) {
+      // 画像を切り替える
+      UI.menuTreasures[index].src = state.config[index].src;
+      // 【新規】取得済みを示すクラス「is-found」を追加してホバー説明を解禁！
+      UI.cardTreasures[index].classList.add("is-found");
+    }
   });
 }
 
@@ -375,18 +466,11 @@ function checkCompleteTreasure() {
   }
 }
 
-function showEffect(text) {
-  UI.treasureEffect.textContent = text;
-  UI.treasureEffect.style.display = "block";
-  setTimeout(() => { UI.treasureEffect.style.display = "none"; }, 1500);
-}
-
 // ======================
 // お宝検出イベントの共通登録
 // ======================
 state.config.forEach((item, index) => {
   document.querySelector(`#target${item.id}`).addEventListener("targetFound", () => {
-    // 【改善】パッと出すのではなく、CSSのフレックス構造とアニメーションを伴って綺麗に表示
     UI.treasureBox.style.display = "flex";
     UI.treasureImage.src = item.src;
 
