@@ -222,12 +222,10 @@ body {
 /* ========================================================
    ホバー＆タップギミックの連動
 ======================================================== */
-/* 【場所確認】はいつでも見られるので常時有効 */
 .hint-card:hover .hint-overlay { opacity: 1; }
 .hint-card:hover .hint-text { transform: translateY(0); }
 .hint-card:hover img { transform: scale(1.08); }
 
-/* 【お宝図鑑】JavaScriptで「.is-found」クラスが付いた時（取得後）のみホバーが有効化する */
 .treasure-card.is-found { cursor: pointer; }
 .treasure-card.is-found:hover .treasure-overlay { opacity: 1; }
 .treasure-card.is-found:hover .treasure-text { transform: translateY(0); }
@@ -412,7 +410,6 @@ const UI = {
     document.querySelector("#menuTreasure1"),
     document.querySelector("#menuTreasure2")
   ],
-  // 【新規】お宝カード全体の枠（クラス付与用）
   cardTreasures: [
     document.querySelector("#cardTreasure1"),
     document.querySelector("#cardTreasure2")
@@ -445,9 +442,7 @@ function updateTreasureUI() {
   UI.treasureCount.textContent = `${state.foundCount} / ${state.total}`;
   state.treasures.forEach((isGet, index) => {
     if (isGet) {
-      // 画像を切り替える
       UI.menuTreasures[index].src = state.config[index].src;
-      // 【新規】取得済みを示すクラス「is-found」を追加してホバー説明を解禁！
       UI.cardTreasures[index].classList.add("is-found");
     }
   });
@@ -466,6 +461,13 @@ function checkCompleteTreasure() {
   }
 }
 
+// 【新規追加】エラーの原因になっていたエフェクト関数
+function showEffect(text) {
+  UI.treasureEffect.textContent = text;
+  UI.treasureEffect.style.display = "block";
+  setTimeout(() => { UI.treasureEffect.style.display = "none"; }, 1500);
+}
+
 // ======================
 // お宝検出イベントの共通登録
 // ======================
@@ -478,7 +480,7 @@ state.config.forEach((item, index) => {
       state.treasures[index] = true;
       saveGame();
       updateTreasureUI();
-      showEffect(item.msg);
+      showEffect(item.msg); // これが動くようになります
       checkCompleteTreasure();
     } else {
       showEffect("発見済みのお宝");
