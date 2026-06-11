@@ -63,7 +63,7 @@ body{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:16px; /* 文字拡大に伴い、ボタンとの間隔を微調整 */
+  gap:16px; 
   width: 100%;
   max-width: 340px; 
   background: rgba(255, 255, 255, 0.65); 
@@ -77,10 +77,10 @@ body{
 }
 
 .menuGuide{
-  font-size:16px; /* 14px から 16px へ大きく変更 */
+  font-size:16px; 
   color: #2c445e;
   text-align:center;
-  line-height:1.6; /* 行間を少し広く */
+  line-height:1.6; 
   letter-spacing: 0.5px;
   font-weight: bold;
 }
@@ -91,7 +91,7 @@ body{
   padding:15px;
   border:none;
   border-radius:16px;
-  font-size:24px; /* 22px から 24px へ大きく変更 */
+  font-size:24px; 
   font-weight:bold;
   color:white;
   background: linear-gradient(135deg, #ffaa00 0%, #ff5500 100%);
@@ -152,20 +152,73 @@ body{
   max-width: 600px; 
 }
 
-.hintGrid img{
+/* ========================================================
+   【新規】場所確認（ヒント画像）のホバー・タップ説明ギミック
+======================================================== */
+.hint-card {
+  position: relative;
   width: 140px; 
   height: 140px;
-  border-radius:20px;
-  object-fit: cover;
+  border-radius: 20px;
+  overflow: hidden; /* 子要素のはみ出しを綺麗にカット */
   box-shadow: 0 6px 18px rgba(0,0,0,.15);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent; /* スマホタップ時の青枠消去 */
 }
+
+/* カード内の画像設定 */
+.hint-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* ホバー/タップ時に重なる黒背景のレイヤー */
+.hint-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7); /* 暗めの透過レイヤー */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* 浮かび上がるテキスト */
+.hint-text {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.5;
+  text-align: center;
+  transform: translateY(15px); /* 最初は少し下に隠しておく */
+  transition: transform 0.3s ease;
+}
+
+/* ホバーされた時（またはスマホでタップされた時）の連動ギミック */
+.hint-card:hover .hint-overlay {
+  opacity: 1;
+}
+
+.hint-card:hover .hint-text {
+  transform: translateY(0); /* 文字が定位置に浮き上がる */
+}
+
+.hint-card:hover img {
+  transform: scale(1.08); /* 背景を奥に少しズームさせて立体感を演出 */
+}
+/* ======================================================== */
 
 .explainBox {
   width: 100%;
   max-width: 500px;
   color: #334155;
-  font-size: 18px; /* 16px から 18px へ大きく変更 */
-  line-height: 1.7; /* 行間をさらにゆったりと */
+  font-size: 18px; 
+  line-height: 1.7; 
   text-align: left;
 }
 .explainBox h3 {
@@ -174,7 +227,7 @@ body{
   margin-bottom: 12px;
   border-left: 5px solid #ffaa00;
   padding-left: 10px;
-  font-size: 22px; /* 18px から 22px へ大きく変更 */
+  font-size: 22px; 
 }
 .explainBox p {
   margin: 0 0 14px 0;
@@ -199,7 +252,7 @@ body{
   border-radius:18px;
   background:#ffaa00;
   color:white;
-  font-size:24px; /* 22px から 24px へ大きく変更 */
+  font-size:24px; 
   cursor: pointer;
   margin-top: auto; 
   flex-shrink: 0; 
@@ -294,8 +347,15 @@ device-orientation-permission-ui="enabled:false">
 <div id="hintScreen">
   <h1 style="margin: 0; font-size: 38px;">場所確認</h1>
   <div class="hintGrid">
-    <img src="hint_p.jpg">
-  </div>
+    
+    <div class="hint-card">
+      <img src="hint_p.jpg">
+      <div class="hint-overlay">
+        <div class="hint-text">花壇の近くにあるよ！</div>
+      </div>
+    </div>
+    
+    </div>
   <button id="closeHintBtn" class="backBtn">戻る</button>
 </div>
 
