@@ -173,7 +173,6 @@ body{
   transition: transform 0.3s ease;
 }
 
-/* テキストを常時、または見やすく下に帯として配置するスタイルに変更 */
 .hint-overlay {
   position: absolute;
   left: 0; right: 0; bottom: 0;
@@ -198,14 +197,14 @@ body{
   transform: scale(1.08);
 }
 
-/* ＝【新規】ずれた位置に表示するフレームプレビューエリア＝ */
+/* ＝フレームプレビューエリア＝ */
 .preview-area {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 260px;
+  max-width: 280px; /* テキストが収まりやすいよう少し広げました */
   height: 180px;
   margin: 10px 0;
   border: 3px dashed #ffaa00;
@@ -218,10 +217,12 @@ body{
 
 .preview-placeholder {
   color: #708aa6;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
   text-align: center;
   transition: opacity 0.3s ease;
+  padding: 0 10px;
+  line-height: 1.4;
 }
 
 .preview-image {
@@ -229,7 +230,7 @@ body{
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* 横縦比を崩さず綺麗に収める */
+  object-fit: contain; 
   opacity: 0;
   transform: scale(0.95);
   transition: opacity 0.3s ease, transform 0.3s ease;
@@ -380,19 +381,17 @@ device-orientation-permission-ui="enabled:false">
   <h1 style="margin: 0; font-size: 38px;">場所確認</h1>
   
   <div id="previewArea" class="preview-area">
-    <div class="preview-placeholder">画像を触ると<br>出現フレームが表示されるよ！</div>
-    <img src="frame.png" class="preview-image" id="previewFrameImg">
+    <div id="previewPlaceholder" class="preview-placeholder">読み込んだことのある場所を触ると<br>出現フレームが表示されるよ！</div>
+    <img src="unknown_photo.jpg" class="preview-image" id="previewFrameImg">
   </div>
 
   <div class="hintGrid">
-    
     <div class="hint-card" data-has-frame="true">
       <img src="hint_p.jpg">
       <div class="hint-overlay">
         <div class="hint-text">花壇の近くにあるよ！</div>
       </div>
     </div>
-    
   </div>
   <button id="closeHintBtn" class="backBtn">戻る</button>
 </div>
@@ -480,12 +479,21 @@ backBtn.addEventListener("click", async ()=>{
 });
 
 /* ======================
-画面開閉処理
+画面開閉処理 ＆ 条件切り替え
 ====================== */
-document.querySelector("#openHintBtn").addEventListener("click",()=>{ hintScreen.style.display="flex"; });
+const previewArea = document.querySelector("#previewArea");
+const previewPlaceholder = document.querySelector("#previewPlaceholder");
+const previewFrameImg = document.querySelector("#previewFrameImg");
+
+// 「場所確認」ボタンを押したときに状態をチェックして更新する
+document.querySelector("#openHintBtn").addEventListener("click",()=>{ 
+  updateHintPreviewUI();
+  hintScreen.style.display="flex"; 
+});
+
 document.querySelector("#closeHintBtn").addEventListener("click",()=>{ 
   hintScreen.style.display="none"; 
-  document.querySelector("#previewArea").classList.remove("is-active"); // 閉じる時にプレビュー初期化
+  previewArea.classList.remove("is-active"); // 閉じる時にプレビュー初期化
 });
 document.querySelector("#openExplainBtn").addEventListener("click",()=>{ explainScreen.style.display="flex"; });
 document.querySelector("#closeExplainBtn").addEventListener("click",()=>{ explainScreen.style.display="none"; });
@@ -499,10 +507,29 @@ function resetPhotoFrame() {
 }
 closeFrameBtn.addEventListener("click", resetPhotoFrame);
 
+
 /* ======================
-【新規追加】場所確認でのフレームプレビュー連動
+【新規追加】読み込み状態に応じたプレビューUIの更新
 ====================== */
-const previewArea = document.querySelector("#previewArea");
+function updateHintPreviewUI() {
+  // ブラウザに保存された読み込み完了フラグを確認
+  const isScanned = localStorage.getItem("ar_spot_scanned_8");
+
+  if (isScanned === "true") {
+    // 一度でも読み込んだことがある場合
+    previewPlaceholder.innerHTML = "読み込んだものは画像を触ると<br>出現フレームが表示されるよ！";
+    previewFrameImg.src = "frame.png";
+  } else {
+    // まだ読み込んだことがない場合
+    previewPlaceholder.innerHTML = "画像を読み込むと<br>出現フレームをここで確認できるよ！";
+    previewFrameImg.src = "unknown_photo.jpg";
+  }
+}
+
+
+/* ======================
+場所確認でのフレームプレビュー連動
+====================== */
 const hintCards = document.querySelectorAll(".hint-card[data-has-frame='true']");
 
 hintCards.forEach(card => {
@@ -517,7 +544,6 @@ hintCards.forEach(card => {
   // スマホ・タブレット用のタップ処理連動
   card.addEventListener("touchstart", (e) => {
     previewArea.classList.toggle("is-active");
-    // 他のカードがタップされた時にトグルが不自然にならないよう、タップ時のみ発火
   }, { passive: true });
 });
 
@@ -587,9 +613,12 @@ captureBtn.addEventListener("click", async ()=>{
 });
 
 /* ======================
-ターゲット認識
+ターゲット認識（ここで読み込み成功をブラウザに記憶！）
 ====================== */
 targetPhoto.addEventListener("targetFound", ()=>{
+  // このスポット(8番)を読み込んだというフラグをブラウザに保存
+  localStorage.setItem("ar_spot_scanned_8", "true");
+
   if (isFrameActive) return;
   isFrameActive = true;
   photoFrameOverlay.style.display = "block"; 
