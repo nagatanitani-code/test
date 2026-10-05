@@ -366,6 +366,15 @@
         });
         this.el.addEventListener("targetLost", () => {
           if (!currentGroup) return;
+          
+          const group = targetGroups[currentGroup];
+          if (group) {
+            const planeEl = document.querySelector(group.planeId);
+            if (planeEl) planeEl.setAttribute("visible", "false");
+            const containerEl = document.querySelector(group.containerId);
+            if (containerEl) containerEl.setAttribute("visible", "false");
+          }
+
           const guideUI = document.querySelector(`#${currentGroup}GuideUI`);
           if (guideUI) guideUI.style.display = "none";
           document.querySelector("#progressBox").style.display = "none";
@@ -386,44 +395,46 @@
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: false">
   <a-assets>
-    <img id="godImg"    src="1god.png" />
-    <img id="spaceImg"  src="2space.png" />
-    <img id="asiatoImg"   src="3asiato.png" />
-    <img id="forestImg" src="4forest.png" />
-    <img id="gaiaImg"   src="5gaia.png" />
+    <!-- 【修正】<a-plane> の src 指定に合わせて id とファイル名を修正 -->
+    <img id="girlImg"    src="girl.jpg" />
+    <img id="animalImg"  src="animal.jpg" />
+    <img id="alienImg"   src="alien.jpg" />
+    <img id="fantasyImg" src="fantasy.jpg" />
+    <img id="spaceImg"   src="space.jpg" />
     <img id="checkImg"   src="check.png" />
   </a-assets>
   
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
   
+  <!-- 【修正】初期状態で AR コンテンツを非表示 (visible="false") に設定 -->
   <!-- Target 0: Girl -->
   <a-entity id="targetGirl" markerhandler data-group="girl" mindar-image-target="targetIndex: 0">
-    <a-plane id="girlPlane" src="#girlImg" width="1" height="1" material="shader: flat; transparent: true;"></a-plane>
-    <a-entity id="girlGuideContainer"></a-entity>
+    <a-plane id="girlPlane" src="#girlImg" width="1" height="1" visible="false" material="shader: flat; transparent: true;"></a-plane>
+    <a-entity id="girlGuideContainer" visible="false"></a-entity>
   </a-entity>
 
   <!-- Target 1: Animal -->
   <a-entity id="targetAnimal" markerhandler data-group="animal" mindar-image-target="targetIndex: 1">
-    <a-plane id="animalPlane" src="#animalImg" width="1" height="1" material="shader: flat; transparent: true;"></a-plane>
-    <a-entity id="animalGuideContainer"></a-entity>
+    <a-plane id="animalPlane" src="#animalImg" width="1" height="1" visible="false" material="shader: flat; transparent: true;"></a-plane>
+    <a-entity id="animalGuideContainer" visible="false"></a-entity>
   </a-entity>
 
   <!-- Target 2: Alien -->
   <a-entity id="targetAlien" markerhandler data-group="alien" mindar-image-target="targetIndex: 2">
-    <a-plane id="alienPlane" src="#alienImg" width="1" height="1" material="shader: flat; transparent: true;"></a-plane>
-    <a-entity id="alienGuideContainer"></a-entity>
+    <a-plane id="alienPlane" src="#alienImg" width="1" height="1" visible="false" material="shader: flat; transparent: true;"></a-plane>
+    <a-entity id="alienGuideContainer" visible="false"></a-entity>
   </a-entity>
 
   <!-- Target 3: Fantasy -->
   <a-entity id="targetFantasy" markerhandler data-group="fantasy" mindar-image-target="targetIndex: 3">
-    <a-plane id="fantasyPlane" src="#fantasyImg" width="1" height="1" material="shader: flat; transparent: true;"></a-plane>
-    <a-entity id="fantasyGuideContainer"></a-entity>
+    <a-plane id="fantasyPlane" src="#fantasyImg" width="1" height="1" visible="false" material="shader: flat; transparent: true;"></a-plane>
+    <a-entity id="fantasyGuideContainer" visible="false"></a-entity>
   </a-entity>
 
   <!-- Target 4: Space -->
   <a-entity id="targetSpace" markerhandler data-group="space" mindar-image-target="targetIndex: 4">
-    <a-plane id="spacePlane" src="#spaceImg" width="1" height="1" material="shader: flat; transparent: true;"></a-plane>
-    <a-entity id="spaceGuideContainer"></a-entity>
+    <a-plane id="spacePlane" src="#spaceImg" width="1" height="1" visible="false" material="shader: flat; transparent: true;"></a-plane>
+    <a-entity id="spaceGuideContainer" visible="false"></a-entity>
   </a-entity>
 </a-scene>
 
@@ -850,6 +861,10 @@ async function initGame() {
     createHitPlanes(key);
     setupGuideCropAuto(key, res);
     
+    // 【修正】生成されたコンテナを初期状態で明示的に非表示に設定
+    const container = document.querySelector(targetGroups[key].containerId);
+    if (container) container.setAttribute("visible", "false");
+
     targetGroups[key].list.forEach(t => {
       if(t.found) {
         const group = targetGroups[key];
