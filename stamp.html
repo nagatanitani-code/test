@@ -439,7 +439,7 @@ function loadGame() {
 function updateStampBook() {
   UI.stampCount.textContent = `${state.foundCount} / ${state.total}`;
   state.stamps.forEach((isGet, index) => {
-    if (isGet) UI.menuStamps[index].src = `stamp${index + 1}.jpg`;
+    if (isGet) UI.menuStamps[index].src = `stamp${index + 1}.png`;
   });
 }
 
@@ -469,7 +469,7 @@ function showStampEffect(text) {
 function registerStampListener(index) {
   document.querySelector(`#targetStamp${index + 1}`).addEventListener("targetFound", () => {
     UI.stampBox.style.display = "block";
-    UI.stampPreview.src = `stamp${index + 1}.jpg`;
+    UI.stampPreview.src = `stamp${index + 1}.png`;
 
     if (!state.stamps[index]) {
       state.stamps[index] = true;
