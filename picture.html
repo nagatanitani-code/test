@@ -767,7 +767,7 @@ function handleTouch(event) {
   if (checkUI) checkUI.style.display = "block";
 
   const check = document.createElement("a-plane");
-  //check.setAttribute("src", "#checkImg");
+  check.setAttribute("src", "#checkImg");
   // 【修正後】 Z座標を 0.04 に下げ、レイキャストを無視させる
   check.setAttribute("position", `${target.x * group.scales.x} ${target.y * group.scales.y} 0.04`);
 
