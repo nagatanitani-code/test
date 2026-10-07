@@ -333,19 +333,19 @@
     }
     
     /* キャラクター名 */
-.clearName { 
-  font-size: 12px;           /* 少し小さめにして収まりやすく */
-  color: #6d4c41; 
-  font-weight: bold; 
-  text-align: center; 
-  width: 100%; 
-  line-height: 1.2;          /* 改行時の行間をきゅっと詰める */
-  word-break: break-all;     /* 長い単語でも途中で折り返す */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;     /* 最大2行まで表示 */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+    .clearName { 
+      font-size: 12px;
+      color: #6d4c41; 
+      font-weight: bold; 
+      text-align: center; 
+      width: 100%; 
+      line-height: 1.2;
+      word-break: break-all;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
   </style>
 
   <script>
@@ -398,7 +398,6 @@
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: false">
   <a-assets>
-    <!-- 【修正】<a-plane> の src 指定に合わせて id とファイル名を修正 -->
     <img id="girlImg"    src="1god.png" />
     <img id="animalImg"  src="2space.png" />
     <img id="alienImg"   src="3asiato.png" />
@@ -409,7 +408,6 @@
   
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
   
-  <!-- 【修正】初期状態で AR コンテンツを非表示 (visible="false") に設定 -->
   <!-- Target 0: Girl -->
   <a-entity id="targetGirl" markerhandler data-group="girl" mindar-image-target="targetIndex: 0">
     <a-plane id="girlPlane" src="#girlImg" width="1" height="1" visible="false" material="shader: flat; transparent: true;"></a-plane>
@@ -581,44 +579,45 @@
 </div>
 
 <script>
+// 【修正ポイント】各オブジェクトに checkSize を追加（自由に変更してください）
 const targetGroups = {
   girl: {
     maxSize: 2.5, planeId: "#girlPlane", containerId: "#girlGuideContainer", cropPrefix: "#guideCrop_", img: "1god.png", scales: {x:1, y:1},
     list: [
-      { id: "heart",  name: "大黒天様",    x:  0.13, y: 0.04, guideSize: 0.6, hitSize: 0.7, found: false },
-      { id: "eye",    name: "天使ちゃん",    x: 0.04, y:  0.38, guideSize: 0.37, hitSize: 0.4, found: false },
-      { id: "ribbon", name: "だるまさん",      x:  -0.42, y:  -0.04, guideSize: 0.3, hitSize: 0.45, found: false }
+      { id: "heart",  name: "大黒天様",   x:  0.13, y:  0.04, guideSize: 0.6,  hitSize: 0.7,  checkSize: 0.8, found: false },
+      { id: "eye",    name: "天使ちゃん", x:  0.04, y:  0.38, guideSize: 0.37, hitSize: 0.4,  checkSize: 0.5, found: false },
+      { id: "ribbon", name: "だるまさん", x: -0.42, y: -0.04, guideSize: 0.3,  hitSize: 0.45, checkSize: 0.6, found: false }
     ]
   },
   animal: {
     maxSize: 2.5, planeId: "#animalPlane", containerId: "#animalGuideContainer", cropPrefix: "#animalGuideCrop_", img: "2space.png", scales: {x:1, y:1},
     list: [
-      { id: "ear",  name: "ビックリ星人", x: 0.02,  y:  -0.02, guideSize: 0.6, hitSize: 0.7, found: false },
-      { id: "nose", name: "太陽", x:  -0.2,  y:  -0.33,  guideSize: 0.9, hitSize: 1, found: false },
-      { id: "tail", name: "月", x:  0.27, y: 0.3, guideSize: 0.9, hitSize: 1, found: false }
+      { id: "ear",  name: "ビックリ星人", x:  0.02, y: -0.02, guideSize: 0.6, hitSize: 0.7, checkSize: 0.8, found: false },
+      { id: "nose", name: "太陽",         x: -0.2,  y: -0.33, guideSize: 0.9, hitSize: 1.0, checkSize: 1.2, found: false },
+      { id: "tail", name: "月",           x:  0.27, y:  0.3,  guideSize: 0.9, hitSize: 1.0, checkSize: 1.2, found: false }
     ]
   },
   alien: {
     maxSize: 2.5, planeId: "#alienPlane", containerId: "#alienGuideContainer", cropPrefix: "#alienGuideCrop_", img: "3asiato.png", scales: {x:1, y:1},
     list: [
-      { id: "alienEye",   name: "ガーコ",       x: -0.41, y:  0.36, guideSize: 0.25, hitSize: 0.4, found: false },
-      { id: "alienMouth", name: "ボビー", x:  0.22, y: -0.12, guideSize: 0.4, hitSize: 0.5, found: false }
+      { id: "alienEye",   name: "ガーコ", x: -0.41, y:  0.36, guideSize: 0.25, hitSize: 0.4, checkSize: 0.4, found: false },
+      { id: "alienMouth", name: "ボビー", x:  0.22, y: -0.12, guideSize: 0.4,  hitSize: 0.5, checkSize: 0.6, found: false }
     ]
   },
   fantasy: {
     maxSize: 2.5, planeId: "#fantasyPlane", containerId: "#fantasyGuideContainer", cropPrefix: "#fantasyGuideCrop_", img: "4forest.png", scales: {x:1, y:1},
     list: [
-      { id: "dragon", name: "森のキノコ", x: -0.01, y:  0.06, guideSize: 0.45, hitSize: 0.5, found: false },
-      { id: "hero",   name: "鼻ピンク",     x:  -0.16,  y: -0.1, guideSize: 0.4, hitSize: 0.5, found: false },
-      { id: "wizard", name: "リス", x:  0.38, y:  -0.22, guideSize: 0.25, hitSize: 0.4, found: false }
+      { id: "dragon", name: "森のキノコ", x: -0.01, y:  0.06, guideSize: 0.45, hitSize: 0.5, checkSize: 0.7, found: false },
+      { id: "hero",   name: "鼻ピンク",   x: -0.16, y: -0.1,  guideSize: 0.4,  hitSize: 0.5, checkSize: 0.6, found: false },
+      { id: "wizard", name: "リス",       x:  0.38, y: -0.22, guideSize: 0.25, hitSize: 0.4, checkSize: 0.4, found: false }
     ]
   },
   space: {
     maxSize: 2.5, planeId: "#spacePlane", containerId: "#spaceGuideContainer", cropPrefix: "#spaceGuideCrop_", img: "5gaia.png", scales: {x:1, y:1},
     list: [
-      { id: "rocket",    name: "オムレッツ",   x: -0.3, y:  0.16, guideSize: 0.35, hitSize: 0.4, found: false },
-      { id: "planet",    name: "くちびるドラゴン",   x:  -0.3, y:  -0.32, guideSize: 0.5, hitSize: 0.6, found: false },
-      { id: "astronaut", name: "バッサ", x:  0.29, y: -0.33, guideSize: 0.4, hitSize: 0.5, found: false }
+      { id: "rocket",    name: "オムレッツ",       x: -0.3,  y:  0.16, guideSize: 0.35, hitSize: 0.4, checkSize: 0.5, found: false },
+      { id: "planet",    name: "くちびるドラゴン", x: -0.3,  y: -0.32, guideSize: 0.5,  hitSize: 0.6, checkSize: 0.8, found: false },
+      { id: "astronaut", name: "バッサ",           x:  0.29, y: -0.33, guideSize: 0.4,  hitSize: 0.5, checkSize: 0.6, found: false }
     ]
   }
 };
@@ -768,12 +767,10 @@ function handleTouch(event) {
 
   const check = document.createElement("a-plane");
   check.setAttribute("src", "#checkImg");
-  // 【修正後】 Z座標を 0.04 に下げ、レイキャストを無視させる
   check.setAttribute("position", `${target.x * group.scales.x} ${target.y * group.scales.y} 0.04`);
 
-
-check.setAttribute("position", `${target.x * group.scales.x} ${target.y * group.scales.y} 0.08`);
-  const cs = target.guideSize * 1.6;
+  // 【修正ポイント】checkSize が設定されていれば使用、なければ従来の計算式
+  const cs = target.checkSize || (target.guideSize * 1.6);
   check.setAttribute("width", cs);
   check.setAttribute("height", cs);
   check.setAttribute("material", "shader: flat; transparent: true");
@@ -805,7 +802,6 @@ function autoFitPlane(groupKey) {
       resolve({ img, w, h });
     };
     img.onerror = () => {
-      // フォールバック設定（画像読み込み失敗時）
       resolve({ img: { width: 1000, height: 1000 }, w: group.maxSize, h: group.maxSize });
     };
     img.src = group.img;
@@ -868,7 +864,6 @@ async function initGame() {
     createHitPlanes(key);
     setupGuideCropAuto(key, res);
     
-    // 【修正】生成されたコンテナを初期状態で明示的に非表示に設定
     const container = document.querySelector(targetGroups[key].containerId);
     if (container) container.setAttribute("visible", "false");
 
@@ -877,14 +872,12 @@ async function initGame() {
         const group = targetGroups[key];
         const check = document.createElement("a-plane");
         check.setAttribute("src", "#checkImg");
-        // 【修正前】
-  // check.setAttribute("position", `${t.x * group.scales.x} ${t.y * group.scales.y} 0.08`);
+        check.setAttribute("position", `${t.x * group.scales.x} ${t.y * group.scales.y} 0.04`);
 
-  // 【修正後】 Z座標を 0.04 に下げる
-  check.setAttribute("position", `${t.x * group.scales.x} ${t.y * group.scales.y} 0.04`);
-
- const cs = t.guideSize * 1.6;
-        check.setAttribute("width", cs); check.setAttribute("height", cs);
+        // 【修正ポイント】初期化時にも checkSize を適用
+        const cs = t.checkSize || (t.guideSize * 1.6);
+        check.setAttribute("width", cs); 
+        check.setAttribute("height", cs);
         check.setAttribute("material", "shader: flat; transparent: true");
         document.querySelector(group.containerId).appendChild(check);
       }
@@ -923,7 +916,6 @@ UI.backToMenuBtn.addEventListener("click", async () => {
     video.remove(); 
   }
 
-  // メニューに戻る際、すべてのイラスト平面とガイドコンテナを非表示にする
   Object.keys(targetGroups).forEach(key => {
     const group = targetGroups[key];
     const planeEl = document.querySelector(group.planeId);
@@ -942,7 +934,6 @@ UI.backToMenuBtn.addEventListener("click", async () => {
   UI.progressBox.style.display   = "none";
   currentGroup = "";
 
-  // 5つのグループすべてのガイドUIを非表示
   ["#girlGuideUI", "#animalGuideUI", "#alienGuideUI", "#fantasyGuideUI", "#spaceGuideUI"].forEach(s => {
     const el = document.querySelector(s);
     if (el) el.style.display = "none";
