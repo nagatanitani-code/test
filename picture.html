@@ -333,16 +333,19 @@
     }
     
     /* キャラクター名 */
-    .clearName { 
-      font-size: 13px; 
-      color: #6d4c41; 
-      font-weight: bold; 
-      text-align: center; 
-      width: 100%; 
-      white-space: nowrap; 
-      overflow: hidden; 
-      text-overflow: ellipsis; 
-    }
+.clearName { 
+  font-size: 12px;           /* 少し小さめにして収まりやすく */
+  color: #6d4c41; 
+  font-weight: bold; 
+  text-align: center; 
+  width: 100%; 
+  line-height: 1.2;          /* 改行時の行間をきゅっと詰める */
+  word-break: break-all;     /* 長い単語でも途中で折り返す */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;     /* 最大2行まで表示 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
   </style>
 
   <script>
