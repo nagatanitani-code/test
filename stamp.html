@@ -48,7 +48,6 @@ body {
   border: 3px dotted #ffb300; padding: 18px 16px; border-radius: 24px;
   box-shadow: 0 8px 20px rgba(0, 64, 112, 0.2); box-sizing: border-box;
 }
-/* コンテンツ表示エリアは画像拡大に伴い、少し広めの最大幅に設定 */
 .contentCard { max-width: 360px; padding: 22px 16px; gap: 16px; }
 
 .menuGuide { 
@@ -134,7 +133,6 @@ body {
 
 #howToScreen, #hintScreen, #stampScreen { z-index: 20000; display: none; }
 
-/* グリッドレイアウトを調整（2カラム構成でも崩れないよう最適化） */
 .hintGrid, .stampGrid { 
   display: grid; 
   grid-template-columns: repeat(2, 1fr); 
@@ -142,10 +140,6 @@ body {
   width: 100%; 
 }
 
-/* ========================================================
-   【サイズアップ＆常時テキスト】デザイン調整
-======================================================== */
-/* 1. 新しいスタンプ用デザイン（旧86pxから140pxへ拡大） */
 .stampGrid img {
   width: 140px; 
   height: 140px; 
@@ -154,10 +148,9 @@ body {
   background: #f5f5f5; 
   border: 3px solid #ffe082; 
   box-shadow: 0 6px 14px rgba(0, 64, 112, 0.15);
-  justify-self: center; /* グリッド内で中央配置 */
+  justify-self: center;
 }
 
-/* 2. 新しい場所確認カード（常に下に説明文・枠を大きく） */
 .hintCardContainer {
   display: flex;
   flex-direction: column;
@@ -170,7 +163,6 @@ body {
   justify-self: center;
 }
 
-/* カード内の画像エリア（140px正方形） */
 .hintCardImgWrap {
   width: 140px;
   height: 140px;
@@ -184,7 +176,6 @@ body {
   transition: transform 0.3s ease;
 }
 
-/* 常に表示される画像下のテキストエリア */
 .hintBottomTextBar {
   padding: 10px 8px;
   background: #ffffff;
@@ -203,11 +194,9 @@ body {
   word-break: break-all;
 }
 
-/* ホバー時の軽い演出（デザインを崩さない拡大） */
 .hintCardContainer:hover .hintCardImgWrap img {
   transform: scale(1.06);
 }
-/* ======================================================== */
 
 /* COMPLETE画面 */
 #completeWrap {
@@ -236,9 +225,11 @@ body {
   device-orientation-permission-ui="enabled:false">
 
   <a-assets>
-    <img id="stamp1Img" src="stamp1.jpg">
-    <img id="stamp2Img" src="stamp2.jpg">
-    <img id="stamp3Img" src="stamp3.jpg">
+    <img id="stamp1Img" src="stamp1.png">
+    <img id="stamp2Img" src="stamp2.png">
+    <img id="stamp3Img" src="stamp3.png">
+    <img id="stamp4Img" src="stamp4.png">
+    <img id="stamp5Img" src="stamp5.png">
   </a-assets>
 
   <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
@@ -250,6 +241,12 @@ body {
     <a-plane width="0.01" height="0.01" visible="false"></a-plane>
   </a-entity>
   <a-entity id="targetStamp3" mindar-image-target="targetIndex:2">
+    <a-plane width="0.01" height="0.01" visible="false"></a-plane>
+  </a-entity>
+  <a-entity id="targetStamp4" mindar-image-target="targetIndex:3">
+    <a-plane width="0.01" height="0.01" visible="false"></a-plane>
+  </a-entity>
+  <a-entity id="targetStamp5" mindar-image-target="targetIndex:4">
     <a-plane width="0.01" height="0.01" visible="false"></a-plane>
   </a-entity>
 </a-scene>
@@ -284,7 +281,7 @@ body {
 
 <div id="stampBox">
   <div id="stampTitle">スタンプ獲得数</div>
-  <div id="stampCount">0 / 3</div>
+  <div id="stampCount">0 / 5</div>
   <img id="stampPreview" src="">
 </div>
 
@@ -340,6 +337,24 @@ body {
         </div>
       </div>
 
+      <div class="hintCardContainer">
+        <div class="hintCardImgWrap">
+          <img src="hint4_t.jpg">
+        </div>
+        <div class="hintBottomTextBar">
+          <div class="hintText">4番目のヒント場所だよ！</div>
+        </div>
+      </div>
+
+      <div class="hintCardContainer">
+        <div class="hintCardImgWrap">
+          <img src="hint5_t.jpg">
+        </div>
+        <div class="hintBottomTextBar">
+          <div class="hintText">5番目のヒント場所だよ！</div>
+        </div>
+      </div>
+
     </div>
   </div>
   <button id="closeHintBtn" class="backBtn">戻る</button>
@@ -353,6 +368,8 @@ body {
       <img id="menuStamp1" src="stamp_unknown.jpg">
       <img id="menuStamp2" src="stamp_unknown.jpg">
       <img id="menuStamp3" src="stamp_unknown.jpg">
+      <img id="menuStamp4" src="stamp_unknown.jpg">
+      <img id="menuStamp5" src="stamp_unknown.jpg">
     </div>
   </div>
   <button id="closeStampBtn" class="backBtn">戻る</button>
@@ -369,9 +386,9 @@ body {
 // 状態管理と要素キャッシュ
 // ======================
 const state = {
-  stamps: [false, false, false], 
+  stamps: [false, false, false, false, false], 
   get foundCount() { return state.stamps.filter(Boolean).length; },
-  total: 3
+  total: 5
 };
 
 const UI = {
@@ -391,7 +408,9 @@ const UI = {
   menuStamps: [
     document.querySelector("#menuStamp1"),
     document.querySelector("#menuStamp2"),
-    document.querySelector("#menuStamp3")
+    document.querySelector("#menuStamp3"),
+    document.querySelector("#menuStamp4"),
+    document.querySelector("#menuStamp5")
   ]
 };
 
