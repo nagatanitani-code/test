@@ -414,6 +414,14 @@ const UI = {
   ]
 };
 
+const stampNames = [
+  "天界スタンプ！",
+  "神さま山スタンプ！",
+  "あしあとタウンスタンプ！",
+  "摩界スタンプ！",
+  "おとなり島スタンプ！"
+];
+
 // ======================
 // セーブ / ロード
 // ======================
@@ -471,11 +479,11 @@ function registerStampListener(index) {
     UI.stampBox.style.display = "block";
     UI.stampPreview.src = `stamp${index + 1}.png`;
 
-    if (!state.stamps[index]) {
+   if (!state.stamps[index]) {
       state.stamps[index] = true;
       saveGame();
       updateStampBook();
-      showStampEffect(`スタンプ${index + 1} GET!`);
+      showStampEffect(`${stampNames[index]} GET!`); // または showStampEffect(stampNames[index]);
       checkComplete();
     } else {
       showStampEffect("取得済み");
