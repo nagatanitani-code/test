@@ -129,7 +129,11 @@ body {
   position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
   background: gold; color: black; font-size: 24px; font-weight: bold;
   padding: 12px 24px; border-radius: 16px; display: none; z-index: 99999;
+  text-align: center;         /* 中央揃えにする */
+  white-space: pre-wrap;       /* \n での改行を有効にする */
+  word-break: keep-all;        /* 単語の途中で変に改行されないようにする */
 }
+
 
 #howToScreen, #hintScreen, #stampScreen { z-index: 20000; display: none; }
 
@@ -415,11 +419,11 @@ const UI = {
 };
 
 const stampNames = [
-  "天界スタンプ！",
-  "神さま山スタンプ！",
-  "あしあとタウンスタンプ！",
-  "摩界スタンプ！",
-  "おとなり島スタンプ！"
+  "天界\nスタンプ！",
+  "神さま山\nスタンプ！",
+  "あしあとタウン\nスタンプ！",
+  "摩界\nスタンプ！",
+  "おとなり島\nスタンプ！"
 ];
 
 // ======================
