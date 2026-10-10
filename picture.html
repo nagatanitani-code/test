@@ -94,7 +94,7 @@
       pointer-events: none;
     }
 
-    /* メインゲームビューアー (2Dスワイプ＆ズーム用) */
+    /* メインゲームビューアー */
     #gameViewport {
       position: fixed;
       inset: 0;
@@ -107,7 +107,9 @@
 
     #stageContainer {
       position: absolute;
-      transform-origin: 0 0;
+      top: 50%;
+      left: 50%;
+      transform-origin: 50% 50%; /* 画像の中央を中心に拡大縮小 */
       will-change: transform;
     }
 
@@ -363,6 +365,7 @@
       <li>「スタート」を押し、対象のポスターにカメラをまっすぐかざします。</li>
       <li>マーカーを検出すると、自動的にイラスト画面に切り替わります！</li>
       <li>画面を1本指でスワイプして移動、2本指でピンチ（拡大・縮小）しながら隠れたキャラを探そう！</li>
+      <li>画面をトントン（ダブルタップ）すると、最初の大きさに戻ります。</li>
       <li>見つけたらそのキャラを直接タップしてね！</li>
       <li>探すのをやめたい時は「カメラに戻る」を押すとカメラ画面に戻れます。</li>
     </ol>
@@ -421,7 +424,6 @@
 </div>
 
 <script>
-// picture2.html と同じ中心原点ベースのデータ構成
 const targetGroups = {
   girl: {
     maxSize: 2.5, img: "1god.png",
@@ -467,10 +469,12 @@ const targetGroups = {
 let currentGroup = "";
 const imageMetaCache = {};
 
-// ズーム＆パン変数
+// ズーム＆パンの制御変数
 let scale = 1, translateX = 0, translateY = 0;
+let defaultScale = 1;
 let isDragging = false, startX = 0, startY = 0;
 let initialPinchDistance = null, initialScale = 1;
+let lastTapTime = 0;
 
 const viewport = document.getElementById("gameViewport");
 const stageContainer = document.getElementById("stageContainer");
@@ -478,10 +482,10 @@ const mainStageImg = document.getElementById("mainStageImg");
 const hotspotContainer = document.getElementById("hotspotContainer");
 
 function applyTransform() {
-  stageContainer.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  // CSSのtranslate(-50%, -50%)と共存させて中央配置＋スワイプ（translate）＋拡大縮小（scale）を確実に適用
+  stageContainer.style.transform = `translate(calc(-50% + ${translateX}px), calc(-50% + ${translateY}px)) scale(${scale})`;
 }
 
-// ARマーカー読み込み後に2Dスワイプ画面へシームレス移行する処理
 async function start2DMode(groupKey) {
   const arSystem = document.querySelector("#mainScene").systems["mindar-image-system"];
   if (arSystem) { try { await arSystem.stop(); } catch(e){} }
@@ -503,7 +507,6 @@ async function start2DMode(groupKey) {
   loadStage(groupKey);
 }
 
-// 2D画面からカメラ画面に戻る処理
 async function backToCamera() {
   viewport.style.display = "none";
   document.getElementById("backToCameraBtn").style.display = "none";
@@ -521,7 +524,7 @@ async function backToCamera() {
   if (arSystem) await arSystem.start();
 }
 
-// ズーム＆パンスワイプ操作設定
+// ズーム・スワイプ操作ロジック
 function setupPanZoom() {
   viewport.addEventListener("mousedown", (e) => {
     if (e.target.classList.contains("targetHotspot")) return;
@@ -539,7 +542,20 @@ function setupPanZoom() {
 
   window.addEventListener("mouseup", () => { isDragging = false; });
 
+  // タッチ操作（1本指スワイプ・2本指ピンチズーム・ダブルタップリセット）
   viewport.addEventListener("touchstart", (e) => {
+    const now = Date.now();
+    // ダブルタップで初期倍率・位置にリセット
+    if (e.touches.length === 1 && now - lastTapTime < 300) {
+      scale = defaultScale;
+      translateX = 0;
+      translateY = 0;
+      applyTransform();
+      lastTapTime = 0;
+      return;
+    }
+    lastTapTime = now;
+
     if (e.touches.length === 1) {
       isDragging = true;
       startX = e.touches[0].clientX - translateX;
@@ -565,8 +581,9 @@ function setupPanZoom() {
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
       );
+      // 比率計算でスムーズに縮小可能に（0.15倍〜5.0倍）
       const factor = currentDistance / initialPinchDistance;
-      scale = Math.min(Math.max(0.8, initialScale * factor), 5.0);
+      scale = Math.min(Math.max(0.15, initialScale * factor), 5.0);
       applyTransform();
     }
   }, { passive: false });
@@ -576,23 +593,15 @@ function setupPanZoom() {
     initialPinchDistance = null;
   });
 
+  // マウスホイールズーム
   viewport.addEventListener("wheel", (e) => {
     e.preventDefault();
     const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
-    const newScale = Math.min(Math.max(0.8, scale * zoomFactor), 5.0);
-    
-    const rect = viewport.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-
-    translateX = mouseX - (mouseX - translateX) * (newScale / scale);
-    translateY = mouseY - (mouseY - translateY) * (newScale / scale);
-    scale = newScale;
+    scale = Math.min(Math.max(0.15, scale * zoomFactor), 5.0);
     applyTransform();
   }, { passive: false });
 }
 
-// セーブ / ロード
 function saveGame() {
   const saveData = {};
   Object.keys(targetGroups).forEach(key => {
@@ -636,7 +645,6 @@ function checkComplete() {
   }
 }
 
-// 2Dステージ読み込み（picture2.htmlの判定ロジックを使用）
 function loadStage(groupKey) {
   currentGroup = groupKey;
   const group = targetGroups[groupKey];
@@ -648,7 +656,6 @@ function loadStage(groupKey) {
     const iw = mainStageImg.naturalWidth;
     const ih = mainStageImg.naturalHeight;
     
-    // picture2.htmlと同様の3D Plane計算（アスペクト比維持）
     const aspect = iw / ih;
     let planeW = group.maxSize, planeH = group.maxSize;
     if (aspect >= 1) { planeW = group.maxSize; planeH = group.maxSize / aspect; }
@@ -658,13 +665,16 @@ function loadStage(groupKey) {
 
     const vw = viewport.clientWidth;
     const vh = viewport.clientHeight;
+    
+    // 初期スケール（画面に綺麗に収まる倍率）
     scale = Math.min(vw / iw, vh / ih) * 0.95;
-    translateX = (vw - iw * scale) / 2;
-    translateY = (vh - ih * scale) / 2;
+    translateX = 0;
+    translateY = 0;
+    
+    defaultScale = scale;
     applyTransform();
 
     group.list.forEach(target => {
-      // 画面中央原点（x: -0.5〜0.5, y: -0.5〜0.5）から画像ピクセル位置へ変換
       const px = ((target.x * planeW) + planeW / 2) / planeW * iw;
       const py = ((planeH / 2) - (target.y * planeH)) / planeH * ih;
       const size = (target.hitSize / planeW) * iw;
@@ -789,7 +799,7 @@ function updateClearScreen() {
   });
 }
 
-// カメラスタート処理
+// イベントリスナー設定
 document.getElementById("startBtn").addEventListener("click", async () => {
   document.getElementById("menuScreen").style.display = "none";
   document.getElementById("mainScene").style.display = "block";
