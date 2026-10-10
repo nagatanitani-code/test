@@ -205,19 +205,28 @@ body {
 /* COMPLETE画面 */
 #completeWrap {
   position: fixed; inset: 0; display: none; flex-direction: column;
-  justify-content: center; align-items: center; gap: 20px;
-  background: rgba(0,0,0,.75); z-index: 30000;
+  justify-content: center; align-items: center; gap: 16px;
+  background: rgba(0,0,0,.85); z-index: 30000;
+  padding: 40px 20px 20px; box-sizing: border-box;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
 }
-#completeText { font-size: 42px; font-weight: bold; color: gold; text-shadow: 0 0 20px rgba(255,215,0,.8); }
-#completeImage { width: 320px; max-width: 85vw; border-radius: 24px; cursor: pointer; box-shadow: 0 0 30px rgba(255,180,0,.8); }
+#completeText { 
+  font-size: 36px; font-weight: bold; color: gold; 
+  text-shadow: 0 0 20px rgba(255,215,0,.8); 
+  margin: 0;
+}
+#completeImage { 
+  width: 240px; max-width: 70vw; max-height: 35vh; object-fit: contain;
+  border-radius: 20px; cursor: pointer; box-shadow: 0 0 20px rgba(255,180,0,.6); 
+}
 #completeSubText {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   color: #ffffff;
   text-align: center;
   line-height: 1.5;
   background: rgba(0, 0, 0, 0.6);
-  padding: 12px 20px;
+  padding: 10px 16px;
   border-radius: 16px;
   border: 2px solid #ffb300;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -225,9 +234,9 @@ body {
   box-sizing: border-box;
 }
 #closeComplete {
-  position: absolute; top: 20px; left: 20px; width: 52px; height: 52px; border-radius: 50%;
-  background: rgba(0,0,0,.8); color: white; font-size: 32px; font-weight: bold;
-  display: flex; justify-content: center; align-items: center; border: 3px solid white; cursor: pointer;
+  position: absolute; top: 15px; left: 15px; width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(0,0,0,.8); color: white; font-size: 28px; font-weight: bold;
+  display: flex; justify-content: center; align-items: center; border: 2px solid white; cursor: pointer;
 }
 </style>
 </head>
