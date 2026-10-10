@@ -473,7 +473,7 @@ const targetGroups = {
 let currentGroup = "";
 const imageMetaCache = {};
 
-// スムーズズーム＆パンの制御変数
+// ズーム＆パン制御用変数
 let currentScale = 1, targetScale = 1, defaultScale = 1;
 let currentX = 0, targetX = 0;
 let currentY = 0, targetY = 0;
@@ -481,22 +481,54 @@ let currentY = 0, targetY = 0;
 let isDragging = false, startX = 0, startY = 0;
 let initialPinchDistance = null, initialScale = 1;
 let lastTapTime = 0;
-let animFrameId = null;
+
+let isAnimating = false;
 
 const viewport = document.getElementById("gameViewport");
 const stageContainer = document.getElementById("stageContainer");
 const mainStageImg = document.getElementById("mainStageImg");
 const hotspotContainer = document.getElementById("hotspotContainer");
 
-// スムーズ移動・ズームのアニメーションループ関数
+// 軽量化: 必要な時（操作中・慣性移動中）のみループを回す
+function requestRender() {
+  if (!isAnimating) {
+    isAnimating = true;
+    requestAnimationFrame(updateTransformLoop);
+  }
+}
+
 function updateTransformLoop() {
-  currentScale += (targetScale - currentScale) * 0.2;
-  currentX += (targetX - currentX) * 0.2;
-  currentY += (targetY - currentY) * 0.2;
+  // ラープ補間計算
+  const ds = targetScale - currentScale;
+  const dx = targetX - currentX;
+  const dy = targetY - currentY;
+
+  currentScale += ds * 0.25;
+  currentX += dx * 0.25;
+  currentY += dy * 0.25;
 
   stageContainer.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px)) scale(${currentScale})`;
 
-  animFrameId = requestAnimationFrame(updateTransformLoop);
+  // 動きがほぼ無くなったら描画ループを停止してCPU・GPU負荷を下げる
+  if (Math.abs(ds) < 0.001 && Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1 && !isDragging && !initialPinchDistance) {
+    currentScale = targetScale;
+    currentX = targetX;
+    currentY = targetY;
+    stageContainer.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px)) scale(${currentScale})`;
+    isAnimating = false;
+  } else {
+    requestAnimationFrame(updateTransformLoop);
+  }
+}
+
+// カメラストリームの完全停止処理（発熱抑制）
+function stopCameraStream() {
+  const video = document.querySelector("video");
+  if (video && video.srcObject) {
+    video.srcObject.getTracks().forEach(track => track.stop());
+    video.srcObject = null;
+    video.remove();
+  }
 }
 
 // AR読み込み検知時の2D切り替え
@@ -507,6 +539,8 @@ async function start2DMode(groupKey) {
     try { await arSystem.stop(); } catch(e){}
   }
 
+  stopCameraStream();
+
   scene.style.display = "none";
   document.getElementById("backToMenuFromARBtn").style.display = "none";
   
@@ -514,8 +548,6 @@ async function start2DMode(groupKey) {
   document.getElementById("progressBox").style.display = "block";
   document.getElementById("backToCameraBtn").style.display = "block";
   document.getElementById("guideUI").style.display = "flex";
-
-  if (!animFrameId) updateTransformLoop();
 
   loadStage(groupKey);
 }
@@ -537,15 +569,10 @@ async function backToCamera() {
 
   const arSystem = scene.systems ? scene.systems["mindar-image-system"] : null;
   if (arSystem) {
-    try {
-      await arSystem.stop();
-    } catch(e) {}
-    try {
-      await arSystem.start();
-    } catch(e) {}
+    try { await arSystem.stop(); } catch(e) {}
+    try { await arSystem.start(); } catch(e) {}
   }
 
-  // 遷移フラグをリセットして次の検出を有効化
   isTransitioning = false;
 }
 
@@ -556,23 +583,27 @@ function setupPanZoom() {
     isDragging = true;
     startX = e.clientX - targetX;
     startY = e.clientY - targetY;
+    requestRender();
   });
 
   window.addEventListener("mousemove", (e) => {
     if (!isDragging) return;
     targetX = e.clientX - startX;
     targetY = e.clientY - startY;
+    requestRender();
   });
 
   window.addEventListener("mouseup", () => { isDragging = false; });
 
   viewport.addEventListener("touchstart", (e) => {
     const now = Date.now();
+    // ダブルタップで初期倍率・位置にリセット
     if (e.touches.length === 1 && now - lastTapTime < 300) {
       targetScale = defaultScale;
       targetX = 0;
       targetY = 0;
       lastTapTime = 0;
+      requestRender();
       return;
     }
     lastTapTime = now;
@@ -581,6 +612,7 @@ function setupPanZoom() {
       isDragging = true;
       startX = e.touches[0].clientX - targetX;
       startY = e.touches[0].clientY - targetY;
+      requestRender();
     } else if (e.touches.length === 2) {
       isDragging = false;
       initialPinchDistance = Math.hypot(
@@ -588,6 +620,7 @@ function setupPanZoom() {
         e.touches[0].clientY - e.touches[1].clientY
       );
       initialScale = targetScale;
+      requestRender();
     }
   }, { passive: false });
 
@@ -596,6 +629,7 @@ function setupPanZoom() {
     if (e.touches.length === 1 && isDragging) {
       targetX = e.touches[0].clientX - startX;
       targetY = e.touches[0].clientY - startY;
+      requestRender();
     } else if (e.touches.length === 2 && initialPinchDistance) {
       const currentDistance = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
@@ -603,18 +637,21 @@ function setupPanZoom() {
       );
       const factor = currentDistance / initialPinchDistance;
       targetScale = Math.min(Math.max(0.15, initialScale * factor), 5.0);
+      requestRender();
     }
   }, { passive: false });
 
   viewport.addEventListener("touchend", () => {
     isDragging = false;
     initialPinchDistance = null;
+    requestRender();
   });
 
   viewport.addEventListener("wheel", (e) => {
     e.preventDefault();
     const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
     targetScale = Math.min(Math.max(0.15, targetScale * zoomFactor), 5.0);
+    requestRender();
   }, { passive: false });
 }
 
@@ -736,6 +773,7 @@ function loadStage(groupKey) {
 
     renderGuideUI();
     updateProgress();
+    requestRender();
   };
 }
 
@@ -839,11 +877,7 @@ document.getElementById("backToMenuFromARBtn").addEventListener("click", async (
   const arSystem = scene.systems ? scene.systems["mindar-image-system"] : null;
   if (arSystem) { try { await arSystem.stop(); } catch(e) {} }
 
-  const video = document.querySelector("video");
-  if (video) {
-    if (video.srcObject) video.srcObject.getTracks().forEach(t => t.stop());
-    video.remove();
-  }
+  stopCameraStream();
 
   scene.style.display = "none";
   document.getElementById("menuScreen").style.display = "flex";
