@@ -36,7 +36,7 @@
       letter-spacing: 4px;
       text-shadow: 0 4px 12px rgba(0,0,0,0.4); 
       box-shadow: 0 0 40px rgba(255,180,0,0.8);
-      z-index: 9999; 
+      z-index: 99999; 
       animation: pop 0.8s ease;
       white-space: nowrap;
       text-align: center;
@@ -49,29 +49,33 @@
       100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
 
-    /* 上部ガイドUI */
+    /* 上部ガイドUI (z-indexを上げて確実に前面化) */
     .guideUI {
       position: fixed; 
       top: env(safe-area-inset-top, 10px); 
       left: 50%; 
       transform: translateX(-50%);
       display: none; 
-      gap: 14px; 
-      z-index: 9999;
+      gap: 12px; 
+      z-index: 20000;
       max-width: 95vw;
       overflow-x: auto;
-      padding: 5px;
+      padding: 6px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 16px;
+      backdrop-filter: blur(4px);
     }
 
     .guideItem {
       position: relative; 
-      width: 70px; 
-      height: 70px;
+      width: 65px; 
+      height: 65px;
       flex-shrink: 0;
-      border: 3px solid yellow; 
-      border-radius: 14px; 
+      border: 3px solid #ffeb3b; 
+      border-radius: 12px; 
       overflow: hidden; 
-      background: rgba(0,0,0,0.7);
+      background: #000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
 
     .guideCrop { 
@@ -98,9 +102,8 @@
       display: none;
       background: #222;
       z-index: 10000;
-      cursor: grab;
+      touch-action: none;
     }
-    #gameViewport:active { cursor: grabbing; }
 
     #stageContainer {
       position: absolute;
@@ -119,6 +122,7 @@
       border-radius: 50%;
       box-sizing: border-box;
       cursor: pointer;
+      touch-action: none;
     }
 
     .checkMark {
@@ -147,7 +151,7 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    #menuScreen { z-index: 20000; }
+    #menuScreen { z-index: 30000; }
 
     .gameTitleStyle {
       font-size: clamp(32px, 10vw, 48px); 
@@ -217,32 +221,34 @@
     #openClearBtn { border: 2px solid #26a69a !important; background: linear-gradient(180deg, #4db6ac 0%, #00897b 100%) !important; border-bottom: 6px solid #00695c !important; }
     .backBtnColor { border: 2px solid #5c6bc0 !important; background: linear-gradient(180deg, #7986cb 0%, #3f51b5 100%) !important; border-bottom: 6px solid #283593 !important; }
 
-    #backToMenuBtn {
+    /* カメラに戻る / メニューに戻る ボタン */
+    #backToCameraBtn, #backToMenuFromARBtn {
       position: fixed; 
       bottom: calc(20px + env(safe-area-inset-bottom, 0px)); 
       left: 20px; 
-      z-index: 50000;
+      z-index: 25000;
       padding: 12px 20px; 
       border: none; 
       border-radius: 16px; 
-      background: rgba(0,0,0,0.8); 
+      background: rgba(0,0,0,0.85); 
       color: white; 
       font-size: 16px; 
       font-weight: bold; 
       display: none; 
       cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
 
     #progressBox {
       position: fixed; 
       bottom: calc(20px + env(safe-area-inset-bottom, 0px)); 
       right: 20px;
-      background: rgba(0,0,0,0.8); 
+      background: rgba(0,0,0,0.85); 
       border: 2px solid rgba(255,255,255,0.2); 
       border-radius: 18px;
       padding: 10px 18px; 
       color: white; 
-      z-index: 15000; 
+      z-index: 20000; 
       display: none; 
       text-align: center;
     }
@@ -253,7 +259,7 @@
       position: fixed; 
       inset: 0; 
       background: rgba(0,0,0,0.85); 
-      z-index: 30000;
+      z-index: 40000;
       display: none; 
       flex-direction: column; 
       justify-content: center; 
@@ -263,7 +269,7 @@
     #completeText { font-size: 42px; font-weight: bold; color: gold; text-shadow: 0 0 20px rgba(255,215,0,0.8); }
     #completeClose { padding: 14px 30px; border: none; border-radius: 18px; font-size: 20px; font-weight: bold; background: #ff9800; color: white; cursor: pointer; }
 
-    #howToScreen, #clearScreen { z-index: 20000; display: none; }
+    #howToScreen, #clearScreen { z-index: 35000; display: none; }
 
     .clearCategoryTitle { font-size: 18px; color: #d84315; font-weight: bold; margin: 15px 0 4px 0; align-self: flex-start; }
     .clearWholeImageContainer { width: 100%; max-width: 320px; background: #fff; border: 3px solid #ffb74d; padding: 8px; border-radius: 16px; box-sizing: border-box; text-align: center; }
@@ -337,7 +343,9 @@
   </div>
 </div>
 
-<button id="backToMenuBtn">メニューへ戻る</button>
+<!-- ボタン群 -->
+<button id="backToCameraBtn">カメラに戻る</button>
+<button id="backToMenuFromARBtn">メニューへ戻る</button>
 
 <div id="progressBox">
   <div class="label">イラスト内の発見数</div>
@@ -357,6 +365,7 @@
       <li>マーカーを検出すると、自動的にイラスト画面に切り替わります！</li>
       <li>画面を1本指でスワイプして移動、2本指でピンチ（拡大）しながら隠れたキャラを探そう！</li>
       <li>見つけたらそのキャラを直接タップしてね！</li>
+      <li>探すのをやめたい時は「カメラに戻る」を押すとカメラ画面に戻れます。</li>
     </ol>
   </div>
   <button id="closeHowToBtn" class="popBtnStyle backBtnColor">メニューに戻る</button>
@@ -475,7 +484,7 @@ function applyTransform() {
 
 // ARマーカー読み込み後に2Dスワイプ画面へシームレス移行する処理
 async function start2DMode(groupKey) {
-  // カメラ停止
+  // カメラの停止
   const arSystem = document.querySelector("#mainScene").systems["mindar-image-system"];
   if (arSystem) { try { await arSystem.stop(); } catch(e){} }
 
@@ -486,14 +495,35 @@ async function start2DMode(groupKey) {
   }
 
   document.querySelector("#mainScene").style.display = "none";
+  document.getElementById("backToMenuFromARBtn").style.display = "none";
+  
   viewport.style.display = "block";
   document.getElementById("progressBox").style.display = "block";
+  document.getElementById("backToCameraBtn").style.display = "block";
   document.getElementById("guideUI").style.display = "flex";
 
   loadStage(groupKey);
 }
 
-// ズーム＆パンスワイプ操作設定
+// 2D画面からカメラ画面に戻る処理
+async function backToCamera() {
+  viewport.style.display = "none";
+  document.getElementById("backToCameraBtn").style.display = "none";
+  document.getElementById("progressBox").style.display = "none";
+  document.getElementById("guideUI").style.display = "none";
+
+  document.querySelector("#mainScene").style.display = "block";
+  document.getElementById("backToMenuFromARBtn").style.display = "block";
+
+  const scene = document.querySelector("#mainScene");
+  if (!scene.hasLoaded) {
+    await new Promise(r => scene.addEventListener("loaded", r));
+  }
+  const arSystem = scene.systems["mindar-image-system"];
+  if (arSystem) await arSystem.start();
+}
+
+// ズーム＆パンスワイプ操作設定 (スマホ・PC最適化)
 function setupPanZoom() {
   viewport.addEventListener("mousedown", (e) => {
     if (e.target.classList.contains("targetHotspot")) return;
@@ -511,6 +541,7 @@ function setupPanZoom() {
 
   window.addEventListener("mouseup", () => { isDragging = false; });
 
+  // タッチ操作（1本指パン、2本指ピンチズーム）
   viewport.addEventListener("touchstart", (e) => {
     if (e.touches.length === 1) {
       isDragging = true;
@@ -527,6 +558,7 @@ function setupPanZoom() {
   }, { passive: false });
 
   viewport.addEventListener("touchmove", (e) => {
+    e.preventDefault(); // デフォルトのブラウザスクロールを防止
     if (e.touches.length === 1 && isDragging) {
       translateX = e.touches[0].clientX - startX;
       translateY = e.touches[0].clientY - startY;
@@ -537,7 +569,7 @@ function setupPanZoom() {
         e.touches[0].clientY - e.touches[1].clientY
       );
       const factor = currentDistance / initialPinchDistance;
-      scale = Math.min(Math.max(0.5, initialScale * factor), 4);
+      scale = Math.min(Math.max(0.8, initialScale * factor), 5.0);
       applyTransform();
     }
   }, { passive: false });
@@ -547,10 +579,11 @@ function setupPanZoom() {
     initialPinchDistance = null;
   });
 
+  // マウスホイールズーム
   viewport.addEventListener("wheel", (e) => {
     e.preventDefault();
-    const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
-    const newScale = Math.min(Math.max(0.5, scale * zoomFactor), 4);
+    const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
+    const newScale = Math.min(Math.max(0.8, scale * zoomFactor), 5.0);
     
     const rect = viewport.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
@@ -680,6 +713,7 @@ function renderGuideUI() {
   const guideUI = document.getElementById("guideUI");
   guideUI.innerHTML = "";
   const group = targetGroups[currentGroup];
+  const meta = imageMetaCache[currentGroup];
 
   group.list.forEach(target => {
     const item = document.createElement("div");
@@ -688,9 +722,8 @@ function renderGuideUI() {
     const crop = document.createElement("div");
     crop.className = "guideCrop";
 
-    const meta = imageMetaCache[currentGroup];
     if (meta) {
-      const boxSize = 70;
+      const boxSize = 65;
       const cropW = meta.w * target.radius * 2;
       const cropH = meta.h * target.radius * 2;
       const bgW = meta.w * (boxSize / cropW);
@@ -750,7 +783,7 @@ function updateClearScreen() {
 document.getElementById("startBtn").addEventListener("click", async () => {
   document.getElementById("menuScreen").style.display = "none";
   document.getElementById("mainScene").style.display = "block";
-  document.getElementById("backToMenuBtn").style.display = "block";
+  document.getElementById("backToMenuFromARBtn").style.display = "block";
 
   const scene = document.querySelector("#mainScene");
   if (!scene.hasLoaded) {
@@ -760,8 +793,11 @@ document.getElementById("startBtn").addEventListener("click", async () => {
   if (arSystem) await arSystem.start();
 });
 
-// メニューに戻るボタン
-document.getElementById("backToMenuBtn").addEventListener("click", async () => {
+// 「カメラに戻る」ボタンのクリックリスナー
+document.getElementById("backToCameraBtn").addEventListener("click", backToCamera);
+
+// 「メニューに戻る」ボタン（AR撮影時）のクリックリスナー
+document.getElementById("backToMenuFromARBtn").addEventListener("click", async () => {
   const arSystem = document.querySelector("#mainScene").systems["mindar-image-system"];
   if (arSystem) { try { await arSystem.stop(); } catch(e) {} }
 
@@ -772,11 +808,8 @@ document.getElementById("backToMenuBtn").addEventListener("click", async () => {
   }
 
   document.querySelector("#mainScene").style.display = "none";
-  viewport.style.display = "none";
   document.getElementById("menuScreen").style.display = "flex";
-  document.getElementById("backToMenuBtn").style.display = "none";
-  document.getElementById("progressBox").style.display = "none";
-  document.getElementById("guideUI").style.display = "none";
+  document.getElementById("backToMenuFromARBtn").style.display = "none";
 });
 
 document.getElementById("openHowToBtn").addEventListener("click", () => {
