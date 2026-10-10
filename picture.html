@@ -109,7 +109,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform-origin: 50% 50%; /* 画像の中央を中心に拡大縮小 */
+      transform-origin: 50% 50%;
       will-change: transform;
     }
 
@@ -140,7 +140,7 @@
       inset: 0;
       background: 
         radial-gradient(circle at 50% 30%, rgba(255, 235, 160, 0.2), transparent 60%),
-        linear-gradient(45deg, #f7ede2 25%, #f5e1d3 25%, #f5e1d3 50%, #f7ede2 50%, #f7ede2 75%, #f5e1d3 75%, #f5e1d3 100%);
+        linear-gradient(45deg, #f7ede2 25%, #f5e1d3 25%, #f5e1d3 50%, #f7ede2 50%, #f7ede2 75%, #f5e1d3 75%, #f7ede2 100%);
       background-size: 40px 40px; 
       background-color: #f7ede2;
       display: flex; 
@@ -469,21 +469,31 @@ const targetGroups = {
 let currentGroup = "";
 const imageMetaCache = {};
 
-// ズーム＆パンの制御変数
-let scale = 1, translateX = 0, translateY = 0;
-let defaultScale = 1;
+// スムーズズーム＆パンの制御変数
+let currentScale = 1, targetScale = 1, defaultScale = 1;
+let currentX = 0, targetX = 0;
+let currentY = 0, targetY = 0;
+
 let isDragging = false, startX = 0, startY = 0;
 let initialPinchDistance = null, initialScale = 1;
 let lastTapTime = 0;
+let animFrameId = null;
 
 const viewport = document.getElementById("gameViewport");
 const stageContainer = document.getElementById("stageContainer");
 const mainStageImg = document.getElementById("mainStageImg");
 const hotspotContainer = document.getElementById("hotspotContainer");
 
-function applyTransform() {
-  // CSSのtranslate(-50%, -50%)と共存させて中央配置＋スワイプ（translate）＋拡大縮小（scale）を確実に適用
-  stageContainer.style.transform = `translate(calc(-50% + ${translateX}px), calc(-50% + ${translateY}px)) scale(${scale})`;
+// スムーズ移動・ズームのアニメーションループ関数
+function updateTransformLoop() {
+  // 補間（ラープ処理）で滑らかに目標値へ近づける
+  currentScale += (targetScale - currentScale) * 0.2;
+  currentX += (targetX - currentX) * 0.2;
+  currentY += (targetY - currentY) * 0.2;
+
+  stageContainer.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px)) scale(${currentScale})`;
+
+  animFrameId = requestAnimationFrame(updateTransformLoop);
 }
 
 async function start2DMode(groupKey) {
@@ -503,6 +513,8 @@ async function start2DMode(groupKey) {
   document.getElementById("progressBox").style.display = "block";
   document.getElementById("backToCameraBtn").style.display = "block";
   document.getElementById("guideUI").style.display = "flex";
+
+  if (!animFrameId) updateTransformLoop();
 
   loadStage(groupKey);
 }
@@ -524,33 +536,31 @@ async function backToCamera() {
   if (arSystem) await arSystem.start();
 }
 
-// ズーム・スワイプ操作ロジック
+// スムーズなズーム・スワイプ操作ロジック
 function setupPanZoom() {
   viewport.addEventListener("mousedown", (e) => {
     if (e.target.classList.contains("targetHotspot")) return;
     isDragging = true;
-    startX = e.clientX - translateX;
-    startY = e.clientY - translateY;
+    startX = e.clientX - targetX;
+    startY = e.clientY - targetY;
   });
 
   window.addEventListener("mousemove", (e) => {
     if (!isDragging) return;
-    translateX = e.clientX - startX;
-    translateY = e.clientY - startY;
-    applyTransform();
+    targetX = e.clientX - startX;
+    targetY = e.clientY - startY;
   });
 
   window.addEventListener("mouseup", () => { isDragging = false; });
 
-  // タッチ操作（1本指スワイプ・2本指ピンチズーム・ダブルタップリセット）
+  // タッチ操作（パン・ピンチズーム）
   viewport.addEventListener("touchstart", (e) => {
     const now = Date.now();
-    // ダブルタップで初期倍率・位置にリセット
+    // ダブルタップで初期倍率・位置にスムーズリセット
     if (e.touches.length === 1 && now - lastTapTime < 300) {
-      scale = defaultScale;
-      translateX = 0;
-      translateY = 0;
-      applyTransform();
+      targetScale = defaultScale;
+      targetX = 0;
+      targetY = 0;
       lastTapTime = 0;
       return;
     }
@@ -558,33 +568,30 @@ function setupPanZoom() {
 
     if (e.touches.length === 1) {
       isDragging = true;
-      startX = e.touches[0].clientX - translateX;
-      startY = e.touches[0].clientY - translateY;
+      startX = e.touches[0].clientX - targetX;
+      startY = e.touches[0].clientY - targetY;
     } else if (e.touches.length === 2) {
       isDragging = false;
       initialPinchDistance = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
       );
-      initialScale = scale;
+      initialScale = targetScale;
     }
   }, { passive: false });
 
   viewport.addEventListener("touchmove", (e) => {
     e.preventDefault();
     if (e.touches.length === 1 && isDragging) {
-      translateX = e.touches[0].clientX - startX;
-      translateY = e.touches[0].clientY - startY;
-      applyTransform();
+      targetX = e.touches[0].clientX - startX;
+      targetY = e.touches[0].clientY - startY;
     } else if (e.touches.length === 2 && initialPinchDistance) {
       const currentDistance = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
       );
-      // 比率計算でスムーズに縮小可能に（0.15倍〜5.0倍）
       const factor = currentDistance / initialPinchDistance;
-      scale = Math.min(Math.max(0.15, initialScale * factor), 5.0);
-      applyTransform();
+      targetScale = Math.min(Math.max(0.15, initialScale * factor), 5.0);
     }
   }, { passive: false });
 
@@ -597,8 +604,7 @@ function setupPanZoom() {
   viewport.addEventListener("wheel", (e) => {
     e.preventDefault();
     const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
-    scale = Math.min(Math.max(0.15, scale * zoomFactor), 5.0);
-    applyTransform();
+    targetScale = Math.min(Math.max(0.15, targetScale * zoomFactor), 5.0);
   }, { passive: false });
 }
 
@@ -667,12 +673,12 @@ function loadStage(groupKey) {
     const vh = viewport.clientHeight;
     
     // 初期スケール（画面に綺麗に収まる倍率）
-    scale = Math.min(vw / iw, vh / ih) * 0.95;
-    translateX = 0;
-    translateY = 0;
+    defaultScale = Math.min(vw / iw, vh / ih) * 0.95;
+    targetScale = defaultScale;
+    currentScale = defaultScale;
     
-    defaultScale = scale;
-    applyTransform();
+    targetX = 0; currentX = 0;
+    targetY = 0; currentY = 0;
 
     group.list.forEach(target => {
       const px = ((target.x * planeW) + planeW / 2) / planeW * iw;
@@ -705,14 +711,15 @@ function loadStage(groupKey) {
 
       hotspotContainer.appendChild(hs);
 
+      // 発見チェックマーク生成 (サイズを0.5倍に小さく変更)
       const check = document.createElement("img");
       check.id = "check_" + target.id;
       check.src = "check.png";
       check.className = "checkMark";
       check.style.left = `${px}px`;
       check.style.top = `${py}px`;
-      check.style.width = `${size * 1.2}px`;
-      check.style.height = `${size * 1.2}px`;
+      check.style.width = `${size * 0.5}px`;
+      check.style.height = `${size * 0.5}px`;
       if (target.found) check.style.display = "block";
 
       hotspotContainer.appendChild(check);
