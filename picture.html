@@ -49,7 +49,7 @@
       100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
 
-    /* 上部ガイドUI (z-indexを上げて確実に前面化) */
+    /* 上部ガイドUI */
     .guideUI {
       position: fixed; 
       top: env(safe-area-inset-top, 10px); 
@@ -282,7 +282,6 @@
   </style>
 
   <script>
-    // ARマーカー検出イベントの設定
     AFRAME.registerComponent("markerhandler", {
       init() {
         this.el.addEventListener("targetFound", () => {
@@ -363,7 +362,7 @@
     <ol style="font-size: 15px; color: #6d4c41; font-weight: bold; margin: 0; padding-left: 20px; line-height: 1.8;">
       <li>「スタート」を押し、対象のポスターにカメラをまっすぐかざします。</li>
       <li>マーカーを検出すると、自動的にイラスト画面に切り替わります！</li>
-      <li>画面を1本指でスワイプして移動、2本指でピンチ（拡大）しながら隠れたキャラを探そう！</li>
+      <li>画面を1本指でスワイプして移動、2本指でピンチ（拡大・縮小）しながら隠れたキャラを探そう！</li>
       <li>見つけたらそのキャラを直接タップしてね！</li>
       <li>探すのをやめたい時は「カメラに戻る」を押すとカメラ画面に戻れます。</li>
     </ol>
@@ -422,45 +421,45 @@
 </div>
 
 <script>
-// キャラクター座標管理 (相対割合 0~1)
+// picture2.html と同じ中心原点ベースのデータ構成
 const targetGroups = {
   girl: {
-    title: "福を迎えに！", img: "1god.png",
+    maxSize: 2.5, img: "1god.png",
     list: [
-      { id: "heart",  name: "大黒天様",   rx: 0.63, ry: 0.46, radius: 0.08, found: false },
-      { id: "eye",    name: "天使ちゃん", rx: 0.54, ry: 0.12, radius: 0.06, found: false },
-      { id: "ribbon", name: "だるまさん", rx: 0.08, ry: 0.54, radius: 0.06, found: false }
+      { id: "heart",  name: "大黒天様",   x:  0.13, y:  0.04, guideSize: 0.6,  hitSize: 0.7,  found: false },
+      { id: "eye",    name: "天使ちゃん", x:  0.04, y:  0.38, guideSize: 0.37, hitSize: 0.4,  found: false },
+      { id: "ribbon", name: "だるまさん", x: -0.42, y: -0.04, guideSize: 0.3,  hitSize: 0.45, found: false }
     ]
   },
   animal: {
-    title: "宇宙", img: "2space.png",
+    maxSize: 2.5, img: "2space.png",
     list: [
-      { id: "ear",  name: "ビックリ星人", rx: 0.52, ry: 0.52, radius: 0.08, found: false },
-      { id: "nose", name: "太陽",         rx: 0.30, ry: 0.83, radius: 0.09, found: false },
-      { id: "tail", name: "月",           rx: 0.77, ry: 0.20, radius: 0.09, found: false }
+      { id: "ear",  name: "ビックリ星人", x:  0.02, y: -0.02, guideSize: 0.6, hitSize: 0.7, found: false },
+      { id: "nose", name: "太陽",         x: -0.2,  y: -0.33, guideSize: 0.9, hitSize: 1.0, found: false },
+      { id: "tail", name: "月",           x:  0.27, y:  0.3,  guideSize: 0.9, hitSize: 1.0, found: false }
     ]
   },
   alien: {
-    title: "あしあとタウン", img: "3asiato.png",
+    maxSize: 2.5, img: "3asiato.png",
     list: [
-      { id: "alienEye",   name: "ガーコ", rx: 0.09, ry: 0.14, radius: 0.06, found: false },
-      { id: "alienMouth", name: "ボビー", rx: 0.72, ry: 0.62, radius: 0.07, found: false }
+      { id: "alienEye",   name: "ガーコ", x: -0.41, y:  0.36, guideSize: 0.25, hitSize: 0.4, found: false },
+      { id: "alienMouth", name: "ボビー", x:  0.22, y: -0.12, guideSize: 0.4,  hitSize: 0.5, found: false }
     ]
   },
   fantasy: {
-    title: "森の音楽会", img: "4forest.png",
+    maxSize: 2.5, img: "4forest.png",
     list: [
-      { id: "dragon", name: "森のキノコ", rx: 0.49, ry: 0.44, radius: 0.07, found: false },
-      { id: "hero",   name: "鼻ピンク",   rx: 0.34, ry: 0.60, radius: 0.07, found: false },
-      { id: "wizard", name: "リス",       rx: 0.88, ry: 0.72, radius: 0.06, found: false }
+      { id: "dragon", name: "森のキノコ", x: -0.01, y:  0.06, guideSize: 0.45, hitSize: 0.5, found: false },
+      { id: "hero",   name: "鼻ピンク",   x: -0.16, y: -0.1,  guideSize: 0.4,  hitSize: 0.5, found: false },
+      { id: "wizard", name: "リス",       x:  0.38, y: -0.22, guideSize: 0.25, hitSize: 0.4, found: false }
     ]
   },
   space: {
-    title: "魔界集合", img: "5gaia.png",
+    maxSize: 2.5, img: "5gaia.png",
     list: [
-      { id: "rocket",    name: "オムレッツ",       rx: 0.20, ry: 0.34, radius: 0.06, found: false },
-      { id: "planet",    name: "くちびるドラゴン", rx: 0.20, ry: 0.82, radius: 0.08, found: false },
-      { id: "astronaut", name: "バッサ",           rx: 0.79, ry: 0.83, radius: 0.07, found: false }
+      { id: "rocket",    name: "オムレッツ",       x: -0.3,  y:  0.16, guideSize: 0.35, hitSize: 0.4, found: false },
+      { id: "planet",    name: "くちびるドラゴン", x: -0.3,  y: -0.32, guideSize: 0.5,  hitSize: 0.6, found: false },
+      { id: "astronaut", name: "バッサ",           x:  0.29, y: -0.33, guideSize: 0.4,  hitSize: 0.5, found: false }
     ]
   }
 };
@@ -484,7 +483,6 @@ function applyTransform() {
 
 // ARマーカー読み込み後に2Dスワイプ画面へシームレス移行する処理
 async function start2DMode(groupKey) {
-  // カメラの停止
   const arSystem = document.querySelector("#mainScene").systems["mindar-image-system"];
   if (arSystem) { try { await arSystem.stop(); } catch(e){} }
 
@@ -523,7 +521,7 @@ async function backToCamera() {
   if (arSystem) await arSystem.start();
 }
 
-// ズーム＆パンスワイプ操作設定 (スマホ・PC最適化)
+// ズーム＆パンスワイプ操作設定
 function setupPanZoom() {
   viewport.addEventListener("mousedown", (e) => {
     if (e.target.classList.contains("targetHotspot")) return;
@@ -541,7 +539,6 @@ function setupPanZoom() {
 
   window.addEventListener("mouseup", () => { isDragging = false; });
 
-  // タッチ操作（1本指パン、2本指ピンチズーム）
   viewport.addEventListener("touchstart", (e) => {
     if (e.touches.length === 1) {
       isDragging = true;
@@ -558,7 +555,7 @@ function setupPanZoom() {
   }, { passive: false });
 
   viewport.addEventListener("touchmove", (e) => {
-    e.preventDefault(); // デフォルトのブラウザスクロールを防止
+    e.preventDefault();
     if (e.touches.length === 1 && isDragging) {
       translateX = e.touches[0].clientX - startX;
       translateY = e.touches[0].clientY - startY;
@@ -579,7 +576,6 @@ function setupPanZoom() {
     initialPinchDistance = null;
   });
 
-  // マウスホイールズーム
   viewport.addEventListener("wheel", (e) => {
     e.preventDefault();
     const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
@@ -640,7 +636,7 @@ function checkComplete() {
   }
 }
 
-// 2Dステージ読み込み
+// 2Dステージ読み込み（picture2.htmlの判定ロジックを使用）
 function loadStage(groupKey) {
   currentGroup = groupKey;
   const group = targetGroups[groupKey];
@@ -649,21 +645,29 @@ function loadStage(groupKey) {
   hotspotContainer.innerHTML = "";
 
   mainStageImg.onload = () => {
-    const w = mainStageImg.naturalWidth;
-    const h = mainStageImg.naturalHeight;
-    imageMetaCache[groupKey] = { w, h };
+    const iw = mainStageImg.naturalWidth;
+    const ih = mainStageImg.naturalHeight;
+    
+    // picture2.htmlと同様の3D Plane計算（アスペクト比維持）
+    const aspect = iw / ih;
+    let planeW = group.maxSize, planeH = group.maxSize;
+    if (aspect >= 1) { planeW = group.maxSize; planeH = group.maxSize / aspect; }
+    else             { planeH = group.maxSize; planeW = group.maxSize * aspect;  }
+
+    imageMetaCache[groupKey] = { iw, ih, planeW, planeH };
 
     const vw = viewport.clientWidth;
     const vh = viewport.clientHeight;
-    scale = Math.min(vw / w, vh / h) * 0.95;
-    translateX = (vw - w * scale) / 2;
-    translateY = (vh - h * scale) / 2;
+    scale = Math.min(vw / iw, vh / ih) * 0.95;
+    translateX = (vw - iw * scale) / 2;
+    translateY = (vh - ih * scale) / 2;
     applyTransform();
 
     group.list.forEach(target => {
-      const px = target.rx * w;
-      const py = target.ry * h;
-      const size = Math.max(w, h) * target.radius;
+      // 画面中央原点（x: -0.5〜0.5, y: -0.5〜0.5）から画像ピクセル位置へ変換
+      const px = ((target.x * planeW) + planeW / 2) / planeW * iw;
+      const py = ((planeH / 2) - (target.y * planeH)) / planeH * ih;
+      const size = (target.hitSize / planeW) * iw;
 
       const hs = document.createElement("div");
       hs.className = "targetHotspot";
@@ -724,12 +728,15 @@ function renderGuideUI() {
 
     if (meta) {
       const boxSize = 65;
-      const cropW = meta.w * target.radius * 2;
-      const cropH = meta.h * target.radius * 2;
-      const bgW = meta.w * (boxSize / cropW);
-      const bgH = meta.h * (boxSize / cropH);
-      const posX = boxSize / 2 - (target.rx * meta.w) * (boxSize / cropW);
-      const posY = boxSize / 2 - (target.ry * meta.h) * (boxSize / cropH);
+      const imageX = ((target.x * meta.planeW) + meta.planeW / 2) / meta.planeW * meta.iw;
+      const imageY = ((meta.planeH / 2) - (target.y * meta.planeH)) / meta.planeH * meta.ih;
+      const cropW = (target.guideSize / meta.planeW) * meta.iw;
+      const cropH = (target.guideSize / meta.planeH) * meta.ih;
+
+      const bgW = meta.iw * (boxSize / cropW);
+      const bgH = meta.ih * (boxSize / cropH);
+      const posX = boxSize / 2 - imageX * (boxSize / cropW);
+      const posY = boxSize / 2 - imageY * (boxSize / cropH);
 
       crop.style.backgroundImage = `url("${group.img}")`;
       crop.style.backgroundSize = `${bgW}px ${bgH}px`;
@@ -751,7 +758,7 @@ function renderGuideUI() {
 function updateClearScreen() {
   Object.keys(targetGroups).forEach(key => {
     const group = targetGroups[key];
-    const meta = imageMetaCache[key] || { w: 1000, h: 1000 };
+    const meta = imageMetaCache[key] || { iw: 1000, ih: 1000, planeW: 2.5, planeH: 2.5 };
     
     const anyFound = group.list.some(t => t.found);
     const wholeImgEl = document.querySelector("#wholeImg_" + key);
@@ -764,12 +771,15 @@ function updateClearScreen() {
         if (nameEl) nameEl.textContent = t.name;
 
         const boxSize = cropEl.clientWidth || 80;
-        const cropW = meta.w * t.radius * 2;
-        const cropH = meta.h * t.radius * 2;
-        const bgW = meta.w * (boxSize / cropW);
-        const bgH = meta.h * (boxSize / cropH);
-        const posX = boxSize / 2 - (t.rx * meta.w) * (boxSize / cropW);
-        const posY = boxSize / 2 - (t.ry * meta.h) * (boxSize / cropH);
+        const imageX = ((t.x * meta.planeW) + meta.planeW / 2) / meta.planeW * meta.iw;
+        const imageY = ((meta.planeH / 2) - (t.y * meta.planeH)) / meta.planeH * meta.ih;
+        const cropW = (t.guideSize / meta.planeW) * meta.iw;
+        const cropH = (t.guideSize / meta.planeH) * meta.ih;
+
+        const bgW = meta.iw * (boxSize / cropW);
+        const bgH = meta.ih * (boxSize / cropH);
+        const posX = boxSize / 2 - imageX * (boxSize / cropW);
+        const posY = boxSize / 2 - imageY * (boxSize / cropH);
 
         cropEl.style.backgroundImage = `url("${group.img}")`;
         cropEl.style.backgroundSize = `${bgW}px ${bgH}px`;
@@ -793,10 +803,8 @@ document.getElementById("startBtn").addEventListener("click", async () => {
   if (arSystem) await arSystem.start();
 });
 
-// 「カメラに戻る」ボタンのクリックリスナー
 document.getElementById("backToCameraBtn").addEventListener("click", backToCamera);
 
-// 「メニューに戻る」ボタン（AR撮影時）のクリックリスナー
 document.getElementById("backToMenuFromARBtn").addEventListener("click", async () => {
   const arSystem = document.querySelector("#mainScene").systems["mindar-image-system"];
   if (arSystem) { try { await arSystem.stop(); } catch(e) {} }
