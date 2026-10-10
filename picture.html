@@ -89,7 +89,7 @@
       inset: 0;
       background: 
         radial-gradient(circle at 50% 30%, rgba(255, 235, 160, 0.2), transparent 60%),
-        linear-gradient(45deg, #f7ede2 25%, #f5e1d3 25%, #f5e1d3 50%, #f7ede2 50%, #f7ede2 75%, #f5e1d3 75%, #f5e1d3 100%);
+        linear-gradient(45deg, #f7ede2 25%, #f5e1d3 25%, #f5e1d3 50%, #f7ede2 50%, #f7ede2 75%, #f5e1d3 75%, #f7ede2 100%);
       background-size: 40px 40px; 
       background-color: #f7ede2;
       display: flex; 
@@ -701,7 +701,6 @@ function checkComplete() {
   }
 }
 
-// レイキャスト判定処理の軽量化
 function handleTouch(event) {
   const camera = document.querySelector("[camera]");
   if (!camera || !currentGroup) return;
@@ -709,7 +708,6 @@ function handleTouch(event) {
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   
-  // イベントの座標を取得（重複呼び出し防止）
   const clientX = event.changedTouches ? event.changedTouches[0].clientX : event.clientX;
   const clientY = event.changedTouches ? event.changedTouches[0].clientY : event.clientY;
 
@@ -717,7 +715,6 @@ function handleTouch(event) {
   mouse.y = -(clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera.getObject3D("camera"));
 
-  // 表示中かつクリック可能な要素のみ取得（検索対象の限定化）
   const objects = [];
   document.querySelectorAll(".clickable").forEach(el => {
     if (el.object3D.visible && el.parentElement && el.parentElement.object3D.visible) {
@@ -758,7 +755,6 @@ function handleTouch(event) {
   checkComplete();
 }
 
-// 重複イベントを防ぐため click（PC・スマホ共通）のみに統一
 document.addEventListener("click", handleTouch);
 
 function autoFitPlane(groupKey) {
@@ -787,7 +783,6 @@ function autoFitPlane(groupKey) {
   });
 }
 
-// 軽量化：常時アニメーション（a-ring）の廃止と静的オブジェクト化
 function createHitPlanes(groupKey) {
   const group = targetGroups[groupKey];
   const container = document.querySelector(group.containerId);
@@ -803,12 +798,12 @@ function createHitPlanes(groupKey) {
     touch.setAttribute("material", "color: red; opacity: 0; transparent: true; side: double; depthTest: false;");
     container.appendChild(touch);
 
-    // 黄色リングから常時アニメーション（animation属性）を削除してGPU負荷を削減
+    // 黄色い丸枠を透明（opacity: 0）に設定して完全非表示化
     const ring = document.createElement("a-ring");
     ring.setAttribute("position", `${target.x * group.scales.x} ${target.y * group.scales.y} 0.03`);
     ring.setAttribute("radius-inner", target.guideSize / 2);
     ring.setAttribute("radius-outer", target.guideSize / 2 + 0.02);
-    ring.setAttribute("material", "color: yellow; opacity: 0.8; transparent: true; side: double");
+    ring.setAttribute("material", "color: yellow; opacity: 0; transparent: true; side: double");
     container.appendChild(ring);
   });
 }
@@ -885,7 +880,6 @@ document.querySelector("#startBtn").addEventListener("click", async () => {
   if (ar) await ar.start(); 
 });
 
-// カメラストリームの完全解放関数
 function stopCameraStream() {
   const video = document.querySelector("video");
   if (video && video.srcObject) {
