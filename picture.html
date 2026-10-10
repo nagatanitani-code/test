@@ -284,11 +284,15 @@
   </style>
 
   <script>
+    let isTransitioning = false;
+
     AFRAME.registerComponent("markerhandler", {
       init() {
         this.el.addEventListener("targetFound", () => {
+          if (isTransitioning) return;
           const groupKey = this.el.dataset.group;
           if (groupKey) {
+            isTransitioning = true;
             start2DMode(groupKey);
           }
         });
@@ -486,7 +490,6 @@ const hotspotContainer = document.getElementById("hotspotContainer");
 
 // スムーズ移動・ズームのアニメーションループ関数
 function updateTransformLoop() {
-  // 補間（ラープ処理）で滑らかに目標値へ近づける
   currentScale += (targetScale - currentScale) * 0.2;
   currentX += (targetX - currentX) * 0.2;
   currentY += (targetY - currentY) * 0.2;
@@ -496,17 +499,15 @@ function updateTransformLoop() {
   animFrameId = requestAnimationFrame(updateTransformLoop);
 }
 
+// AR読み込み検知時の2D切り替え
 async function start2DMode(groupKey) {
-  const arSystem = document.querySelector("#mainScene").systems["mindar-image-system"];
-  if (arSystem) { try { await arSystem.stop(); } catch(e){} }
-
-  const video = document.querySelector("video");
-  if (video) {
-    if (video.srcObject) video.srcObject.getTracks().forEach(t => t.stop());
-    video.remove();
+  const scene = document.querySelector("#mainScene");
+  const arSystem = scene.systems ? scene.systems["mindar-image-system"] : null;
+  if (arSystem) {
+    try { await arSystem.stop(); } catch(e){}
   }
 
-  document.querySelector("#mainScene").style.display = "none";
+  scene.style.display = "none";
   document.getElementById("backToMenuFromARBtn").style.display = "none";
   
   viewport.style.display = "block";
@@ -519,21 +520,33 @@ async function start2DMode(groupKey) {
   loadStage(groupKey);
 }
 
+// カメラに戻る処理（ARエンジンおよびカメラストリームの安全な再起動）
 async function backToCamera() {
   viewport.style.display = "none";
   document.getElementById("backToCameraBtn").style.display = "none";
   document.getElementById("progressBox").style.display = "none";
   document.getElementById("guideUI").style.display = "none";
 
-  document.querySelector("#mainScene").style.display = "block";
+  const scene = document.querySelector("#mainScene");
+  scene.style.display = "block";
   document.getElementById("backToMenuFromARBtn").style.display = "block";
 
-  const scene = document.querySelector("#mainScene");
   if (!scene.hasLoaded) {
     await new Promise(r => scene.addEventListener("loaded", r));
   }
-  const arSystem = scene.systems["mindar-image-system"];
-  if (arSystem) await arSystem.start();
+
+  const arSystem = scene.systems ? scene.systems["mindar-image-system"] : null;
+  if (arSystem) {
+    try {
+      await arSystem.stop();
+    } catch(e) {}
+    try {
+      await arSystem.start();
+    } catch(e) {}
+  }
+
+  // 遷移フラグをリセットして次の検出を有効化
+  isTransitioning = false;
 }
 
 // スムーズなズーム・スワイプ操作ロジック
@@ -553,10 +566,8 @@ function setupPanZoom() {
 
   window.addEventListener("mouseup", () => { isDragging = false; });
 
-  // タッチ操作（パン・ピンチズーム）
   viewport.addEventListener("touchstart", (e) => {
     const now = Date.now();
-    // ダブルタップで初期倍率・位置にスムーズリセット
     if (e.touches.length === 1 && now - lastTapTime < 300) {
       targetScale = defaultScale;
       targetX = 0;
@@ -600,7 +611,6 @@ function setupPanZoom() {
     initialPinchDistance = null;
   });
 
-  // マウスホイールズーム
   viewport.addEventListener("wheel", (e) => {
     e.preventDefault();
     const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
@@ -672,7 +682,6 @@ function loadStage(groupKey) {
     const vw = viewport.clientWidth;
     const vh = viewport.clientHeight;
     
-    // 初期スケール（画面に綺麗に収まる倍率）
     defaultScale = Math.min(vw / iw, vh / ih) * 0.95;
     targetScale = defaultScale;
     currentScale = defaultScale;
@@ -711,7 +720,7 @@ function loadStage(groupKey) {
 
       hotspotContainer.appendChild(hs);
 
-      // 発見チェックマーク生成 (サイズを0.5倍に小さく変更)
+      // チェックマーク (0.5倍サイズ)
       const check = document.createElement("img");
       check.id = "check_" + target.id;
       check.src = "check.png";
@@ -812,18 +821,22 @@ document.getElementById("startBtn").addEventListener("click", async () => {
   document.getElementById("mainScene").style.display = "block";
   document.getElementById("backToMenuFromARBtn").style.display = "block";
 
+  isTransitioning = false;
   const scene = document.querySelector("#mainScene");
   if (!scene.hasLoaded) {
     await new Promise(r => scene.addEventListener("loaded", r));
   }
-  const arSystem = scene.systems["mindar-image-system"];
-  if (arSystem) await arSystem.start();
+  const arSystem = scene.systems ? scene.systems["mindar-image-system"] : null;
+  if (arSystem) {
+    try { await arSystem.start(); } catch(e){}
+  }
 });
 
 document.getElementById("backToCameraBtn").addEventListener("click", backToCamera);
 
 document.getElementById("backToMenuFromARBtn").addEventListener("click", async () => {
-  const arSystem = document.querySelector("#mainScene").systems["mindar-image-system"];
+  const scene = document.querySelector("#mainScene");
+  const arSystem = scene.systems ? scene.systems["mindar-image-system"] : null;
   if (arSystem) { try { await arSystem.stop(); } catch(e) {} }
 
   const video = document.querySelector("video");
@@ -832,9 +845,10 @@ document.getElementById("backToMenuFromARBtn").addEventListener("click", async (
     video.remove();
   }
 
-  document.querySelector("#mainScene").style.display = "none";
+  scene.style.display = "none";
   document.getElementById("menuScreen").style.display = "flex";
   document.getElementById("backToMenuFromARBtn").style.display = "none";
+  isTransitioning = false;
 });
 
 document.getElementById("openHowToBtn").addEventListener("click", () => {
