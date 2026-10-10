@@ -511,7 +511,7 @@ function registerStampListener(index) {
       state.stamps[index] = true;
       saveGame();
       updateStampBook();
-      showStampEffect(`${stampNames[index]} GET!`); // または showStampEffect(stampNames[index]);
+      showStampEffect(`${stampNames[index]} GET!`);
       checkComplete();
     } else {
       showStampEffect("取得済み");
@@ -559,7 +559,12 @@ document.querySelector("#closeStampBtn").addEventListener("click", () => { UI.st
 document.querySelector("#closeComplete").addEventListener("click", (e) => {
   e.stopPropagation();
   UI.completeWrap.style.display = "none";
-  UI.backToMenuBtn.style.display = "block";
+  // メニュー画面が表示中であれば「メニューへ戻る」ボタンは表示しない
+  if (UI.mainScene.style.display === "block") {
+    UI.backToMenuBtn.style.display = "block";
+  } else {
+    UI.backToMenuBtn.style.display = "none";
+  }
 });
 
 document.querySelector("#completeImage").addEventListener("click", () => {
