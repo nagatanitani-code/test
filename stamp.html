@@ -559,6 +559,36 @@ function loadGame() {
 }
 
 // ======================
+// カメラ制御関数
+// ======================
+async function startCamera() {
+  UI.menuScreen.style.display = "none";
+  UI.mainScene.style.display = "block";
+  UI.backToMenuBtn.style.display = "block";
+
+  await new Promise(r => setTimeout(r, 200));
+  const arSystem = UI.mainScene.systems["mindar-image-system"];
+  if (arSystem) {
+    try { await arSystem.start(); } catch(e) {}
+  }
+}
+
+async function stopCamera() {
+  const arSystem = UI.mainScene.systems["mindar-image-system"];
+  if (arSystem) { try { await arSystem.stop(); } catch(e) {} }
+
+  const video = document.querySelector("video");
+  if (video) {
+    if (video.srcObject) video.srcObject.getTracks().forEach(track => track.stop());
+    video.remove();
+  }
+
+  UI.mainScene.style.display = "none";
+  UI.backToMenuBtn.style.display = "none";
+  UI.stampBox.style.display = "none";
+}
+
+// ======================
 // 画面更新ロジック
 // ======================
 function updateStampBook() {
@@ -581,9 +611,10 @@ function updateBonusButton() {
 function checkComplete() {
   if (state.foundCount >= state.total) {
     updateBonusButton();
-    setTimeout(() => {
+    setTimeout(async () => {
+      // コンプリート画面を表示する前にカメラをオフにする
+      await stopCamera();
       UI.completeWrap.style.display = "flex";
-      UI.backToMenuBtn.style.display = "none";
     }, 1000);
   }
 }
@@ -611,7 +642,6 @@ function registerStampListener(index) {
       state.stamps[index] = true;
       saveGame();
       updateStampBook();
-      // 2行ですっきりと「〇〇スタンプ\n発見！！」を表示
       showStampEffect(`${stampNames[index]}スタンプ\n発見！！`);
       checkComplete();
     } else {
@@ -622,32 +652,15 @@ function registerStampListener(index) {
 for (let i = 0; i < state.total; i++) { registerStampListener(i); }
 
 // ======================
-// 画面遷移・カメラ制御
+// 画面遷移・イベントリスナー
 // ======================
-UI.startBtn.addEventListener("click", async () => {
-  UI.menuScreen.style.display = "none";
-  UI.mainScene.style.display = "block";
-  UI.backToMenuBtn.style.display = "block";
-
-  await new Promise(r => setTimeout(r, 200));
-  const arSystem = UI.mainScene.systems["mindar-image-system"];
-  if (arSystem) await arSystem.start();
+UI.startBtn.addEventListener("click", () => {
+  startCamera();
 });
 
 UI.backToMenuBtn.addEventListener("click", async () => {
-  const arSystem = UI.mainScene.systems["mindar-image-system"];
-  if (arSystem) { try { await arSystem.stop(); } catch(e) {} }
-
-  const video = document.querySelector("video");
-  if (video) {
-    if (video.srcObject) video.srcObject.getTracks().forEach(track => track.stop());
-    video.remove();
-  }
-
-  UI.mainScene.style.display = "none";
+  await stopCamera();
   UI.menuScreen.style.display = "flex";
-  UI.backToMenuBtn.style.display = "none";
-  UI.stampBox.style.display = "none";
 });
 
 document.querySelector("#openHowToBtn").addEventListener("click", () => { UI.howToScreen.style.display = "flex"; });
@@ -657,23 +670,22 @@ document.querySelector("#closeHintBtn").addEventListener("click", () => { UI.hin
 document.querySelector("#openStampBtn").addEventListener("click", () => { updateStampBook(); UI.stampScreen.style.display = "flex"; });
 document.querySelector("#closeStampBtn").addEventListener("click", () => { UI.stampScreen.style.display = "none"; });
 
-document.querySelector("#closeComplete").addEventListener("click", (e) => {
+// コンプリート画面を閉じたらカメラをオンにする
+document.querySelector("#closeComplete").addEventListener("click", async (e) => {
   e.stopPropagation();
   UI.completeWrap.style.display = "none";
-  if (UI.mainScene.style.display === "block") {
-    UI.backToMenuBtn.style.display = "block";
-  } else {
-    UI.backToMenuBtn.style.display = "none";
-  }
+  // カメラを再度オンにして探索画面に戻る
+  await startCamera();
 });
 
 document.querySelector("#completeImage").addEventListener("click", () => {
   window.location.href = "https://nagatanitani-code.github.io/test/stamp.html";
 });
 
-document.querySelector("#openBonusBtn").addEventListener("click", () => {
+// コンプリート特典ボタンを押した時もカメラをオフにしてコンプリート画面を表示
+document.querySelector("#openBonusBtn").addEventListener("click", async () => {
+  await stopCamera();
   UI.completeWrap.style.display = "flex";
-  UI.backToMenuBtn.style.display = "none";
 });
 
 loadGame();
