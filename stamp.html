@@ -125,13 +125,13 @@ body {
 #stampCount { font-size: 28px; font-weight: bold; }
 #stampPreview { width: 120px; margin-top: 10px; border-radius: 12px; }
 
-/* 豪華なスタンプ発見エフェクト */
+/* 2行ですっきり表示するスタンプ発見エフェクト */
 #stampEffect {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
   background: linear-gradient(135deg, #fff9c4 0%, #ffeb3b 50%, #ffa000 100%);
-  color: #b71c1c; font-size: 28px; font-weight: 900;
-  padding: 24px 36px; border-radius: 30px; display: none; z-index: 99999;
-  text-align: center; white-space: pre-wrap; word-break: keep-all;
+  color: #b71c1c; font-size: 26px; font-weight: 900;
+  padding: 22px 32px; border-radius: 30px; display: none; z-index: 99999;
+  text-align: center; white-space: pre-wrap; word-break: keep-all; line-height: 1.4;
   border: 4px solid #fff; box-shadow: 0 0 50px rgba(255, 215, 0, 0.9), 0 10px 25px rgba(0,0,0,0.4);
   animation: stampPopAnim 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
@@ -566,7 +566,7 @@ function updateStampBook() {
   state.stamps.forEach((isGet, index) => {
     if (isGet) {
       UI.menuStamps[index].src = `stamp${index + 1}.png`;
-      UI.nameStamps[index].textContent = stampNames[index];
+      UI.nameStamps[index].textContent = stampNames[index] + "スタンプ";
     } else {
       UI.menuStamps[index].src = `stamp_unknown.jpg`;
       UI.nameStamps[index].textContent = "？？？";
@@ -588,7 +588,7 @@ function checkComplete() {
   }
 }
 
-// 豪華なアニメーションを再トリガーするためのトリック
+// アニメーションを再トリガーするための処理
 function showStampEffect(text) {
   UI.stampEffect.textContent = text;
   UI.stampEffect.style.display = "none";
@@ -611,7 +611,8 @@ function registerStampListener(index) {
       state.stamps[index] = true;
       saveGame();
       updateStampBook();
-      showStampEffect(`✨ スタンプGET!! ✨\n【 ${stampNames[index]} 】`);
+      // 2行ですっきりと「〇〇スタンプ\n発見！！」を表示
+      showStampEffect(`${stampNames[index]}スタンプ\n発見！！`);
       checkComplete();
     } else {
       showStampEffect("取得済みスタンプです！");
