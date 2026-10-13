@@ -19,8 +19,8 @@ body {
 ====================== */
 .blueSkyBg {
   position: fixed; inset: 0;
-  display: flex; flex-direction: column; align-items: center; gap: 24px; 
-  padding: 50px 20px; box-sizing: border-box;
+  display: flex; flex-direction: column; align-items: center; gap: 18px; 
+  padding: 40px 20px; box-sizing: border-box;
   background: 
     radial-gradient(circle at 50% -20%, #fff7d6 0%, transparent 60%),
     linear-gradient(135deg, #7fe3ff 0%, #00b2fe 100%);
@@ -31,7 +31,7 @@ body {
 #menuScreen { z-index: 9999; }
 
 .screenTitleStyle {
-  font-size: 42px; font-weight: 900; color: #ffffff; margin: 0 0 15px 0; 
+  font-size: 38px; font-weight: 900; color: #ffffff; margin: 0 0 10px 0; 
   text-shadow: 3px 3px 0px #e65100, 5px 5px 12px rgba(0, 74, 124, 0.4);
   text-align: center; letter-spacing: 2px;
 }
@@ -43,19 +43,18 @@ body {
 }
 
 .menuGroup, .contentCard {
-  display: flex; flex-direction: column; align-items: center; gap: 14px; 
+  display: flex; flex-direction: column; align-items: center; gap: 12px; 
   width: 100%; max-width: 320px; background: #ffffff;
-  border: 3px dotted #ffb300; padding: 18px 16px; border-radius: 24px;
+  border: 3px dotted #ffb300; padding: 16px; border-radius: 24px;
   box-shadow: 0 8px 20px rgba(0, 64, 112, 0.2); box-sizing: border-box;
 }
 .contentCard { max-width: 360px; padding: 22px 16px; gap: 16px; }
 
 .menuGuide { 
-  font-size: 16px; 
+  font-size: 15px; 
   color: #4e342e; 
   text-align: center; 
-  line-height: 1.6; 
-  letter-spacing: 0.5px; 
+  line-height: 1.5; 
   font-weight: bold; 
 }
 
@@ -83,25 +82,43 @@ body {
   box-shadow: 0 4px 10px rgba(0, 64, 112, 0.1);
 }
 
-/* ビタミンカラー立体ボタン */
+/* メニューボタン共通スタイル（2行構成対応・個別の色はインラインまたは専用クラスで指定） */
 .menuBtn, .backBtn {
-  width: 100%; max-width: 280px; padding: 16px; border: none; border-radius: 20px;
-  font-size: 24px; font-weight: 900; color: white; 
-  background: linear-gradient(180deg, #ffb300 0%, #ff6f00 100%);
-  border-bottom: 5px solid #b71c1c; box-shadow: 0 6px 12px rgba(255, 111, 0, 0.3);
+  width: 100%; max-width: 280px; padding: 14px; border: none; border-radius: 18px;
+  font-size: 22px; font-weight: 900; color: white; 
   cursor: pointer; transition: all 0.1s ease; text-align: center; box-sizing: border-box;
   letter-spacing: 1px;
 }
 .menuBtn:active, .backBtn:active {
-  transform: translateY(4px); border-bottom: 1px solid #b71c1c; box-shadow: 0 2px 4px rgba(255, 111, 0, 0.3);
+  transform: translateY(4px); filter: brightness(0.9);
 }
 
+/* 各メニューボタンの固有カラー */
 #openBonusBtn {
   background: linear-gradient(180deg, #00e676 0%, #00c853 100%);
   border-bottom: 5px solid #006020; box-shadow: 0 6px 15px rgba(0, 200, 83, 0.4);
 }
-#openBonusBtn:active {
-  transform: translateY(4px); border-bottom: 1px solid #006020; box-shadow: 0 2px 5px rgba(0, 200, 83, 0.4);
+#openHowToBtn {
+  background: linear-gradient(180deg, #ab47bc 0%, #8e24aa 100%);
+  border-bottom: 5px solid #4a148c; box-shadow: 0 6px 12px rgba(142, 36, 170, 0.3);
+}
+#startBtn {
+  background: linear-gradient(180deg, #ffa726 0%, #fb8c00 100%);
+  border-bottom: 5px solid #e65100; box-shadow: 0 6px 12px rgba(251, 140, 0, 0.3);
+}
+#openHintBtn {
+  background: linear-gradient(180deg, #26a69a 0%, #00897b 100%);
+  border-bottom: 5px solid #004d40; box-shadow: 0 6px 12px rgba(0, 137, 123, 0.3);
+}
+#openStampBtn {
+  background: linear-gradient(180deg, #ec407a 0%, #d81b60 100%);
+  border-bottom: 5px solid #880e4f; box-shadow: 0 6px 12px rgba(216, 27, 96, 0.3);
+}
+
+.backBtn {
+  background: linear-gradient(180deg, #ffb300 0%, #ff6f00 100%);
+  border-bottom: 5px solid #b71c1c; box-shadow: 0 6px 12px rgba(255, 111, 0, 0.3);
+  max-width: 280px;
 }
 
 /* ======================
@@ -322,7 +339,7 @@ body {
 <div id="menuScreen" class="blueSkyBg">
   <div id="gameTitle" class="screenTitleStyle">スタンプラリーAR</div>
 
-  <div class="menuGroup" id="bonusGroup" style="display: none; margin-bottom: 10px;">
+  <div class="menuGroup" id="bonusGroup" style="display: none;">
     <div class="menuGuide" style="color: #d32f2f; font-weight: bold;">🎉 スタンプコンプリート特典！</div>
     <button id="openBonusBtn" class="menuBtn">コンプリート特典</button>
   </div>
@@ -509,6 +526,9 @@ const stampNames = [
   "おとなり島"
 ];
 
+// コンプリート画面がどこから開かれたかを記録するフラグ
+let openedFromMenu = false;
+
 const UI = {
   menuScreen: document.querySelector("#menuScreen"),
   mainScene: document.querySelector("#mainScene"),
@@ -612,7 +632,7 @@ function checkComplete() {
   if (state.foundCount >= state.total) {
     updateBonusButton();
     setTimeout(async () => {
-      // コンプリート画面を表示する前にカメラをオフにする
+      openedFromMenu = false; // カメラ画面からの自動達成
       await stopCamera();
       UI.completeWrap.style.display = "flex";
     }, 1000);
@@ -670,21 +690,29 @@ document.querySelector("#closeHintBtn").addEventListener("click", () => { UI.hin
 document.querySelector("#openStampBtn").addEventListener("click", () => { updateStampBook(); UI.stampScreen.style.display = "flex"; });
 document.querySelector("#closeStampBtn").addEventListener("click", () => { UI.stampScreen.style.display = "none"; });
 
-// コンプリート画面を閉じたらカメラをオンにする
+// コンプリート画面を閉じた時の処理（開き元によって戻り先を分岐）
 document.querySelector("#closeComplete").addEventListener("click", async (e) => {
   e.stopPropagation();
   UI.completeWrap.style.display = "none";
-  // カメラを再度オンにして探索画面に戻る
-  await startCamera();
+  
+  if (openedFromMenu) {
+    // メニュー画面から開いた場合はメニュー画面に戻す
+    UI.menuScreen.style.display = "flex";
+  } else {
+    // カメラ画面から開いた（自動達成）場合はカメラを再起動する
+    await startCamera();
+  }
 });
 
 document.querySelector("#completeImage").addEventListener("click", () => {
   window.location.href = "https://nagatanitani-code.github.io/test/stamp.html";
 });
 
-// コンプリート特典ボタンを押した時もカメラをオフにしてコンプリート画面を表示
+// コンプリート特典ボタンを押した時はメニューから開いたとみなす
 document.querySelector("#openBonusBtn").addEventListener("click", async () => {
+  openedFromMenu = true; // メニューからのオープンフラグを立てる
   await stopCamera();
+  UI.menuScreen.style.display = "none";
   UI.completeWrap.style.display = "flex";
 });
 
