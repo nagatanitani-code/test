@@ -20,26 +20,29 @@
       touch-action: none;
     }
 
-    /* 発見エフェクト */
+    /* 発見エフェクト（見切れ防止対応） */
     #effect {
       position: fixed; 
       top: 50%; 
       left: 50%; 
       transform: translate(-50%, -50%);
       display: none; 
-      padding: 20px 40px; 
-      border-radius: 40px;
+      padding: 20px 30px; 
+      border-radius: 30px;
       background: linear-gradient(135deg, rgba(255,220,0,0.95), rgba(255,140,0,0.95));
       color: white; 
-      font-size: 36px; 
+      font-size: clamp(24px, 6vw, 36px); 
       font-weight: bold; 
-      letter-spacing: 4px;
+      letter-spacing: 2px;
       text-shadow: 0 4px 12px rgba(0,0,0,0.4); 
       box-shadow: 0 0 40px rgba(255,180,0,0.8);
       z-index: 99999; 
       animation: pop 0.8s ease;
-      white-space: nowrap;
+      white-space: normal;
+      word-break: keep-all;
       text-align: center;
+      max-width: 90vw;
+      box-sizing: border-box;
       pointer-events: none;
     }
 
@@ -280,7 +283,8 @@
     .clearGrid { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; max-width: 320px; background: #fff; border: 3px solid #ffb74d; padding: 12px; border-radius: 16px; box-sizing: border-box; }
     .clearItem { display: flex; flex-direction: column; align-items: center; gap: 4px; background: #fdfaf6; padding: 6px; border: 2px solid #ffe0b2; border-radius: 12px; width: calc(33.33% - 6px); box-sizing: border-box; }
     .clearCropBox { width: 100%; aspect-ratio: 1; border-radius: 8px; background-repeat: no-repeat; background-color: #e0e0e0; background-image: url("clear_unknown.jpg"); background-size: cover; background-position: center; }
-    .clearName { font-size: 11px; color: #6d4c41; font-weight: bold; text-align: center; line-height: 1.2; word-break: break-all; }
+    /* 改行を有効にするための設定 */
+    .clearName { font-size: 11px; color: #6d4c41; font-weight: bold; text-align: center; line-height: 1.2; word-break: break-all; white-space: pre-wrap; }
   </style>
 
   <script>
@@ -420,6 +424,7 @@
   <div class="clearWholeImageContainer"><img id="wholeImg_space" src="clear_unknown.jpg"></div>
   <div class="clearGrid">
     <div class="clearItem"><div id="clearImg_rocket" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <!-- 要望2：くちびる改行ドラゴン -->
     <div class="clearItem"><div id="clearImg_planet" class="clearCropBox"></div><div class="clearName">？？？</div></div>
     <div class="clearItem"><div id="clearImg_astronaut" class="clearCropBox"></div><div class="clearName">？？？</div></div>
   </div>
@@ -464,7 +469,8 @@ const targetGroups = {
     maxSize: 2.5, img: "5gaia.png",
     list: [
       { id: "rocket",    name: "オムレッツ",       x: -0.3,  y:  0.16, guideSize: 0.35, hitSize: 0.4, found: false },
-      { id: "planet",    name: "くちびるドラゴン", x: -0.3,  y: -0.32, guideSize: 0.5,  hitSize: 0.6, found: false },
+      // 要望2：くちびる改行ドラゴン
+      { id: "planet",    name: "くちびる\nドラゴン", x: -0.3,  y: -0.32, guideSize: 0.5,  hitSize: 0.6, found: false },
       { id: "astronaut", name: "バッサ",           x:  0.29, y: -0.33, guideSize: 0.4,  hitSize: 0.5, found: false }
     ]
   }
@@ -498,7 +504,6 @@ function requestRender() {
 }
 
 function updateTransformLoop() {
-  // ラープ補間計算
   const ds = targetScale - currentScale;
   const dx = targetX - currentX;
   const dy = targetY - currentY;
@@ -509,7 +514,6 @@ function updateTransformLoop() {
 
   stageContainer.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px)) scale(${currentScale})`;
 
-  // 動きがほぼ無くなったら描画ループを停止してCPU・GPU負荷を下げる
   if (Math.abs(ds) < 0.001 && Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1 && !isDragging && !initialPinchDistance) {
     currentScale = targetScale;
     currentX = targetX;
@@ -552,7 +556,7 @@ async function start2DMode(groupKey) {
   loadStage(groupKey);
 }
 
-// カメラに戻る処理（ARエンジンおよびカメラストリームの安全な再起動）
+// カメラに戻る処理
 async function backToCamera() {
   viewport.style.display = "none";
   document.getElementById("backToCameraBtn").style.display = "none";
@@ -576,7 +580,7 @@ async function backToCamera() {
   isTransitioning = false;
 }
 
-// スムーズなズーム・スワイプ操作ロジック
+// スムーズなズーム・スワイプ操作ロジック（要望3：拡大縮小中は絵柄タッチの判定を無くす）
 function setupPanZoom() {
   viewport.addEventListener("mousedown", (e) => {
     if (e.target.classList.contains("targetHotspot")) return;
@@ -597,7 +601,6 @@ function setupPanZoom() {
 
   viewport.addEventListener("touchstart", (e) => {
     const now = Date.now();
-    // ダブルタップで初期倍率・位置にリセット
     if (e.touches.length === 1 && now - lastTapTime < 300) {
       targetScale = defaultScale;
       targetX = 0;
@@ -620,6 +623,10 @@ function setupPanZoom() {
         e.touches[0].clientY - e.touches[1].clientY
       );
       initialScale = targetScale;
+      
+      // 要望3：2本指での拡大縮小（ピンチ）中は絵柄のタッチ判定を一時的に無効化
+      hotspotContainer.style.pointerEvents = "none";
+      
       requestRender();
     }
   }, { passive: false });
@@ -641,9 +648,13 @@ function setupPanZoom() {
     }
   }, { passive: false });
 
-  viewport.addEventListener("touchend", () => {
+  viewport.addEventListener("touchend", (e) => {
     isDragging = false;
-    initialPinchDistance = null;
+    // 要望3：指が1本以下になったら（ピンチ終了時）タッチ判定を復帰
+    if (e.touches.length < 2) {
+      initialPinchDistance = null;
+      hotspotContainer.style.pointerEvents = "auto";
+    }
     requestRender();
   });
 
@@ -745,7 +756,7 @@ function loadStage(groupKey) {
         target.found = true;
         saveGame();
         updateProgress();
-        showEffect(target.name + " 発見！！");
+        showEffect(target.name.replace("\n", "") + " 発見！！");
 
         const checkMark = document.getElementById("check_" + target.id);
         if (checkMark) checkMark.style.display = "block";
@@ -757,7 +768,6 @@ function loadStage(groupKey) {
 
       hotspotContainer.appendChild(hs);
 
-      // チェックマーク (0.5倍サイズ)
       const check = document.createElement("img");
       check.id = "check_" + target.id;
       check.src = "check.png";
