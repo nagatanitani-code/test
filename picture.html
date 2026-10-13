@@ -334,7 +334,7 @@
       margin: 0;
     }
     .charModalDesc {
-      font-size: 14px;
+      font-size: 13px;
       color: #4e342e;
       line-height: 1.6;
       margin: 0;
@@ -345,6 +345,8 @@
       width: 100%;
       box-sizing: border-box;
       border: 1px solid #ffe0b2;
+      max-height: 180px;
+      overflow-y: auto;
     }
     .charModalClose {
       width: 100%;
@@ -518,40 +520,40 @@ const targetGroups = {
   girl: {
     maxSize: 2.5, img: "1god.jpg",
     list: [
-      { id: "heart",  name: "大黒天様",   x:  0.13, y:  0.04, guideSize: 0.6,  hitSize: 0.7,  found: false, desc: "福徳や財宝を授けてくれる神様。いつも優しい笑顔でみんなを見守っているよ。" },
-      { id: "eye",    name: "天使ちゃん", x:  0.04, y:  0.38, guideSize: 0.37, hitSize: 0.4,  found: false, desc: "ふわふわの羽がチャームポイントの天使ちゃん。空から幸せを届けてくれるよ。" },
-      { id: "ribbon", name: "だるまさん", x: -0.42, y: -0.04, guideSize: 0.3,  hitSize: 0.45, found: false, desc: "何度転んでも起き上がる強い心を持った縁起の良いだるまさん。" }
+      { id: "heart",  name: "大黒天様",   x:  0.13, y:  0.04, guideSize: 0.6,  hitSize: 0.7,  found: false, desc: "神さま山に住んでいる八福神の一柱。いつも明るい八福神のムードメーカー。だいこちゃんが笑うと、みんなもつられて笑顔になってしまう。" },
+      { id: "eye",    name: "天使ちゃん", x:  0.04, y:  0.38, guideSize: 0.37, hitSize: 0.4,  found: false, desc: "いつもにこにこ笑顔の小さな天使たち。みんなに幸せを届けるお手伝いをしている。天界にはたくさんの天使ちゃんたちが暮らしている。" },
+      { id: "ribbon", name: "だるまさん", x: -0.42, y: -0.04, guideSize: 0.3,  hitSize: 0.45, found: false, desc: "いろんな願いを応援する、神さま山のだるまたち。転んでもすぐに起き上がる前向きな性格で、今日も誰かを応援している。" }
     ]
   },
   animal: {
     maxSize: 2.5, img: "2space.jpg",
     list: [
-      { id: "ear",  name: "ビックリ星人", x:  0.02, y: -0.02, guideSize: 0.6, hitSize: 0.7, found: false, desc: "いつも目が点になって驚いている宇宙からやってきた愉快なエイリアン。" },
-      { id: "nose", name: "太陽",         x: -0.2,  y: -0.33, guideSize: 0.9, hitSize: 1.0, found: false, desc: "みんなを明るく温かく照らしてくれる、元気いっぱいの大きな太陽。" },
-      { id: "tail", name: "月",           x:  0.27, y:  0.3,  guideSize: 0.9, hitSize: 1.0, found: false, desc: "夜空で静かに光り輝きながら、みんなの眠りを見守る優しいお月様。" }
+      { id: "ear",  name: "ビックリ星人", x:  0.02, y: -0.02, guideSize: 0.6, hitSize: 0.7, found: false, desc: "宇宙のあちこちを飛び回る宇宙人。 たまたま立ち寄ったやおよろず大国を気に入り、それ以来よく遊びに来ている。 ちょっとびっくりしやすい体質のため、よくUFOの機体から飛び出ている。 心臓がいくつあっても足りない様だ..." },
+      { id: "nose", name: "太陽",         x: -0.2,  y: -0.33, guideSize: 0.9, hitSize: 1.0, found: false, desc: "やおよろず大国を明るく照らし、いつもみんなを見守っている太陽。 太陽の光は、その時々の雰囲気に合わせて色や形が変わる。 月と仲良しでよく一緒にいる。" },
+      { id: "tail", name: "月",           x:  0.27, y:  0.3,  guideSize: 0.9, hitSize: 1.0, found: false, desc: "太陽とともに、やおよろず大国で輝いている月。 ちょっと茶目っ気のある性格で、満月や三日月など姿を変えるたびに顔つきも変化する。 太陽と仲良しでよく一緒にいる。" }
     ]
   },
   alien: {
     maxSize: 2.5, img: "3asiato.jpg",
     list: [
-      { id: "alienEye",   name: "ガーコ", x: -0.41, y:  0.36, guideSize: 0.25, hitSize: 0.4, found: false, desc: "あしあとタウンをのんびりお散歩するのが大好きな、愛嬌たっぷりのキャラクター。" },
-      { id: "alienMouth", name: "ボビー", x:  0.22, y: -0.12, guideSize: 0.4,  hitSize: 0.5, found: false, desc: "おしゃべり大好きで元気いっぱいなボビー。いつもみんなを笑顔にするよ。" }
+      { id: "alienEye",   name: "ガーコ", x: -0.41, y:  0.36, guideSize: 0.25, hitSize: 0.4, found: false, desc: "動物たちにちょっかいをかけては、その反応を楽しんでいるカラス。いつも余裕たっぷりの笑みを浮かべているのがちょっぴり鼻につくが、どこか憎めない。" },
+      { id: "alienMouth", name: "ボビー", x:  0.22, y: -0.12, guideSize: 0.4,  hitSize: 0.5, found: false, desc: "ジョンの相棒。凛々しい眉が自慢のしっかり者。相棒のジョンにいつも巻き込まれて大忙し。でも、なんだかんだジョンのことが大切。" }
     ]
   },
   fantasy: {
     maxSize: 2.5, img: "4forest.jpg",
     list: [
-      { id: "dragon", name: "森のキノコ", x: -0.01, y:  0.06, guideSize: 0.45, hitSize: 0.5, found: false, desc: "森の音楽会でひそかにリズムをとっている、不思議なパワーを持つキノコ。" },
-      { id: "hero",   name: "鼻ピンク",   x: -0.16, y: -0.1,  guideSize: 0.4,  hitSize: 0.5, found: false, desc: "お鼻がキュートにピンク色に染まった、ちょっぴり恥ずかしがり屋な住人。" },
-      { id: "wizard", name: "リス",       x:  0.38, y: -0.22, guideSize: 0.25, hitSize: 0.4, found: false, desc: "木の実を集めるのが得意なすばしっこいリスさん。音楽会を楽しみにしているよ。" }
+      { id: "dragon", name: "森のキノコ", x: -0.01, y:  0.06, guideSize: 0.45, hitSize: 0.5, found: false, desc: "陽気な音楽好きのキノコたち。 コーラスや楽器演奏などで、森の音楽を盛り上げてくれる。 誰かが歌い始めると、どこからともなく現れて一緒に演奏することもある。" },
+      { id: "hero",   name: "鼻ピンク",   x: -0.16, y: -0.1,  guideSize: 0.4,  hitSize: 0.5, found: false, desc: "鼻が特徴的な妖精で結成された、森のアイドル。それぞれ「鼻ピンク」「鼻ブルー」など、鼻の色で呼ばれている。 5人が奏でる音楽と息ぴったりのパフォーマンスで、森のみんなを楽しんでいる。" },
+      { id: "wizard", name: "リス",       x:  0.38, y: -0.22, guideSize: 0.25, hitSize: 0.4, found: false, desc: "鼻ファイブと森のキノコのコンサートに訪れたファン。森の仲間たちとコンサートを心待ちにしている。" }
     ]
   },
   space: {
     maxSize: 2.5, img: "5gaia.jpg",
     list: [
-      { id: "rocket",    name: "オムレッツ",       x: -0.3,  y:  0.16, guideSize: 0.35, hitSize: 0.4, found: false, desc: "星空をロケットのようにビューンと駆け抜ける、スピード自慢の仲間。" },
-      { id: "planet",    name: "くちびる\nドラゴン", x: -0.3,  y: -0.32, guideSize: 0.5,  hitSize: 0.6, found: false, desc: "ぷるんとしたくちびるがとってもチャームポイント！ユニークで愛され者のドラゴン。" },
-      { id: "astronaut", name: "バッサ",           x:  0.29, y: -0.33, guideSize: 0.4,  hitSize: 0.5, found: false, desc: "魔界の空を颯爽と飛び回る、かっこいい翼を持った冒険家。" }
+      { id: "rocket",    name: "オムレッツ",       x: -0.3,  y:  0.16, guideSize: 0.35, hitSize: 0.4, found: false, desc: "理想の朝食を追い求めていたら、いつの間にか自分が朝食のプレートになっていた。 サプライズで美味しい朝食を作ってくれる。 ちなみに目玉焼きにはケチャップ派。(もちろん何派でも大歓迎)" },
+      { id: "planet",    name: "くちびる\nドラゴン", x: -0.3,  y: -0.32, guideSize: 0.5,  hitSize: 0.6, found: false, desc: "分厚い唇が特徴的なドラゴン。 くちびるドラゴンにキッスされると同じ様なプルプルの唇になれるため、キッスされたい人たちが後を絶たない。 本人は「人気者って大変ね…」とため息をついていたが、満更でもない様子。" },
+      { id: "astronaut", name: "バッサ",           x:  0.29, y: -0.33, guideSize: 0.4,  hitSize: 0.5, found: false, desc: "フサフサの毛並みは触り心地が良く、住人たちからの人気が高い。 換毛期や梅雨時期は、毛量や抜け毛が増えるため毛の扱いにちょっと困っているらしい。" }
     ]
   }
 };
@@ -954,7 +956,6 @@ document.querySelectorAll(".clearItem").forEach(item => {
     let foundTarget = null;
     let foundGroupImg = "";
 
-    // 該当するターゲットを検索
     for (let gKey in targetGroups) {
       const found = targetGroups[gKey].list.find(t => t.id === targetId);
       if (found) {
@@ -966,13 +967,11 @@ document.querySelectorAll(".clearItem").forEach(item => {
 
     if (foundTarget) {
       if (foundTarget.found) {
-        // 発見済みの場合は詳細ポップアップを表示
         document.getElementById("modalCharTitle").textContent = foundTarget.name.replace("\n", "");
         document.getElementById("modalCharDesc").textContent = foundTarget.desc;
         document.getElementById("modalCharImg").style.backgroundImage = `url("${foundGroupImg}")`;
         document.getElementById("charDetailModal").style.display = "flex";
       } else {
-        // 未発見の場合はメッセージを表示
         showEffect("まだ見つけていないよ！");
       }
     }
