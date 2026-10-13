@@ -281,9 +281,82 @@
     .clearWholeImageContainer img { width: 100%; max-height: 140px; object-fit: contain; border-radius: 8px; background: #f5f5f5; }
 
     .clearGrid { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; max-width: 320px; background: #fff; border: 3px solid #ffb74d; padding: 12px; border-radius: 16px; box-sizing: border-box; }
-    .clearItem { display: flex; flex-direction: column; align-items: center; gap: 4px; background: #fdfaf6; padding: 6px; border: 2px solid #ffe0b2; border-radius: 12px; width: calc(33.33% - 6px); box-sizing: border-box; }
-    .clearCropBox { width: 100%; aspect-ratio: 1; border-radius: 8px; background-repeat: no-repeat; background-color: #e0e0e0; background-image: url("clear_unknown.jpg"); background-size: cover; background-position: center; }
-    .clearName { font-size: 11px; color: #6d4c41; font-weight: bold; text-align: center; line-height: 1.2; word-break: break-all; white-space: pre-wrap; }
+    .clearItem { display: flex; flex-direction: column; align-items: center; gap: 4px; background: #fdfaf6; padding: 6px; border: 2px solid #ffe0b2; border-radius: 12px; width: calc(33.33% - 6px); box-sizing: border-box; cursor: pointer; transition: transform 0.1s; }
+    .clearItem:active { transform: scale(0.95); }
+    .clearCropBox { width: 100%; aspect-ratio: 1; border-radius: 8px; background-repeat: no-repeat; background-color: #e0e0e0; background-image: url("clear_unknown.jpg"); background-size: cover; background-position: center; pointer-events: none; }
+    .clearName { font-size: 11px; color: #6d4c41; font-weight: bold; text-align: center; line-height: 1.2; word-break: break-all; white-space: pre-wrap; pointer-events: none; }
+
+    /* キャラクター説明ポップアップ（モーダル） */
+    #charDetailModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 50000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .charModalCard {
+      background: #fff;
+      border: 4px solid #ffb74d;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 320px;
+      padding: 24px 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: popModal 0.25s ease;
+      text-align: center;
+    }
+    @keyframes popModal {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .charModalImg {
+      width: 100px;
+      height: 100px;
+      border-radius: 16px;
+      background-size: cover;
+      background-position: center;
+      border: 3px solid #ffe082;
+      background-color: #eee;
+    }
+    .charModalTitle {
+      font-size: 20px;
+      font-weight: bold;
+      color: #d84315;
+      margin: 0;
+    }
+    .charModalDesc {
+      font-size: 14px;
+      color: #4e342e;
+      line-height: 1.6;
+      margin: 0;
+      text-align: left;
+      background: #fff8e1;
+      padding: 12px;
+      border-radius: 12px;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ffe0b2;
+    }
+    .charModalClose {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 12px;
+      background: #ff7043;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
   </style>
 
   <script>
@@ -351,6 +424,16 @@
   </div>
 </div>
 
+<!-- キャラクター詳細ポップアップモーダル -->
+<div id="charDetailModal">
+  <div class="charModalCard">
+    <div id="modalCharImg" class="charModalImg"></div>
+    <h3 id="modalCharTitle" class="charModalTitle">キャラクター名</h3>
+    <p id="modalCharDesc" class="charModalDesc">ここに説明文がはいります。</p>
+    <button id="modalCloseBtn" class="charModalClose">とじる</button>
+  </div>
+</div>
+
 <!-- ボタン群 -->
 <button id="backToCameraBtn">カメラに戻る</button>
 <button id="backToMenuFromARBtn">メニューへ戻る</button>
@@ -391,40 +474,40 @@
   <div class="clearCategoryTitle">イラスト：福を迎えに！</div>
   <div class="clearWholeImageContainer"><img id="wholeImg_girl" src="clear_unknown.jpg"></div>
   <div class="clearGrid">
-    <div class="clearItem"><div id="clearImg_heart" class="clearCropBox"></div><div class="clearName">？？？</div></div>
-    <div class="clearItem"><div id="clearImg_eye" class="clearCropBox"></div><div class="clearName">？？？</div></div>
-    <div class="clearItem"><div id="clearImg_ribbon" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="heart"><div id="clearImg_heart" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="eye"><div id="clearImg_eye" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="ribbon"><div id="clearImg_ribbon" class="clearCropBox"></div><div class="clearName">？？？</div></div>
   </div>
 
   <div class="clearCategoryTitle">イラスト：宇宙</div>
   <div class="clearWholeImageContainer"><img id="wholeImg_animal" src="clear_unknown.jpg"></div>
   <div class="clearGrid">
-    <div class="clearItem"><div id="clearImg_ear" class="clearCropBox"></div><div class="clearName">？？？</div></div>
-    <div class="clearItem"><div id="clearImg_nose" class="clearCropBox"></div><div class="clearName">？？？</div></div>
-    <div class="clearItem"><div id="clearImg_tail" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="ear"><div id="clearImg_ear" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="nose"><div id="clearImg_nose" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="tail"><div id="clearImg_tail" class="clearCropBox"></div><div class="clearName">？？？</div></div>
   </div>
 
   <div class="clearCategoryTitle">イラスト：あしあとタウン</div>
   <div class="clearWholeImageContainer"><img id="wholeImg_alien" src="clear_unknown.jpg"></div>
   <div class="clearGrid">
-    <div class="clearItem"><div id="clearImg_alienEye" class="clearCropBox"></div><div class="clearName">？？？</div></div>
-    <div class="clearItem"><div id="clearImg_alienMouth" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="alienEye"><div id="clearImg_alienEye" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="alienMouth"><div id="clearImg_alienMouth" class="clearCropBox"></div><div class="clearName">？？？</div></div>
   </div>
 
   <div class="clearCategoryTitle">イラスト：森の音楽会</div>
   <div class="clearWholeImageContainer"><img id="wholeImg_fantasy" src="clear_unknown.jpg"></div>
   <div class="clearGrid">
-    <div class="clearItem"><div id="clearImg_dragon" class="clearCropBox"></div><div class="clearName">？？？</div></div>
-    <div class="clearItem"><div id="clearImg_hero" class="clearCropBox"></div><div class="clearName">？？？</div></div>
-    <div class="clearItem"><div id="clearImg_wizard" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="dragon"><div id="clearImg_dragon" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="hero"><div id="clearImg_hero" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="wizard"><div id="clearImg_wizard" class="clearCropBox"></div><div class="clearName">？？？</div></div>
   </div>
 
   <div class="clearCategoryTitle">イラスト：魔界集合</div>
   <div class="clearWholeImageContainer"><img id="wholeImg_space" src="clear_unknown.jpg"></div>
   <div class="clearGrid">
-    <div class="clearItem"><div id="clearImg_rocket" class="clearCropBox"></div><div class="clearName">？？？</div></div>
-    <div class="clearItem"><div id="clearImg_planet" class="clearCropBox"></div><div class="clearName">？？？</div></div>
-    <div class="clearItem"><div id="clearImg_astronaut" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="rocket"><div id="clearImg_rocket" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="planet"><div id="clearImg_planet" class="clearCropBox"></div><div class="clearName">？？？</div></div>
+    <div class="clearItem" data-target-id="astronaut"><div id="clearImg_astronaut" class="clearCropBox"></div><div class="clearName">？？？</div></div>
   </div>
 
   <button id="closeClearBtn" class="popBtnStyle backBtnColor" style="margin-top:15px;">メニューに戻る</button>
@@ -435,40 +518,40 @@ const targetGroups = {
   girl: {
     maxSize: 2.5, img: "1god.jpg",
     list: [
-      { id: "heart",  name: "大黒天様",   x:  0.13, y:  0.04, guideSize: 0.6,  hitSize: 0.7,  found: false },
-      { id: "eye",    name: "天使ちゃん", x:  0.04, y:  0.38, guideSize: 0.37, hitSize: 0.4,  found: false },
-      { id: "ribbon", name: "だるまさん", x: -0.42, y: -0.04, guideSize: 0.3,  hitSize: 0.45, found: false }
+      { id: "heart",  name: "大黒天様",   x:  0.13, y:  0.04, guideSize: 0.6,  hitSize: 0.7,  found: false, desc: "福徳や財宝を授けてくれる神様。いつも優しい笑顔でみんなを見守っているよ。" },
+      { id: "eye",    name: "天使ちゃん", x:  0.04, y:  0.38, guideSize: 0.37, hitSize: 0.4,  found: false, desc: "ふわふわの羽がチャームポイントの天使ちゃん。空から幸せを届けてくれるよ。" },
+      { id: "ribbon", name: "だるまさん", x: -0.42, y: -0.04, guideSize: 0.3,  hitSize: 0.45, found: false, desc: "何度転んでも起き上がる強い心を持った縁起の良いだるまさん。" }
     ]
   },
   animal: {
     maxSize: 2.5, img: "2space.jpg",
     list: [
-      { id: "ear",  name: "ビックリ星人", x:  0.02, y: -0.02, guideSize: 0.6, hitSize: 0.7, found: false },
-      { id: "nose", name: "太陽",         x: -0.2,  y: -0.33, guideSize: 0.9, hitSize: 1.0, found: false },
-      { id: "tail", name: "月",           x:  0.27, y:  0.3,  guideSize: 0.9, hitSize: 1.0, found: false }
+      { id: "ear",  name: "ビックリ星人", x:  0.02, y: -0.02, guideSize: 0.6, hitSize: 0.7, found: false, desc: "いつも目が点になって驚いている宇宙からやってきた愉快なエイリアン。" },
+      { id: "nose", name: "太陽",         x: -0.2,  y: -0.33, guideSize: 0.9, hitSize: 1.0, found: false, desc: "みんなを明るく温かく照らしてくれる、元気いっぱいの大きな太陽。" },
+      { id: "tail", name: "月",           x:  0.27, y:  0.3,  guideSize: 0.9, hitSize: 1.0, found: false, desc: "夜空で静かに光り輝きながら、みんなの眠りを見守る優しいお月様。" }
     ]
   },
   alien: {
     maxSize: 2.5, img: "3asiato.jpg",
     list: [
-      { id: "alienEye",   name: "ガーコ", x: -0.41, y:  0.36, guideSize: 0.25, hitSize: 0.4, found: false },
-      { id: "alienMouth", name: "ボビー", x:  0.22, y: -0.12, guideSize: 0.4,  hitSize: 0.5, found: false }
+      { id: "alienEye",   name: "ガーコ", x: -0.41, y:  0.36, guideSize: 0.25, hitSize: 0.4, found: false, desc: "あしあとタウンをのんびりお散歩するのが大好きな、愛嬌たっぷりのキャラクター。" },
+      { id: "alienMouth", name: "ボビー", x:  0.22, y: -0.12, guideSize: 0.4,  hitSize: 0.5, found: false, desc: "おしゃべり大好きで元気いっぱいなボビー。いつもみんなを笑顔にするよ。" }
     ]
   },
   fantasy: {
     maxSize: 2.5, img: "4forest.jpg",
     list: [
-      { id: "dragon", name: "森のキノコ", x: -0.01, y:  0.06, guideSize: 0.45, hitSize: 0.5, found: false },
-      { id: "hero",   name: "鼻ピンク",   x: -0.16, y: -0.1,  guideSize: 0.4,  hitSize: 0.5, found: false },
-      { id: "wizard", name: "リス",       x:  0.38, y: -0.22, guideSize: 0.25, hitSize: 0.4, found: false }
+      { id: "dragon", name: "森のキノコ", x: -0.01, y:  0.06, guideSize: 0.45, hitSize: 0.5, found: false, desc: "森の音楽会でひそかにリズムをとっている、不思議なパワーを持つキノコ。" },
+      { id: "hero",   name: "鼻ピンク",   x: -0.16, y: -0.1,  guideSize: 0.4,  hitSize: 0.5, found: false, desc: "お鼻がキュートにピンク色に染まった、ちょっぴり恥ずかしがり屋な住人。" },
+      { id: "wizard", name: "リス",       x:  0.38, y: -0.22, guideSize: 0.25, hitSize: 0.4, found: false, desc: "木の実を集めるのが得意なすばしっこいリスさん。音楽会を楽しみにしているよ。" }
     ]
   },
   space: {
     maxSize: 2.5, img: "5gaia.jpg",
     list: [
-      { id: "rocket",    name: "オムレッツ",       x: -0.3,  y:  0.16, guideSize: 0.35, hitSize: 0.4, found: false },
-      { id: "planet",    name: "くちびる\nドラゴン", x: -0.3,  y: -0.32, guideSize: 0.5,  hitSize: 0.6, found: false },
-      { id: "astronaut", name: "バッサ",           x:  0.29, y: -0.33, guideSize: 0.4,  hitSize: 0.5, found: false }
+      { id: "rocket",    name: "オムレッツ",       x: -0.3,  y:  0.16, guideSize: 0.35, hitSize: 0.4, found: false, desc: "星空をロケットのようにビューンと駆け抜ける、スピード自慢の仲間。" },
+      { id: "planet",    name: "くちびる\nドラゴン", x: -0.3,  y: -0.32, guideSize: 0.5,  hitSize: 0.6, found: false, desc: "ぷるんとしたくちびるがとってもチャームポイント！ユニークで愛され者のドラゴン。" },
+      { id: "astronaut", name: "バッサ",           x:  0.29, y: -0.33, guideSize: 0.4,  hitSize: 0.5, found: false, desc: "魔界の空を颯爽と飛び回る、かっこいい翼を持った冒険家。" }
     ]
   }
 };
@@ -608,7 +691,6 @@ function setupPanZoom() {
     }
     lastTapTime = now;
 
-    // 操作が開始されたら（1本指での移動、または2本指での拡大縮小）、誤タップを防ぐため絵柄のタッチ判定を即座に無効化
     hotspotContainer.style.pointerEvents = "none";
 
     if (e.touches.length === 1) {
@@ -629,7 +711,6 @@ function setupPanZoom() {
 
   viewport.addEventListener("touchmove", (e) => {
     e.preventDefault();
-    // 動かしている最中も確実に絵柄タッチを無効に維持
     hotspotContainer.style.pointerEvents = "none";
 
     if (e.touches.length === 1 && isDragging) {
@@ -651,7 +732,6 @@ function setupPanZoom() {
     isDragging = false;
     initialPinchDistance = null;
 
-    // すべての指が画面から離れた少し後に、絵柄のタッチ判定を有効に戻す
     if (e.touches.length === 0) {
       setTimeout(() => {
         if (e.touches.length === 0) {
@@ -866,6 +946,48 @@ function updateClearScreen() {
     });
   });
 }
+
+// クリア画面のキャラクターをタップしたときの処理（詳細説明を表示）
+document.querySelectorAll(".clearItem").forEach(item => {
+  item.addEventListener("click", () => {
+    const targetId = item.getAttribute("data-target-id");
+    let foundTarget = null;
+    let foundGroupImg = "";
+
+    // 該当するターゲットを検索
+    for (let gKey in targetGroups) {
+      const found = targetGroups[gKey].list.find(t => t.id === targetId);
+      if (found) {
+        foundTarget = found;
+        foundGroupImg = targetGroups[gKey].img;
+        break;
+      }
+    }
+
+    if (foundTarget) {
+      if (foundTarget.found) {
+        // 発見済みの場合は詳細ポップアップを表示
+        document.getElementById("modalCharTitle").textContent = foundTarget.name.replace("\n", "");
+        document.getElementById("modalCharDesc").textContent = foundTarget.desc;
+        document.getElementById("modalCharImg").style.backgroundImage = `url("${foundGroupImg}")`;
+        document.getElementById("charDetailModal").style.display = "flex";
+      } else {
+        // 未発見の場合はメッセージを表示
+        showEffect("まだ見つけていないよ！");
+      }
+    }
+  });
+});
+
+// モーダルを閉じる
+document.getElementById("modalCloseBtn").addEventListener("click", () => {
+  document.getElementById("charDetailModal").style.display = "none";
+});
+document.getElementById("charDetailModal").addEventListener("click", (e) => {
+  if (e.target === document.getElementById("charDetailModal")) {
+    document.getElementById("charDetailModal").style.display = "none";
+  }
+});
 
 // イベントリスナー設定
 document.getElementById("startBtn").addEventListener("click", async () => {
