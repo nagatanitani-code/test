@@ -283,7 +283,6 @@
     .clearGrid { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; max-width: 320px; background: #fff; border: 3px solid #ffb74d; padding: 12px; border-radius: 16px; box-sizing: border-box; }
     .clearItem { display: flex; flex-direction: column; align-items: center; gap: 4px; background: #fdfaf6; padding: 6px; border: 2px solid #ffe0b2; border-radius: 12px; width: calc(33.33% - 6px); box-sizing: border-box; }
     .clearCropBox { width: 100%; aspect-ratio: 1; border-radius: 8px; background-repeat: no-repeat; background-color: #e0e0e0; background-image: url("clear_unknown.jpg"); background-size: cover; background-position: center; }
-    /* 改行を有効にするための設定 */
     .clearName { font-size: 11px; color: #6d4c41; font-weight: bold; text-align: center; line-height: 1.2; word-break: break-all; white-space: pre-wrap; }
   </style>
 
@@ -424,7 +423,6 @@
   <div class="clearWholeImageContainer"><img id="wholeImg_space" src="clear_unknown.jpg"></div>
   <div class="clearGrid">
     <div class="clearItem"><div id="clearImg_rocket" class="clearCropBox"></div><div class="clearName">？？？</div></div>
-    <!-- 要望2：くちびる改行ドラゴン -->
     <div class="clearItem"><div id="clearImg_planet" class="clearCropBox"></div><div class="clearName">？？？</div></div>
     <div class="clearItem"><div id="clearImg_astronaut" class="clearCropBox"></div><div class="clearName">？？？</div></div>
   </div>
@@ -469,7 +467,6 @@ const targetGroups = {
     maxSize: 2.5, img: "5gaia.jpg",
     list: [
       { id: "rocket",    name: "オムレッツ",       x: -0.3,  y:  0.16, guideSize: 0.35, hitSize: 0.4, found: false },
-      // 要望2：くちびる改行ドラゴン
       { id: "planet",    name: "くちびる\nドラゴン", x: -0.3,  y: -0.32, guideSize: 0.5,  hitSize: 0.6, found: false },
       { id: "astronaut", name: "バッサ",           x:  0.29, y: -0.33, guideSize: 0.4,  hitSize: 0.5, found: false }
     ]
@@ -580,7 +577,7 @@ async function backToCamera() {
   isTransitioning = false;
 }
 
-// スムーズなズーム・スワイプ操作ロジック（要望3：拡大縮小中は絵柄タッチの判定を無くす）
+// スムーズなズーム・スワイプ操作ロジック（操作中は絵柄タッチを無効化）
 function setupPanZoom() {
   viewport.addEventListener("mousedown", (e) => {
     if (e.target.classList.contains("targetHotspot")) return;
@@ -611,6 +608,9 @@ function setupPanZoom() {
     }
     lastTapTime = now;
 
+    // 操作が開始されたら（1本指での移動、または2本指での拡大縮小）、誤タップを防ぐため絵柄のタッチ判定を即座に無効化
+    hotspotContainer.style.pointerEvents = "none";
+
     if (e.touches.length === 1) {
       isDragging = true;
       startX = e.touches[0].clientX - targetX;
@@ -623,16 +623,15 @@ function setupPanZoom() {
         e.touches[0].clientY - e.touches[1].clientY
       );
       initialScale = targetScale;
-      
-      // 要望3：2本指での拡大縮小（ピンチ）中は絵柄のタッチ判定を一時的に無効化
-      hotspotContainer.style.pointerEvents = "none";
-      
       requestRender();
     }
   }, { passive: false });
 
   viewport.addEventListener("touchmove", (e) => {
     e.preventDefault();
+    // 動かしている最中も確実に絵柄タッチを無効に維持
+    hotspotContainer.style.pointerEvents = "none";
+
     if (e.touches.length === 1 && isDragging) {
       targetX = e.touches[0].clientX - startX;
       targetY = e.touches[0].clientY - startY;
@@ -650,10 +649,15 @@ function setupPanZoom() {
 
   viewport.addEventListener("touchend", (e) => {
     isDragging = false;
-    // 要望3：指が1本以下になったら（ピンチ終了時）タッチ判定を復帰
-    if (e.touches.length < 2) {
-      initialPinchDistance = null;
-      hotspotContainer.style.pointerEvents = "auto";
+    initialPinchDistance = null;
+
+    // すべての指が画面から離れた少し後に、絵柄のタッチ判定を有効に戻す
+    if (e.touches.length === 0) {
+      setTimeout(() => {
+        if (e.touches.length === 0) {
+          hotspotContainer.style.pointerEvents = "auto";
+        }
+      }, 80);
     }
     requestRender();
   });
