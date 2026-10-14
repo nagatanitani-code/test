@@ -191,11 +191,13 @@ body {
   white-space: nowrap; 
   text-align: center;
 }
+/* 縦長画像が切れないようにcontainに変更＆背景を調整 */
 #treasureImage { 
   width: 100%; 
   max-width: 106px; 
   aspect-ratio: 1;
-  object-fit: cover;
+  object-fit: contain; 
+  background: rgba(0,0,0,0.4);
   margin-top: 8px; 
   border-radius: 8px; 
   border: 1px solid rgba(197, 160, 89, 0.5);
@@ -239,11 +241,15 @@ body {
   height: 140px;
   overflow: hidden;
   background: rgba(13, 38, 30, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+/* 図鑑の画像も見切れないようにcontainに変更 */
 .cardImgWrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; 
   transition: transform 0.3s ease;
 }
 
@@ -286,6 +292,33 @@ body {
   position: absolute; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%;
   background: rgba(0,0,0,.8); color: white; font-size: 32px; font-weight: bold;
   display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white;
+}
+
+/* お宝詳細・拡大表示モーダル（タッチ時用） */
+#treasureDetailModal {
+  position: fixed; inset: 0; display: none; flex-direction: column;
+  justify-content: center; align-items: center; gap: 20px;
+  background: rgba(0,0,0,0.85); z-index: 40000; padding: 20px; box-sizing: border-box;
+}
+#closeDetailModalBtn {
+  position: absolute; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%;
+  background: rgba(0,0,0,.8); color: white; font-size: 32px; font-weight: bold;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white;
+}
+#modalDetailImg {
+  max-width: 90%;
+  max-height: 65vh;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 2px solid #c5a059;
+  background: rgba(0,0,0,0.5);
+}
+#modalDetailDesc {
+  color: #ffd700;
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 </style>
 </head>
@@ -378,10 +411,10 @@ body {
 <div id="treasureScreen" class="treasureBg">
   <h1 class="screenTitleStyle">お宝図鑑</h1>
   <div class="contentCard">
-    <div class="menuGuide">これまでに発見した秘宝の記録だ！</div>
+    <div class="menuGuide">これまでに発見した秘宝の記録だ！<br><span style="font-size: 12px; color: #ffd700;">※発見したカードをタッチすると拡大表示できるよ！</span></div>
     <div class="treasureGrid">
       
-      <div id="cardTreasure1" class="treasureCardContainer">
+      <div id="cardTreasure1" class="treasureCardContainer" data-index="0">
         <div class="cardImgWrap">
           <img id="menuTreasure1" src="treasure_unknown.jpg">
         </div>
@@ -390,7 +423,7 @@ body {
         </div>
       </div>
       
-      <div id="cardTreasure2" class="treasureCardContainer">
+      <div id="cardTreasure2" class="treasureCardContainer" data-index="1">
         <div class="cardImgWrap">
           <img id="menuTreasure2" src="treasure_unknown.jpg">
         </div>
@@ -399,7 +432,7 @@ body {
         </div>
       </div>
 
-      <div id="cardTreasure3" class="treasureCardContainer">
+      <div id="cardTreasure3" class="treasureCardContainer" data-index="2">
         <div class="cardImgWrap">
           <img id="menuTreasure3" src="treasure_unknown.jpg">
         </div>
@@ -408,7 +441,7 @@ body {
         </div>
       </div>
 
-      <div id="cardTreasure4" class="treasureCardContainer">
+      <div id="cardTreasure4" class="treasureCardContainer" data-index="3">
         <div class="cardImgWrap">
           <img id="menuTreasure4" src="treasure_unknown.jpg">
         </div>
@@ -417,7 +450,7 @@ body {
         </div>
       </div>
 
-      <div id="cardTreasure5" class="treasureCardContainer">
+      <div id="cardTreasure5" class="treasureCardContainer" data-index="4">
         <div class="cardImgWrap">
           <img id="menuTreasure5" src="treasure_unknown.jpg">
         </div>
@@ -493,20 +526,27 @@ body {
   <button id="downloadWallpaperBtn">壁紙入手!</button>
 </div>
 
+<!-- 図鑑タッチ時の詳細・拡大表示モーダル -->
+<div id="treasureDetailModal">
+  <div id="closeDetailModalBtn">×</div>
+  <img id="modalDetailImg" src="">
+  <div id="modalDetailDesc"></div>
+</div>
+
 <script>
 // ======================
-// 状態管理と要素キャッシュ
+// 状態管理と設定
 // ======================
 const state = {
   treasures: [false, false, false, false, false], 
   get foundCount() { return state.treasures.filter(Boolean).length; },
   total: 5,
   config: [
-    { id: "Treasure1", src: "当たり.png", msg: "あたり発見！！", desc: "1 お宝（あたり）" },
-    { id: "Treasure2", src: "ハズレ.png", msg: "はずれ...", desc: "2 お宝（はずれ）" },
-    { id: "Treasure3", src: "ハズレ.png", msg: "はずれ...", desc: "3 お宝（はずれ）" },
-    { id: "Treasure4", src: "ハズレ.png", msg: "はずれ...", desc: "4 お宝（はずれ）" },
-    { id: "Treasure5", src: "ハズレ.png", msg: "はずれ...", desc: "5 お宝（はずれ）" }
+    { id: "Treasure1", src: "takara1.png", detailSrc: "当たり.png", msg: "あたり発見！！", desc: "1 お宝（あたり）" },
+    { id: "Treasure2", src: "takara2.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "2 お宝（はずれ）" },
+    { id: "Treasure3", src: "takara3.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "3 お宝（はずれ）" },
+    { id: "Treasure4", src: "takara4.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "4 お宝（はずれ）" },
+    { id: "Treasure5", src: "takara5.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "5 お宝（はずれ）" }
   ]
 };
 
@@ -524,6 +564,9 @@ const UI = {
   howToScreen: document.querySelector("#howToScreen"),
   treasureScreen: document.querySelector("#treasureScreen"),
   hintScreen: document.querySelector("#hintScreen"),
+  treasureDetailModal: document.querySelector("#treasureDetailModal"),
+  modalDetailImg: document.querySelector("#modalDetailImg"),
+  modalDetailDesc: document.querySelector("#modalDetailDesc"),
   menuTreasures: [
     document.querySelector("#menuTreasure1"),
     document.querySelector("#menuTreasure2"),
@@ -551,12 +594,12 @@ const UI = {
 // セーブ / ロード
 // ======================
 function saveGame() {
-  localStorage.setItem("treasureSave_v3", JSON.stringify(state.treasures));
+  localStorage.setItem("treasureSave_v4", JSON.stringify(state.treasures));
 }
 
 function loadGame() {
   try {
-    const saved = JSON.parse(localStorage.getItem("treasureSave_v3"));
+    const saved = JSON.parse(localStorage.getItem("treasureSave_v4"));
     if (Array.isArray(saved) && saved.length === state.total) {
       state.treasures = saved;
     }
@@ -573,7 +616,7 @@ function updateTreasureUI() {
   UI.treasureCount.textContent = `${state.foundCount} / ${state.total}`;
   state.treasures.forEach((isGet, index) => {
     if (isGet) {
-      UI.menuTreasures[index].src = state.config[index].src;
+      UI.menuTreasures[index].src = state.config[index].src; // takaraX.pngを表示
       UI.cardTreasures[index].classList.add("is-found");
       UI.treasureTexts[index].textContent = state.config[index].desc;
       UI.treasureTexts[index].classList.remove("not-found-text");
@@ -587,12 +630,10 @@ function updateTreasureUI() {
 }
 
 function updateBonusButton() {
-  // 1番目（インデックス0：あたり）を見つけていればボタンを表示
   UI.bonusGroup.style.display = state.treasures[0] ? "block" : "none";
 }
 
 function checkAtariBonus(index) {
-  // 初めて「あたり（index: 0）」を見つけた時
   if (index === 0) {
     updateBonusButton();
     setTimeout(() => {
@@ -614,18 +655,37 @@ function showEffect(text) {
 state.config.forEach((item, index) => {
   document.querySelector(`#target${item.id}`).addEventListener("targetFound", () => {
     UI.treasureBox.style.display = "flex";
-    UI.treasureImage.src = item.src;
+    UI.treasureImage.src = item.detailSrc; // 発見時には当たり/外れ画像を表示
 
     if (!state.treasures[index]) {
       state.treasures[index] = true;
       saveGame();
       updateTreasureUI();
       showEffect(item.msg);
-      checkAtariBonus(index); // あたり判定チェック
+      checkAtariBonus(index);
     } else {
       showEffect("発見済みのお宝");
     }
   });
+});
+
+// ======================
+// 図鑑カードタップ時の拡大表示
+// ======================
+state.config.forEach((item, index) => {
+  UI.cardTreasures[index].addEventListener("click", () => {
+    // まだ見つけていない場合は反応しない
+    if (!state.treasures[index]) return;
+
+    // タッチされたら当たり/外れの画像と説明をモーダルに表示
+    UI.modalDetailImg.src = item.detailSrc;
+    UI.modalDetailDesc.textContent = item.desc;
+    UI.treasureDetailModal.style.display = "flex";
+  });
+});
+
+document.querySelector("#closeDetailModalBtn").addEventListener("click", () => {
+  UI.treasureDetailModal.style.display = "none";
 });
 
 // ======================
