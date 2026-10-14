@@ -274,15 +274,15 @@ body {
 .treasureCardContainer.is-found:hover .cardImgWrap img { transform: scale(1.06); }
 /* ======================================================== */
 
-/* COMPLETE画面 */
-#completeTreasure {
+/* 壁紙ゲット画面（あたり発見特典） */
+#atariBonusScreen {
   position: fixed; inset: 0; display: none; flex-direction: column;
   justify-content: center; align-items: center; gap: 25px;
   background: rgba(0,0,0,.85); z-index: 30000;
 }
-#completeText { font-size: 42px; font-weight: bold; color: gold; }
+#atariBonusText { font-size: 36px; font-weight: bold; color: gold; text-align: center; padding: 0 20px; }
 #downloadWallpaperBtn { padding: 18px 30px; border: none; border-radius: 18px; font-size: 24px; color: white; background: linear-gradient(135deg, #00c6ff, #0072ff); cursor: pointer; }
-#closeCompleteBtn {
+#closeAtariBonusBtn {
   position: absolute; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%;
   background: rgba(0,0,0,.8); color: white; font-size: 32px; font-weight: bold;
   display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white;
@@ -329,8 +329,8 @@ body {
   <div class="scrollIndicator">▼ 下へスクロールしてね ▼</div>
 
   <div class="menuGroup" id="bonusGroup" style="display: none;">
-    <div class="menuGuide" style="color: #ffd700; text-shadow: 0 0 5px rgba(255,215,0,0.5); font-weight: bold;">🎉 全てのお宝を見つけた特典！</div>
-    <button id="openBonusBtn" class="menuBtn">コンプリート特典</button>
+    <div class="menuGuide" style="color: #ffd700; text-shadow: 0 0 5px rgba(255,215,0,0.5); font-weight: bold;">🎉 あたり発見特典！</div>
+    <button id="openBonusBtn" class="menuBtn">壁紙ゲット！</button>
   </div>
 
   <div class="menuGroup">
@@ -366,10 +366,10 @@ body {
   <div class="contentCard">
     <div class="menuGuide">📜 探索の手引き 📜</div>
     <ol class="howToSteps">
-      <li>「探索開始」ボタンを押し、スマートフォンのカメラアクセスを許可します。</li>
-      <li>「場所確認」に眠る古文書の手がかりを頼りに、怪しい場所（マーカー）を探しましょう。下のような絵がマーカーです。</li>
-      <img src="treasure_img.jpg" class="explainMarkerImg" alt="スタンプマーカーの例">     
-      <li>見つけた場所にカメラをまっすぐかざすと、空間から隠された「秘宝」がその姿を現します！</li>
+      <li>「探索開始」ボタンを押し、スマートフォンのカメラアクセスを許可します[cite: 12]。</li>
+      <li>「場所確認」に眠る古文書の手がかりを頼りに、怪しい場所（マーカー）を探しましょう。下のような絵がマーカーです[cite: 12]。</li>
+      <img src="treasure_img.jpg" class="explainMarkerImg" alt="スタンプマーカーの例">[cite: 12]     
+      <li>見つけた場所にカメラをまっすぐかざすと、空間から隠された「秘宝」がその姿を現します[cite: 12]！</li>
     </ol>
   </div>
   <button id="closeHowToBtn" class="backBtn">戻る</button>
@@ -487,9 +487,9 @@ body {
   <button id="closeHintBtn" class="backBtn">戻る</button>
 </div>
 
-<div id="completeTreasure">
-  <div id="closeCompleteBtn">×</div>
-  <div id="completeText">COMPLETE!!</div>
+<div id="atariBonusScreen">
+  <div id="closeAtariBonusBtn">×</div>
+  <div id="atariBonusText">あたり発見！<br>壁紙をゲットしよう！</div>
   <button id="downloadWallpaperBtn">壁紙入手!</button>
 </div>
 
@@ -520,7 +520,7 @@ const UI = {
   treasureCount: document.querySelector("#treasureCount"),
   treasureEffect: document.querySelector("#treasureEffect"),
   bonusGroup: document.querySelector("#bonusGroup"),
-  completeTreasure: document.querySelector("#completeTreasure"),
+  atariBonusScreen: document.querySelector("#atariBonusScreen"),
   howToScreen: document.querySelector("#howToScreen"),
   treasureScreen: document.querySelector("#treasureScreen"),
   hintScreen: document.querySelector("#hintScreen"),
@@ -551,12 +551,12 @@ const UI = {
 // セーブ / ロード
 // ======================
 function saveGame() {
-  localStorage.setItem("treasureSave_v2", JSON.stringify(state.treasures));
+  localStorage.setItem("treasureSave_v3", JSON.stringify(state.treasures));
 }
 
 function loadGame() {
   try {
-    const saved = JSON.parse(localStorage.getItem("treasureSave_v2"));
+    const saved = JSON.parse(localStorage.getItem("treasureSave_v3"));
     if (Array.isArray(saved) && saved.length === state.total) {
       state.treasures = saved;
     }
@@ -587,14 +587,16 @@ function updateTreasureUI() {
 }
 
 function updateBonusButton() {
-  UI.bonusGroup.style.display = state.foundCount >= state.total ? "block" : "none";
+  // 1番目（インデックス0：あたり）を見つけていればボタンを表示
+  UI.bonusGroup.style.display = state.treasures[0] ? "block" : "none";
 }
 
-function checkCompleteTreasure() {
-  if (state.foundCount >= state.total) {
+function checkAtariBonus(index) {
+  // 初めて「あたり（index: 0）」を見つけた時
+  if (index === 0) {
     updateBonusButton();
     setTimeout(() => {
-      UI.completeTreasure.style.display = "flex";
+      UI.atariBonusScreen.style.display = "flex";
       UI.backToMenuBtn.style.display = "none";
     }, 1000);
   }
@@ -619,7 +621,7 @@ state.config.forEach((item, index) => {
       saveGame();
       updateTreasureUI();
       showEffect(item.msg);
-      checkCompleteTreasure();
+      checkAtariBonus(index); // あたり判定チェック
     } else {
       showEffect("発見済みのお宝");
     }
@@ -663,14 +665,14 @@ document.querySelector("#closeTreasureBtn").addEventListener("click", () => { UI
 document.querySelector("#openHintBtn").addEventListener("click", () => { UI.hintScreen.style.display = "flex"; });
 document.querySelector("#closeHintBtn").addEventListener("click", () => { UI.hintScreen.style.display = "none"; });
 
-document.querySelector("#closeCompleteBtn").addEventListener("click", () => { 
-  UI.completeTreasure.style.display = "none"; 
+document.querySelector("#closeAtariBonusBtn").addEventListener("click", () => { 
+  UI.atariBonusScreen.style.display = "none"; 
   if (UI.menuScreen.style.display === "none") {
     UI.backToMenuBtn.style.display = "block"; 
   }
 });
 
-document.querySelector("#openBonusBtn").addEventListener("click", () => { UI.completeTreasure.style.display = "flex"; });
+document.querySelector("#openBonusBtn").addEventListener("click", () => { UI.atariBonusScreen.style.display = "flex"; });
 
 // 壁紙ダウンロード
 document.querySelector("#downloadWallpaperBtn").addEventListener("click", () => {
