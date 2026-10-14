@@ -31,7 +31,7 @@ body {
 #menuScreen { z-index: 9999; }
 
 .screenTitleStyle {
-  font-size: 38px; font-weight: 900; color: #ffffff; margin: 0 0 10px 0; 
+  font-size: 38px; font-weight: 900; color: #ffffff; margin: 0 0 4px 0; 
   text-shadow: 3px 3px 0px #e65100, 5px 5px 12px rgba(0, 74, 124, 0.4);
   text-align: center; letter-spacing: 2px;
 }
@@ -40,6 +40,23 @@ body {
 @keyframes joyfulJump {
   0%, 100% { transform: translateY(0) scale(1); }
   50% { transform: translateY(-6px) scale(1.02); }
+}
+
+/* スクロールがあることを知らせるインジケーターアニメーション */
+.scrollIndicator {
+  color: #fff176;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0px #e65100;
+  animation: bounceArrow 1.5s infinite ease-in-out;
+  margin-bottom: 5px;
+}
+
+@keyframes bounceArrow {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(5px); opacity: 1; }
 }
 
 .menuGroup, .contentCard {
@@ -82,7 +99,7 @@ body {
   box-shadow: 0 4px 10px rgba(0, 64, 112, 0.1);
 }
 
-/* メニューボタン共通スタイル（2行構成対応・個別の色はインラインまたは専用クラスで指定） */
+/* メニューボタン共通スタイル */
 .menuBtn, .backBtn {
   width: 100%; max-width: 280px; padding: 14px; border: none; border-radius: 18px;
   font-size: 22px; font-weight: 900; color: white; 
@@ -142,7 +159,6 @@ body {
 #stampCount { font-size: 28px; font-weight: bold; }
 #stampPreview { width: 120px; margin-top: 10px; border-radius: 12px; }
 
-/* 2行ですっきり表示するスタンプ発見エフェクト */
 #stampEffect {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
   background: linear-gradient(135deg, #fff9c4 0%, #ffeb3b 50%, #ffa000 100%);
@@ -169,7 +185,6 @@ body {
   width: 100%; 
 }
 
-/* スタンプ帳のカードスタイル */
 .stampCardContainer {
   display: flex;
   flex-direction: column;
@@ -212,7 +227,6 @@ body {
   word-break: break-all;
 }
 
-/* 場所確認（ヒント）のカード */
 .hintCardContainer {
   display: flex;
   flex-direction: column;
@@ -260,7 +274,6 @@ body {
   transform: scale(1.06);
 }
 
-/* COMPLETE画面 */
 #completeWrap {
   position: fixed; inset: 0; display: none; flex-direction: column;
   justify-content: center; align-items: center; gap: 16px;
@@ -338,6 +351,8 @@ body {
 
 <div id="menuScreen" class="blueSkyBg">
   <div id="gameTitle" class="screenTitleStyle">スタンプラリーAR</div>
+  <!-- メニュータイトルの直下に配置 -->
+  <div class="scrollIndicator">▼ 下へスクロールしてね ▼</div>
 
   <div class="menuGroup" id="bonusGroup" style="display: none;">
     <div class="menuGuide" style="color: #d32f2f; font-weight: bold;">🎉 スタンプコンプリート特典！</div>
@@ -377,13 +392,13 @@ body {
   <div class="contentCard">
     <div class="menuGuide">★ あそびかたの手順 ★</div>
     <ol class="howToSteps">
-      <li>「場所確認」を開いて、スタンプが隠されているヒント写真を確認します。</li>
-      <li>「探索開始」ボタンを押し、カメラへのアクセスを許可します。</li>
-      <li>ヒントの場所を見つけたら、対象にカメラをまっすぐかざします。下のような絵が対象です。</li>
+      <li>「場所確認」を開いて、スタンプが隠されているヒント写真を確認します[cite: 10]。</li>
+      <li>「探索開始」ボタンを押し、カメラへのアクセスを許可します[cite: 10]。</li>
+      <li>ヒントの場所を見つけたら、対象にカメラをまっすぐかざします。下のような絵が対象です[cite: 10]。</li>
       
-      <img src="stamp_img.jpg" class="explainMarkerImg" alt="スタンプの例">
+      <img src="stamp_img.jpg" class="explainMarkerImg" alt="スタンプの例">[cite: 10]
 
-      <li>自動的にスタンプが検出され、スタンプ帳に記録されます！</li>
+      <li>自動的にスタンプが検出され、スタンプ帳に記録されます[cite: 10]！</li>
     </ol>
   </div>
   <button id="closeHowToBtn" class="backBtn">戻る</button>
@@ -526,7 +541,6 @@ const stampNames = [
   "おとなり島"
 ];
 
-// コンプリート画面がどこから開かれたかを記録するフラグ
 let openedFromMenu = false;
 
 const UI = {
@@ -632,18 +646,17 @@ function checkComplete() {
   if (state.foundCount >= state.total) {
     updateBonusButton();
     setTimeout(async () => {
-      openedFromMenu = false; // カメラ画面からの自動達成
+      openedFromMenu = false;
       await stopCamera();
       UI.completeWrap.style.display = "flex";
     }, 1000);
   }
 }
 
-// アニメーションを再トリガーするための処理
 function showStampEffect(text) {
   UI.stampEffect.textContent = text;
   UI.stampEffect.style.display = "none";
-  void UI.stampEffect.offsetWidth; // リフローを起こしてアニメーションを再初期化
+  void UI.stampEffect.offsetWidth;
   UI.stampEffect.style.display = "block";
   setTimeout(() => { 
     UI.stampEffect.style.display = "none"; 
@@ -690,16 +703,13 @@ document.querySelector("#closeHintBtn").addEventListener("click", () => { UI.hin
 document.querySelector("#openStampBtn").addEventListener("click", () => { updateStampBook(); UI.stampScreen.style.display = "flex"; });
 document.querySelector("#closeStampBtn").addEventListener("click", () => { UI.stampScreen.style.display = "none"; });
 
-// コンプリート画面を閉じた時の処理（開き元によって戻り先を分岐）
 document.querySelector("#closeComplete").addEventListener("click", async (e) => {
   e.stopPropagation();
   UI.completeWrap.style.display = "none";
   
   if (openedFromMenu) {
-    // メニュー画面から開いた場合はメニュー画面に戻す
     UI.menuScreen.style.display = "flex";
   } else {
-    // カメラ画面から開いた（自動達成）場合はカメラを再起動する
     await startCamera();
   }
 });
@@ -708,9 +718,8 @@ document.querySelector("#completeImage").addEventListener("click", () => {
   window.location.href = "https://nagatanitani-code.github.io/test/stamp.html";
 });
 
-// コンプリート特典ボタンを押した時はメニューから開いたとみなす
 document.querySelector("#openBonusBtn").addEventListener("click", async () => {
-  openedFromMenu = true; // メニューからのオープンフラグを立てる
+  openedFromMenu = true;
   await stopCamera();
   UI.menuScreen.style.display = "none";
   UI.completeWrap.style.display = "flex";
