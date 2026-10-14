@@ -19,8 +19,8 @@ body {
 ====================== */
 .treasureBg {
   position: fixed; inset: 0;
-  display: flex; flex-direction: column; align-items: center; gap: 24px; 
-  padding: 50px 20px; box-sizing: border-box;
+  display: flex; flex-direction: column; align-items: center; gap: 20px; 
+  padding: 40px 20px 60px; box-sizing: border-box;
   background:
     radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 70%),
     linear-gradient(180deg, #0d261e 0%, #06110d 100%);
@@ -31,7 +31,7 @@ body {
 #menuScreen { z-index: 9999; }
 
 .screenTitleStyle {
-  font-size: 44px; font-weight: bold; color: #ffd700; margin: 0 0 15px 0; 
+  font-size: 44px; font-weight: bold; color: #ffd700; margin: 0 0 10px 0; 
   text-shadow:
     0px 3px 0px #8b6508,
     0px 6px 10px rgba(0,0,0,0.8),
@@ -46,22 +46,39 @@ body {
 }
 
 .menuGroup, .contentCard {
-  display: flex; flex-direction: column; align-items: center; gap: 14px; 
+  display: flex; flex-direction: column; align-items: center; gap: 12px; 
   width: 100%; max-width: 320px; background: rgba(14, 36, 28, 0.7);
   border: 2px solid #c5a059; outline: 1px solid #c5a059; outline-offset: -6px;
-  padding: 20px 16px; border-radius: 12px;
+  padding: 18px 16px; border-radius: 12px;
   box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6), 0 10px 25px rgba(0, 0, 0, 0.7);
   box-sizing: border-box;
 }
 .contentCard { max-width: 360px; padding: 24px 16px; gap: 16px; }
 
 .menuGuide { 
-  font-size: 16px; 
+  font-size: 15px; 
   color: #dfd5be; 
   text-align: center; 
-  line-height: 1.6; 
+  line-height: 1.5; 
   letter-spacing: 0.8px; 
   font-weight: bold; 
+}
+
+/* スクロールがあることを知らせるインジケーターアニメーション */
+.scrollIndicator {
+  color: #ffd700;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  animation: bounceArrow 1.5s infinite ease-in-out;
+  margin-top: 5px;
+}
+
+@keyframes bounceArrow {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(6px); opacity: 1; }
 }
 
 .howToSteps { 
@@ -88,25 +105,49 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
-/* 重厚な黄金ボタン */
+/* 共通ボタンベース */
 .menuBtn, .backBtn {
-  width: 100%; max-width: 280px; padding: 16px; border: 1px solid #ffcc00; border-radius: 8px;
-  font-size: 24px; font-weight: 900; color: #ffffff; 
-  background: linear-gradient(180deg, #d4af37 0%, #aa7c11 100%);
-  border-bottom: 5px solid #5a4207; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
-  cursor: pointer; text-shadow: 1px 1px 2px rgba(0,0,0,0.6); transition: all 0.1s ease; text-align: center; box-sizing: border-box;
+  width: 100%; max-width: 280px; padding: 14px; border-radius: 8px;
+  font-size: 22px; font-weight: 900; color: #ffffff; 
+  cursor: pointer; text-shadow: 1px 1px 2px rgba(0,0,0,0.6); 
+  transition: all 0.1s ease; text-align: center; box-sizing: border-box;
 }
 .menuBtn:active, .backBtn:active {
-  transform: translateY(4px); border-bottom: 1px solid #5a4207; box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  transform: translateY(4px); filter: brightness(0.9);
 }
 
+/* 各メニューボタンの個別テーマカラー（世界観を損なわないリッチな宝石・古代風カラー） */
 #openBonusBtn {
-  border: 1px solid #00e5ff;
-  background: linear-gradient(180deg, #0091ea 0%, #006064 100%);
-  border-bottom: 5px solid #00363a; box-shadow: 0 6px 16px rgba(0, 229, 255, 0.2);
+  border: 1px solid #80d8ff;
+  background: linear-gradient(180deg, #00b4db 0%, #0083b0 100%);
+  border-bottom: 5px solid #00363a; box-shadow: 0 6px 16px rgba(0, 180, 219, 0.3);
 }
-#openBonusBtn:active {
-  transform: translateY(4px); border-bottom: 1px solid #00363a; box-shadow: 0 2px 5px rgba(0, 229, 255, 0.2);
+#openHowToBtn {
+  border: 1px solid #ce93d8;
+  background: linear-gradient(180deg, #9c27b0 0%, #6a1b9a 100%);
+  border-bottom: 5px solid #38006b; box-shadow: 0 6px 14px rgba(156, 39, 176, 0.3);
+}
+#startBtn {
+  border: 1px solid #ffcc00;
+  background: linear-gradient(180deg, #d4af37 0%, #aa7c11 100%);
+  border-bottom: 5px solid #5a4207; box-shadow: 0 6px 14px rgba(212, 175, 55, 0.3);
+}
+#openTreasureBtn {
+  border: 1px solid #ff8a80;
+  background: linear-gradient(180deg, #e53935 0%, #b71c1c 100%);
+  border-bottom: 5px solid #5f0000; box-shadow: 0 6px 14px rgba(229, 57, 53, 0.3);
+}
+#openHintBtn {
+  border: 1px solid #80cbc4;
+  background: linear-gradient(180deg, #00897b 0%, #004d40 100%);
+  border-bottom: 5px solid #00251a; box-shadow: 0 6px 14px rgba(0, 137, 123, 0.3);
+}
+
+.backBtn {
+  border: 1px solid #ffcc00;
+  background: linear-gradient(180deg, #d4af37 0%, #aa7c11 100%);
+  border-bottom: 5px solid #5a4207; box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+  margin-top: 10px; flex-shrink: 0;
 }
 
 /* ======================
@@ -176,7 +217,6 @@ body {
   gap: 16px; 
   width: 100%; 
 }
-.backBtn { margin-top: 10px; flex-shrink: 0; }
 
 /* ========================================================
    サイズアップ＆常時下部テキストカード
@@ -225,7 +265,6 @@ body {
   word-break: break-all;
 }
 
-/* 未発見時のテキストカラー調整用（お好みで！） */
 .cardBottomText.not-found-text {
   color: #8fa399;
 }
@@ -300,6 +339,9 @@ body {
     <div class="menuGuide">ここでお宝の場所を確認できるよ！</div>
     <button id="openHintBtn" class="menuBtn">場所確認</button>
   </div>
+
+  <!-- スクロールがあることを知らせる案内表示 -->
+  <div class="scrollIndicator">▼ 下へスクロールしてね ▼</div>
 </div>
 
 <button id="backToMenuBtn">メニューへ戻る</button>
@@ -317,10 +359,10 @@ body {
   <div class="contentCard">
     <div class="menuGuide">📜 探索の手引き 📜</div>
     <ol class="howToSteps">
-      <li>「探索開始」ボタンを押し、スマートフォンのカメラアクセスを許可します。</li>
-      <li>「場所確認」に眠る古文書の手がかりを頼りに、怪しい場所（マーカー）を探しましょう。下のような絵がマーカーです。</li>
-      <img src="treasure_img.jpg" class="explainMarkerImg" alt="スタンプマーカーの例">      
-      <li>見つけた場所にカメラをまっすぐかざすと、空間から隠された「秘宝」がその姿を現します！</li>
+      <li>「探索開始」ボタンを押し、スマートフォンのカメラアクセスを許可します[cite: 9]。</li>
+      <li>「場所確認」に眠る古文書の手がかりを頼りに、怪しい場所（マーカー）を探しましょう。下のような絵がマーカーです[cite: 9]。</li>
+      <img src="treasure_img.jpg" class="explainMarkerImg" alt="スタンプマーカーの例">[cite: 9]      
+      <li>見つけた場所にカメラをまっすぐかざすと、空間から隠された「秘宝」がその姿を現します[cite: 9]！</li>
     </ol>
   </div>
   <button id="closeHowToBtn" class="backBtn">戻る</button>
@@ -426,7 +468,6 @@ const UI = {
     document.querySelector("#cardTreasure1"),
     document.querySelector("#cardTreasure2")
   ],
-  // 【追加】お宝説明テキストの要素キャッシュ
   treasureTexts: [
     document.querySelector("#treasureText1"),
     document.querySelector("#treasureText2")
@@ -461,11 +502,9 @@ function updateTreasureUI() {
     if (isGet) {
       UI.menuTreasures[index].src = state.config[index].src;
       UI.cardTreasures[index].classList.add("is-found");
-      // 【変更】発見したお宝だけ、本来の説明文を代入して未発見用スタイルを外す
       UI.treasureTexts[index].textContent = state.config[index].desc;
       UI.treasureTexts[index].classList.remove("not-found-text");
     } else {
-      // ロード時やリセット等に対応するため未発見時の状態を維持・適用
       UI.menuTreasures[index].src = "treasure_unknown.jpg";
       UI.cardTreasures[index].classList.remove("is-found");
       UI.treasureTexts[index].textContent = "このお宝はまだ見つけてないよ！";
