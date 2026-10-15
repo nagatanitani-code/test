@@ -454,12 +454,12 @@
   <div class="clearGrid" style="flex-direction: column; align-items: flex-start; gap: 10px;">
     <div class="menuGuide">★ あそびかたの手順 ★</div>
     <ol style="font-size: 15px; color: #6d4c41; font-weight: bold; margin: 0; padding-left: 20px; line-height: 1.8;">
-      <li>「スタート」を押し、対象のポスターにカメラをまっすぐかざします。</li>
-      <li>マーカーを検出すると、自動的にイラスト画面に切り替わります！</li>
-      <li>画面を1本指でスワイプして移動、2本指でピンチ（拡大・縮小）しながら隠れたキャラを探そう！</li>
-      <li>画面をトントン（ダブルタップ）すると、最初の大きさに戻ります。</li>
-      <li>見つけたらそのキャラを直接タップしてね！</li>
-      <li>探すのをやめたい時は「カメラに戻る」を押すとカメラ画面に戻れます。</li>
+      <li>「スタート」を押し、対象のポスターにカメラをまっすぐかざします[cite: 13]。</li>
+      <li>マーカーを検出すると、自動的にイラスト画面に切り替わります[cite: 13]！</li>
+      <li>画面を1本指でスワイプして移動、2本指でピンチ（拡大・縮小）しながら隠れたキャラを探そう[cite: 13]！</li>
+      <li>画面をトントン（ダブルタップ）すると、最初の大きさに戻ります[cite: 13]。</li>
+      <li>見つけたらそのキャラを直接タップしてね[cite: 13]！</li>
+      <li>探すのをやめたい時は「カメラに戻る」を押すとカメラ画面に戻れます[cite: 13]。</li>
     </ol>
   </div>
   <button id="closeHowToBtn" class="popBtnStyle backBtnColor">メニューに戻る</button>
@@ -561,7 +561,6 @@ const targetGroups = {
 let currentGroup = "";
 const imageMetaCache = {};
 
-// ズーム＆パン制御用変数
 let currentScale = 1, targetScale = 1, defaultScale = 1;
 let currentX = 0, targetX = 0;
 let currentY = 0, targetY = 0;
@@ -569,7 +568,6 @@ let currentY = 0, targetY = 0;
 let isDragging = false, startX = 0, startY = 0;
 let initialPinchDistance = null, initialScale = 1;
 let lastTapTime = 0;
-
 let isAnimating = false;
 
 const viewport = document.getElementById("gameViewport");
@@ -577,7 +575,6 @@ const stageContainer = document.getElementById("stageContainer");
 const mainStageImg = document.getElementById("mainStageImg");
 const hotspotContainer = document.getElementById("hotspotContainer");
 
-// 軽量化: 必要な時（操作中・慣性移動中）のみループを回す
 function requestRender() {
   if (!isAnimating) {
     isAnimating = true;
@@ -607,7 +604,6 @@ function updateTransformLoop() {
   }
 }
 
-// カメラストリームの完全停止処理（発熱抑制）
 function stopCameraStream() {
   const video = document.querySelector("video");
   if (video && video.srcObject) {
@@ -617,7 +613,6 @@ function stopCameraStream() {
   }
 }
 
-// AR読み込み検知時の2D切り替え
 async function start2DMode(groupKey) {
   const scene = document.querySelector("#mainScene");
   const arSystem = scene.systems ? scene.systems["mindar-image-system"] : null;
@@ -638,7 +633,6 @@ async function start2DMode(groupKey) {
   loadStage(groupKey);
 }
 
-// カメラに戻る処理
 async function backToCamera() {
   viewport.style.display = "none";
   document.getElementById("backToCameraBtn").style.display = "none";
@@ -662,7 +656,6 @@ async function backToCamera() {
   isTransitioning = false;
 }
 
-// スムーズなズーム・スワイプ操作ロジック（操作中は絵柄タッチを無効化）
 function setupPanZoom() {
   viewport.addEventListener("mousedown", (e) => {
     if (e.target.classList.contains("targetHotspot")) return;
@@ -761,16 +754,16 @@ function saveGame() {
 }
 
 function loadGame() {
-  let data;
-  try { data = JSON.parse(localStorage.getItem("arPicSearch_v2")); } catch(e) {}
-  if (!data) return;
-
-  Object.keys(targetGroups).forEach(key => {
-    data[key]?.forEach(s => {
-      const t = targetGroups[key].list.find(t => t.id === s.id);
-      if (t) t.found = s.found;
+  try {
+    const data = JSON.parse(localStorage.getItem("arPicSearch_v2"));
+    if (!data) return;
+    Object.keys(targetGroups).forEach(key => {
+      data[key]?.forEach(s => {
+        const t = targetGroups[key].list.find(item => item.id === s.id);
+        if (t) t.found = s.found;
+      });
     });
-  });
+  } catch(e) {}
 }
 
 function updateProgress() {
@@ -949,7 +942,7 @@ function updateClearScreen() {
   });
 }
 
-// クリア画面のキャラクターをタップしたときの処理（詳細説明を表示）
+// クリア画面のキャラクターをタップしたときの処理
 document.querySelectorAll(".clearItem").forEach(item => {
   item.addEventListener("click", () => {
     const targetId = item.getAttribute("data-target-id");
@@ -978,15 +971,11 @@ document.querySelectorAll(".clearItem").forEach(item => {
   });
 });
 
-// モーダルを閉じる
-document.getElementById("modalCloseBtn").addEventListener("click", () => {
-  document.getElementById("charDetailModal").style.display = "none";
-});
-document.getElementById("charDetailModal").addEventListener("click", (e) => {
-  if (e.target === document.getElementById("charDetailModal")) {
-    document.getElementById("charDetailModal").style.display = "none";
-  }
-});
+// モーダルを閉じる共通処理
+const modal = document.getElementById("charDetailModal");
+const closeModal = () => { modal.style.display = "none"; };
+document.getElementById("modalCloseBtn").addEventListener("click", closeModal);
+modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
 
 // イベントリスナー設定
 document.getElementById("startBtn").addEventListener("click", async () => {
