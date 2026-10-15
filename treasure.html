@@ -191,7 +191,6 @@ body {
   white-space: nowrap; 
   text-align: center;
 }
-/* 縦長画像が切れないようにcontainに変更＆背景を調整 */
 #treasureImage { 
   width: 100%; 
   max-width: 106px; 
@@ -212,7 +211,6 @@ body {
 
 #howToScreen, #treasureScreen, #hintScreen { z-index: 20000; display: none; }
 
-/* お宝図鑑・場所確認のグリッドベース（2カラム均等配置） */
 .treasureGrid, .hintGrid { 
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -220,9 +218,6 @@ body {
   width: 100%; 
 }
 
-/* ========================================================
-   サイズアップ＆常時下部テキストカード
-======================================================== */
 .treasureCardContainer, .hintCardContainer {
   display: flex;
   flex-direction: column;
@@ -245,7 +240,6 @@ body {
   align-items: center;
   justify-content: center;
 }
-/* 図鑑の画像も見切れないようにcontainに変更 */
 .cardImgWrap img {
   width: 100%;
   height: 100%;
@@ -278,9 +272,7 @@ body {
 .hintCardContainer:hover .cardImgWrap img { transform: scale(1.06); }
 .treasureCardContainer.is-found { cursor: pointer; }
 .treasureCardContainer.is-found:hover .cardImgWrap img { transform: scale(1.06); }
-/* ======================================================== */
 
-/* 壁紙ゲット画面（あたり発見特典） */
 #atariBonusScreen {
   position: fixed; inset: 0; display: none; flex-direction: column;
   justify-content: center; align-items: center; gap: 25px;
@@ -294,7 +286,6 @@ body {
   display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white;
 }
 
-/* お宝詳細・拡大表示モーダル（タッチ時用） */
 #treasureDetailModal {
   position: fixed; inset: 0; display: none; flex-direction: column;
   justify-content: center; align-items: center; gap: 20px;
@@ -340,21 +331,11 @@ body {
 
   <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
 
-  <a-entity id="targetTreasure1" mindar-image-target="targetIndex:11">
-    <a-plane width="0.01" height="0.01" visible="false"></a-plane>
-  </a-entity>
-  <a-entity id="targetTreasure2" mindar-image-target="targetIndex:12">
-    <a-plane width="0.01" height="0.01" visible="false"></a-plane>
-  </a-entity>
-  <a-entity id="targetTreasure3" mindar-image-target="targetIndex:13">
-    <a-plane width="0.01" height="0.01" visible="false"></a-plane>
-  </a-entity>
-  <a-entity id="targetTreasure4" mindar-image-target="targetIndex:14">
-    <a-plane width="0.01" height="0.01" visible="false"></a-plane>
-  </a-entity>
-  <a-entity id="targetTreasure5" mindar-image-target="targetIndex:15">
-    <a-plane width="0.01" height="0.01" visible="false"></a-plane>
-  </a-entity>
+  <a-entity id="targetTreasure1" mindar-image-target="targetIndex:11"><a-plane width="0.01" height="0.01" visible="false"></a-plane></a-entity>
+  <a-entity id="targetTreasure2" mindar-image-target="targetIndex:12"><a-plane width="0.01" height="0.01" visible="false"></a-plane></a-entity>
+  <a-entity id="targetTreasure3" mindar-image-target="targetIndex:13"><a-plane width="0.01" height="0.01" visible="false"></a-plane></a-entity>
+  <a-entity id="targetTreasure4" mindar-image-target="targetIndex:14"><a-plane width="0.01" height="0.01" visible="false"></a-plane></a-entity>
+  <a-entity id="targetTreasure5" mindar-image-target="targetIndex:15"><a-plane width="0.01" height="0.01" visible="false"></a-plane></a-entity>
 </a-scene>
 
 <div id="menuScreen" class="treasureBg">
@@ -399,10 +380,10 @@ body {
   <div class="contentCard">
     <div class="menuGuide">📜 探索の手引き 📜</div>
     <ol class="howToSteps">
-      <li>「探索開始」ボタンを押し、スマートフォンのカメラアクセスを許可します。</li>
-      <li>「場所確認」に眠る古文書の手がかりを頼りに、怪しい場所（マーカー）を探しましょう。下のような絵がマーカーです。</li>
-      <img src="treasure_img.jpg" class="explainMarkerImg" alt="スタンプマーカーの例">    
-      <li>見つけた場所にカメラをまっすぐかざすと、空間から隠された「秘宝」がその姿を現します！</li>
+      <li>「探索開始」ボタンを押し、スマートフォンのカメラアクセスを許可します[cite: 12]。</li>
+      <li>「場所確認」に眠る古文書の手がかりを頼りに、怪しい場所（マーカー）を探しましょう。下のような絵がマーカーです[cite: 12]。</li>
+      <img src="treasure_img.jpg" class="explainMarkerImg" alt="スタンプマーカーの例">[cite: 12]    
+      <li>見つけた場所にカメラをまっすぐかざすと、空間から隠された「秘宝」がその姿を現します[cite: 12]！</li>
     </ol>
   </div>
   <button id="closeHowToBtn" class="backBtn">戻る</button>
@@ -413,52 +394,11 @@ body {
   <div class="contentCard">
     <div class="menuGuide">これまでに発見した秘宝の記録だ！<br><span style="font-size: 12px; color: #ffd700;">※発見したカードをタッチすると拡大表示できるよ！</span></div>
     <div class="treasureGrid">
-      
-      <div id="cardTreasure1" class="treasureCardContainer" data-index="0">
-        <div class="cardImgWrap">
-          <img id="menuTreasure1" src="treasure_unknown.jpg">
-        </div>
-        <div class="cardBottomBar">
-          <div id="treasureText1" class="cardBottomText not-found-text">1 お宝 まだ未発見</div>
-        </div>
-      </div>
-      
-      <div id="cardTreasure2" class="treasureCardContainer" data-index="1">
-        <div class="cardImgWrap">
-          <img id="menuTreasure2" src="treasure_unknown.jpg">
-        </div>
-        <div class="cardBottomBar">
-          <div id="treasureText2" class="cardBottomText not-found-text">2 お宝 まだ未発見</div>
-        </div>
-      </div>
-
-      <div id="cardTreasure3" class="treasureCardContainer" data-index="2">
-        <div class="cardImgWrap">
-          <img id="menuTreasure3" src="treasure_unknown.jpg">
-        </div>
-        <div class="cardBottomBar">
-          <div id="treasureText3" class="cardBottomText not-found-text">3 お宝 まだ未発見</div>
-        </div>
-      </div>
-
-      <div id="cardTreasure4" class="treasureCardContainer" data-index="3">
-        <div class="cardImgWrap">
-          <img id="menuTreasure4" src="treasure_unknown.jpg">
-        </div>
-        <div class="cardBottomBar">
-          <div id="treasureText4" class="cardBottomText not-found-text">4 お宝 まだ未発見</div>
-        </div>
-      </div>
-
-      <div id="cardTreasure5" class="treasureCardContainer" data-index="4">
-        <div class="cardImgWrap">
-          <img id="menuTreasure5" src="treasure_unknown.jpg">
-        </div>
-        <div class="cardBottomBar">
-          <div id="treasureText5" class="cardBottomText not-found-text">5 お宝 まだ未発見</div>
-        </div>
-      </div>
-
+      <div id="cardTreasure1" class="treasureCardContainer" data-index="0"><div class="cardImgWrap"><img id="menuTreasure1" src="treasure_unknown.jpg"></div><div class="cardBottomBar"><div id="treasureText1" class="cardBottomText not-found-text">1 お宝 まだ未発見</div></div></div>
+      <div id="cardTreasure2" class="treasureCardContainer" data-index="1"><div class="cardImgWrap"><img id="menuTreasure2" src="treasure_unknown.jpg"></div><div class="cardBottomBar"><div id="treasureText2" class="cardBottomText not-found-text">2 お宝 まだ未発見</div></div></div>
+      <div id="cardTreasure3" class="treasureCardContainer" data-index="2"><div class="cardImgWrap"><img id="menuTreasure3" src="treasure_unknown.jpg"></div><div class="cardBottomBar"><div id="treasureText3" class="cardBottomText not-found-text">3 お宝 まだ未発見</div></div></div>
+      <div id="cardTreasure4" class="treasureCardContainer" data-index="3"><div class="cardImgWrap"><img id="menuTreasure4" src="treasure_unknown.jpg"></div><div class="cardBottomBar"><div id="treasureText4" class="cardBottomText not-found-text">4 お宝 まだ未発見</div></div></div>
+      <div id="cardTreasure5" class="treasureCardContainer" data-index="4"><div class="cardImgWrap"><img id="menuTreasure5" src="treasure_unknown.jpg"></div><div class="cardBottomBar"><div id="treasureText5" class="cardBottomText not-found-text">5 お宝 まだ未発見</div></div></div>
     </div>
   </div>
   <button id="closeTreasureBtn" class="backBtn">戻る</button>
@@ -469,52 +409,11 @@ body {
   <div class="contentCard">
     <div class="menuGuide">古文書が示す手がかりの場所だ！</div>
     <div class="hintGrid">
-      
-      <div class="hintCardContainer">
-        <div class="cardImgWrap">
-          <img src="hint1.jpg">
-        </div>
-        <div class="cardBottomBar">
-          <div class="cardBottomText">1 茂みの奥にあるかも？</div>
-        </div>
-      </div>
-      
-      <div class="hintCardContainer">
-        <div class="cardImgWrap">
-          <img src="hint2.jpg">
-        </div>
-        <div class="cardBottomBar">
-          <div class="cardBottomText">2 看板の裏にあるかも？</div>
-        </div>
-      </div>
-
-      <div class="hintCardContainer">
-        <div class="cardImgWrap">
-          <img src="hint3.jpg">
-        </div>
-        <div class="cardBottomBar">
-          <div class="cardBottomText">3 石垣の間にあるかも？</div>
-        </div>
-      </div>
-
-      <div class="hintCardContainer">
-        <div class="cardImgWrap">
-          <img src="hint4.jpg">
-        </div>
-        <div class="cardBottomBar">
-          <div class="cardBottomText">4 木の根元にあるかも？</div>
-        </div>
-      </div>
-
-      <div class="hintCardContainer">
-        <div class="cardImgWrap">
-          <img src="hint5.jpg">
-        </div>
-        <div class="cardBottomBar">
-          <div class="cardBottomText">5 柵の裏にあるかも？</div>
-        </div>
-      </div>
-
+      <div class="hintCardContainer"><div class="cardImgWrap"><img src="hint1.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">1 茂みの奥にあるかも？</div></div></div>
+      <div class="hintCardContainer"><div class="cardImgWrap"><img src="hint2.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">2 看板の裏にあるかも？</div></div></div>
+      <div class="hintCardContainer"><div class="cardImgWrap"><img src="hint3.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">3 石垣の間にあるかも？</div></div></div>
+      <div class="hintCardContainer"><div class="cardImgWrap"><img src="hint4.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">4 木の根元にあるかも？</div></div></div>
+      <div class="hintCardContainer"><div class="cardImgWrap"><img src="hint5.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">5 柵の裏にあるかも？</div></div></div>
     </div>
   </div>
   <button id="closeHintBtn" class="backBtn">戻る</button>
@@ -526,7 +425,6 @@ body {
   <button id="downloadWallpaperBtn">壁紙入手!</button>
 </div>
 
-<!-- 図鑑タッチ時の詳細・拡大表示モーダル -->
 <div id="treasureDetailModal">
   <div id="closeDetailModalBtn">×</div>
   <img id="modalDetailImg" src="">
@@ -534,9 +432,6 @@ body {
 </div>
 
 <script>
-// ======================
-// 状態管理と設定
-// ======================
 const state = {
   treasures: [false, false, false, false, false], 
   get foundCount() { return state.treasures.filter(Boolean).length; },
@@ -567,32 +462,11 @@ const UI = {
   treasureDetailModal: document.querySelector("#treasureDetailModal"),
   modalDetailImg: document.querySelector("#modalDetailImg"),
   modalDetailDesc: document.querySelector("#modalDetailDesc"),
-  menuTreasures: [
-    document.querySelector("#menuTreasure1"),
-    document.querySelector("#menuTreasure2"),
-    document.querySelector("#menuTreasure3"),
-    document.querySelector("#menuTreasure4"),
-    document.querySelector("#menuTreasure5")
-  ],
-  cardTreasures: [
-    document.querySelector("#cardTreasure1"),
-    document.querySelector("#cardTreasure2"),
-    document.querySelector("#cardTreasure3"),
-    document.querySelector("#cardTreasure4"),
-    document.querySelector("#cardTreasure5")
-  ],
-  treasureTexts: [
-    document.querySelector("#treasureText1"),
-    document.querySelector("#treasureText2"),
-    document.querySelector("#treasureText3"),
-    document.querySelector("#treasureText4"),
-    document.querySelector("#treasureText5")
-  ]
+  menuTreasures: [1,2,3,4,5].map(i => document.querySelector(`#menuTreasure${i}`)),
+  cardTreasures: [1,2,3,4,5].map(i => document.querySelector(`#cardTreasure${i}`)),
+  treasureTexts: [1,2,3,4,5].map(i => document.querySelector(`#treasureText${i}`))
 };
 
-// ======================
-// セーブ / ロード
-// ======================
 function saveGame() {
   localStorage.setItem("treasureSave_v4", JSON.stringify(state.treasures));
 }
@@ -604,21 +478,18 @@ function loadGame() {
       state.treasures = saved;
     }
   } catch(e) {}
-
   updateTreasureUI();
   updateBonusButton();
 }
 
-// ======================
-// 画面更新ロジック
-// ======================
 function updateTreasureUI() {
   UI.treasureCount.textContent = `${state.foundCount} / ${state.total}`;
   state.treasures.forEach((isGet, index) => {
+    const cfg = state.config[index];
     if (isGet) {
-      UI.menuTreasures[index].src = state.config[index].src; // takaraX.pngを表示
+      UI.menuTreasures[index].src = cfg.src;
       UI.cardTreasures[index].classList.add("is-found");
-      UI.treasureTexts[index].textContent = state.config[index].desc;
+      UI.treasureTexts[index].textContent = cfg.desc;
       UI.treasureTexts[index].classList.remove("not-found-text");
     } else {
       UI.menuTreasures[index].src = "treasure_unknown.jpg";
@@ -633,69 +504,50 @@ function updateBonusButton() {
   UI.bonusGroup.style.display = state.treasures[0] ? "block" : "none";
 }
 
-function checkAtariBonus(index) {
-  if (index === 0) {
-    updateBonusButton();
-    setTimeout(() => {
-      UI.atariBonusScreen.style.display = "flex";
-      UI.backToMenuBtn.style.display = "none";
-    }, 1000);
-  }
-}
-
 function showEffect(text) {
   UI.treasureEffect.textContent = text;
   UI.treasureEffect.style.display = "block";
   setTimeout(() => { UI.treasureEffect.style.display = "none"; }, 1500);
 }
 
-// ======================
-// お宝検出イベントの共通登録
-// ======================
+// 共通ループでイベント登録をまとめてスリム化
 state.config.forEach((item, index) => {
+  // 1. ARターゲット認識イベント登録
   document.querySelector(`#target${item.id}`).addEventListener("targetFound", () => {
     UI.treasureBox.style.display = "flex";
-    UI.treasureImage.src = item.detailSrc; // 発見時には当たり/外れ画像を表示
+    UI.treasureImage.src = item.detailSrc;
 
     if (!state.treasures[index]) {
       state.treasures[index] = true;
       saveGame();
       updateTreasureUI();
       showEffect(item.msg);
-      checkAtariBonus(index);
+      if (index === 0) {
+        updateBonusButton();
+        setTimeout(() => {
+          UI.atariBonusScreen.style.display = "flex";
+          UI.backToMenuBtn.style.display = "none";
+        }, 1000);
+      }
     } else {
       showEffect("発見済みのお宝");
     }
   });
-});
 
-// ======================
-// 図鑑カードタップ時の拡大表示
-// ======================
-state.config.forEach((item, index) => {
+  // 2. 図鑑カードタップ時の拡大表示登録
   UI.cardTreasures[index].addEventListener("click", () => {
-    // まだ見つけていない場合は反応しない
     if (!state.treasures[index]) return;
-
-    // タッチされたら当たり/外れの画像と説明をモーダルに表示
     UI.modalDetailImg.src = item.detailSrc;
     UI.modalDetailDesc.textContent = item.desc;
     UI.treasureDetailModal.style.display = "flex";
   });
 });
 
-document.querySelector("#closeDetailModalBtn").addEventListener("click", () => {
-  UI.treasureDetailModal.style.display = "none";
-});
-
-// ======================
-// 画面遷移 & カメラ制御
-// ======================
+// 画面遷移・ボタン操作
 UI.startBtn.addEventListener("click", async () => {
   UI.menuScreen.style.display = "none";
   UI.mainScene.style.display = "block";
   UI.backToMenuBtn.style.display = "block";
-
   await new Promise(r => setTimeout(r, 200));
   const arSystem = UI.mainScene.systems["mindar-image-system"];
   if (arSystem) await arSystem.start();
@@ -704,20 +556,17 @@ UI.startBtn.addEventListener("click", async () => {
 UI.backToMenuBtn.addEventListener("click", async () => {
   const arSystem = UI.mainScene.systems["mindar-image-system"];
   if (arSystem) { try { await arSystem.stop(); } catch(e) {} }
-
   const video = document.querySelector("video");
   if (video) {
     if (video.srcObject) video.srcObject.getTracks().forEach(track => track.stop());
     video.remove();
   }
-
   UI.mainScene.style.display = "none";
   UI.menuScreen.style.display = "flex";
   UI.backToMenuBtn.style.display = "none";
   UI.treasureBox.style.display = "none";
 });
 
-// 各種開閉用イベント
 document.querySelector("#openHowToBtn").addEventListener("click", () => { UI.howToScreen.style.display = "flex"; });
 document.querySelector("#closeHowToBtn").addEventListener("click", () => { UI.howToScreen.style.display = "none"; });
 document.querySelector("#openTreasureBtn").addEventListener("click", () => { updateTreasureUI(); UI.treasureScreen.style.display = "flex"; });
@@ -727,14 +576,12 @@ document.querySelector("#closeHintBtn").addEventListener("click", () => { UI.hin
 
 document.querySelector("#closeAtariBonusBtn").addEventListener("click", () => { 
   UI.atariBonusScreen.style.display = "none"; 
-  if (UI.menuScreen.style.display === "none") {
-    UI.backToMenuBtn.style.display = "block"; 
-  }
+  if (UI.menuScreen.style.display === "none") { UI.backToMenuBtn.style.display = "block"; }
 });
 
 document.querySelector("#openBonusBtn").addEventListener("click", () => { UI.atariBonusScreen.style.display = "flex"; });
+document.querySelector("#closeDetailModalBtn").addEventListener("click", () => { UI.treasureDetailModal.style.display = "none"; });
 
-// 壁紙ダウンロード
 document.querySelector("#downloadWallpaperBtn").addEventListener("click", () => {
   const link = document.createElement("a");
   link.href = "wallpaper.jpg";
