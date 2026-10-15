@@ -150,6 +150,23 @@ body {
   margin-top: 10px; flex-shrink: 0;
 }
 
+/* クレジット表示用スタイル */
+.creditFooter {
+  font-size: 11px;
+  color: #dfd5be;
+  text-align: center;
+  margin-top: 10px;
+  line-height: 1.6;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  width: 100%;
+  max-width: 320px;
+  word-break: break-all;
+}
+.creditFooter a {
+  color: #ffd700;
+  text-decoration: underline;
+}
+
 /* ======================
    UI (AR画面上)
 ====================== */
@@ -363,6 +380,15 @@ body {
     <div class="menuGuide">ここでお宝の場所を確認できるよ！</div>
     <button id="openHintBtn" class="menuBtn">🧭場所確認</button>
   </div>
+
+  <!-- メニュー画面の一番下に追加したクレジット表記 -->
+  <div class="creditFooter">
+    イラスト提供：<br>
+    ・<a href="https://chicodeza.com/" target="_blank">チコデザ</a><br>
+    ・<a href="https://www.irasutoya.com/" target="_blank">いらすとや</a><br>
+    ・<a href="https://japaclip.com/" target="_blank">フリーイラスト素材集 ジャパクリップ</a><br>
+    ・<a href="https://icon.game-materials.com/" target="_blank">アイコンまてりあるず</a>
+  </div>
 </div>
 
 <button id="backToMenuBtn">メニューへ戻る</button>
@@ -380,10 +406,10 @@ body {
   <div class="contentCard">
     <div class="menuGuide">📜 探索の手引き 📜</div>
     <ol class="howToSteps">
-      <li>「探索開始」ボタンを押し、スマートフォンのカメラアクセスを許可します。</li>
-      <li>「場所確認」に眠る古文書の手がかりを頼りに、怪しい場所（マーカー）を探しましょう。下のような絵がマーカーです。</li>
-      <img src="treasure_img.jpg" class="explainMarkerImg" alt="スタンプマーカーの例">    
-      <li>見つけた場所にカメラをまっすぐかざすと、空間から隠された「秘宝」がその姿を現します！</li>
+      <li>「探索開始」ボタンを押し、スマートフォンのカメラアクセスを許可します[cite: 12]。</li>
+      <li>「場所確認」に眠る古文書の手がかりを頼りに、怪しい場所（マーカー）を探しましょう。下のような絵がマーカーです[cite: 12]。</li>
+      <img src="treasure_img.jpg" class="explainMarkerImg" alt="スタンプマーカーの例">[cite: 12]    
+      <li>見つけた場所にカメラをまっすぐかざすと、空間から隠された「秘宝」がその姿を現します[cite: 12]！</li>
     </ol>
   </div>
   <button id="closeHowToBtn" class="backBtn">戻る</button>
@@ -510,9 +536,7 @@ function showEffect(text) {
   setTimeout(() => { UI.treasureEffect.style.display = "none"; }, 1500);
 }
 
-// 共通ループでイベント登録をまとめてスリム化
 state.config.forEach((item, index) => {
-  // 1. ARターゲット認識イベント登録
   document.querySelector(`#target${item.id}`).addEventListener("targetFound", () => {
     UI.treasureBox.style.display = "flex";
     UI.treasureImage.src = item.detailSrc;
@@ -534,7 +558,6 @@ state.config.forEach((item, index) => {
     }
   });
 
-  // 2. 図鑑カードタップ時の拡大表示登録
   UI.cardTreasures[index].addEventListener("click", () => {
     if (!state.treasures[index]) return;
     UI.modalDetailImg.src = item.detailSrc;
@@ -543,7 +566,6 @@ state.config.forEach((item, index) => {
   });
 });
 
-// 画面遷移・ボタン操作
 UI.startBtn.addEventListener("click", async () => {
   UI.menuScreen.style.display = "none";
   UI.mainScene.style.display = "block";
