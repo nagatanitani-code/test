@@ -185,7 +185,7 @@ body {
   width: 100%; 
 }
 
-.stampCardContainer {
+.stampCardContainer, .hintCardContainer {
   display: flex;
   flex-direction: column;
   background: #fffbf0;
@@ -197,19 +197,19 @@ body {
   justify-self: center;
 }
 
-.stampCardImgWrap {
+.stampCardImgWrap, .hintCardImgWrap {
   width: 140px;
   height: 140px;
   overflow: hidden;
   background: #f5f5f5;
 }
-.stampCardImgWrap img {
+.stampCardImgWrap img, .hintCardImgWrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.stampBottomTextBar {
+.stampBottomTextBar, .hintBottomTextBar {
   padding: 10px 8px;
   background: #ffffff;
   border-top: 1px solid #ffe082;
@@ -218,50 +218,7 @@ body {
   align-items: center;
   justify-content: center;
 }
-.stampNameText {
-  color: #4e342e;
-  font-size: 12px;
-  font-weight: bold;
-  line-height: 1.4;
-  text-align: center;
-  word-break: break-all;
-}
-
-.hintCardContainer {
-  display: flex;
-  flex-direction: column;
-  background: #fffbf0;
-  border: 2px solid #ffe082;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 6px 14px rgba(0, 64, 112, 0.12);
-  width: 140px;
-  justify-self: center;
-}
-
-.hintCardImgWrap {
-  width: 140px;
-  height: 140px;
-  overflow: hidden;
-}
-.hintCardImgWrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: #f5f5f5;
-  transition: transform 0.3s ease;
-}
-
-.hintBottomTextBar {
-  padding: 10px 8px;
-  background: #ffffff;
-  border-top: 1px solid #ffe082;
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.hintText {
+.stampNameText, .hintText {
   color: #4e342e;
   font-size: 12px;
   font-weight: bold;
@@ -272,6 +229,9 @@ body {
 
 .hintCardContainer:hover .hintCardImgWrap img {
   transform: scale(1.06);
+}
+.hintCardImgWrap img {
+  transition: transform 0.3s ease;
 }
 
 #completeWrap {
@@ -332,26 +292,15 @@ body {
 
   <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
 
-  <a-entity id="targetStamp1" mindar-image-target="targetIndex:5">
-    <a-plane width="0.01" height="0.01" visible="false"></a-plane>
-  </a-entity>
-  <a-entity id="targetStamp2" mindar-image-target="targetIndex:6">
-    <a-plane width="0.01" height="0.01" visible="false"></a-plane>
-  </a-entity>
-  <a-entity id="targetStamp3" mindar-image-target="targetIndex:7">
-    <a-plane width="0.01" height="0.01" visible="false"></a-plane>
-  </a-entity>
-  <a-entity id="targetStamp4" mindar-image-target="targetIndex:8">
-    <a-plane width="0.01" height="0.01" visible="false"></a-plane>
-  </a-entity>
-  <a-entity id="targetStamp5" mindar-image-target="targetIndex:9">
-    <a-plane width="0.01" height="0.01" visible="false"></a-plane>
-  </a-entity>
+  <a-entity id="targetStamp1" mindar-image-target="targetIndex:5"><a-plane width="0.01" height="0.01" visible="false"></a-plane></a-entity>
+  <a-entity id="targetStamp2" mindar-image-target="targetIndex:6"><a-plane width="0.01" height="0.01" visible="false"></a-plane></a-entity>
+  <a-entity id="targetStamp3" mindar-image-target="targetIndex:7"><a-plane width="0.01" height="0.01" visible="false"></a-plane></a-entity>
+  <a-entity id="targetStamp4" mindar-image-target="targetIndex:8"><a-plane width="0.01" height="0.01" visible="false"></a-plane></a-entity>
+  <a-entity id="targetStamp5" mindar-image-target="targetIndex:9"><a-plane width="0.01" height="0.01" visible="false"></a-plane></a-entity>
 </a-scene>
 
 <div id="menuScreen" class="blueSkyBg">
   <div id="gameTitle" class="screenTitleStyle">スタンプラリー</div>
-  <!-- メニュータイトルの直下に配置 -->
   <div class="scrollIndicator">▼ 下へスクロールしてね ▼</div>
 
   <div class="menuGroup" id="bonusGroup" style="display: none;">
@@ -392,13 +341,11 @@ body {
   <div class="contentCard">
     <div class="menuGuide">★ あそびかたの手順 ★</div>
     <ol class="howToSteps">
-      <li>「場所確認」を開いて、スタンプが隠されているヒント写真を確認します。</li>
-      <li>「探索開始」ボタンを押し、カメラへのアクセスを許可します。</li>
-      <li>ヒントの場所を見つけたら、対象にカメラをまっすぐかざします。下のような絵が対象です。</li>
-      
-      <img src="stamp_img.jpg" class="explainMarkerImg" alt="スタンプの例">
-
-      <li>自動的にスタンプが検出され、スタンプ帳に記録されます！</li>
+      <li>「場所確認」を開いて、スタンプが隠されているヒント写真を確認します[cite: 12]。</li>
+      <li>「探索開始」ボタンを押し、カメラへのアクセスを許可します[cite: 12]。</li>
+      <li>ヒントの場所を見つけたら、対象にカメラをまっすぐかざします。下のような絵が対象です[cite: 12]。</li>
+      <img src="stamp_img.jpg" class="explainMarkerImg" alt="スタンプの例">[cite: 12]
+      <li>自動的にスタンプが検出され、スタンプ帳に記録されます[cite: 12]！</li>
     </ol>
   </div>
   <button id="closeHowToBtn" class="backBtn">戻る</button>
@@ -409,52 +356,11 @@ body {
   <div class="contentCard">
     <div class="menuGuide">ここを探してみてね！</div>
     <div class="hintGrid">
-      
-      <div class="hintCardContainer">
-        <div class="hintCardImgWrap">
-          <img src="hint1_t.jpg">
-        </div>
-        <div class="hintBottomTextBar">
-          <div class="hintText">1ショップの方の家屋にあるよ！</div>
-        </div>
-      </div>
-
-      <div class="hintCardContainer">
-        <div class="hintCardImgWrap">
-          <img src="hint2_t.jpg">
-        </div>
-        <div class="hintBottomTextBar">
-          <div class="hintText">2なりきり商店街にあるよ！</div>
-        </div>
-      </div>
-
-      <div class="hintCardContainer">
-        <div class="hintCardImgWrap">
-          <img src="hint3_t.jpg">
-        </div>
-        <div class="hintBottomTextBar">
-          <div class="hintText">3竹やぶにあるよ！</div>
-        </div>
-      </div>
-
-      <div class="hintCardContainer">
-        <div class="hintCardImgWrap">
-          <img src="hint4_t.jpg">
-        </div>
-        <div class="hintBottomTextBar">
-          <div class="hintText">4番目のヒント場所だよ！</div>
-        </div>
-      </div>
-
-      <div class="hintCardContainer">
-        <div class="hintCardImgWrap">
-          <img src="hint5_t.jpg">
-        </div>
-        <div class="hintBottomTextBar">
-          <div class="hintText">5番目のヒント場所だよ！</div>
-        </div>
-      </div>
-
+      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint1_t.jpg"></div><div class="hintBottomTextBar"><div class="hintText">1ショップの方の家屋にあるよ！</div></div></div>
+      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint2_t.jpg"></div><div class="hintBottomTextBar"><div class="hintText">2なりきり商店街にあるよ！</div></div></div>
+      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint3_t.jpg"></div><div class="hintBottomTextBar"><div class="hintText">3竹やぶにあるよ！</div></div></div>
+      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint4_t.jpg"></div><div class="hintBottomTextBar"><div class="hintText">4番目のヒント場所だよ！</div></div></div>
+      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint5_t.jpg"></div><div class="hintBottomTextBar"><div class="hintText">5番目のヒント場所だよ！</div></div></div>
     </div>
   </div>
   <button id="closeHintBtn" class="backBtn">戻る</button>
@@ -465,52 +371,11 @@ body {
   <div class="contentCard">
     <div class="menuGuide">あつめたスタンプの記録だよ！</div>
     <div class="stampGrid">
-      
-      <div class="stampCardContainer">
-        <div class="stampCardImgWrap">
-          <img id="menuStamp1" src="stamp_unknown.jpg">
-        </div>
-        <div class="stampBottomTextBar">
-          <div class="stampNameText" id="nameStamp1">？？？</div>
-        </div>
-      </div>
-
-      <div class="stampCardContainer">
-        <div class="stampCardImgWrap">
-          <img id="menuStamp2" src="stamp_unknown.jpg">
-        </div>
-        <div class="stampBottomTextBar">
-          <div class="stampNameText" id="nameStamp2">？？？</div>
-        </div>
-      </div>
-
-      <div class="stampCardContainer">
-        <div class="stampCardImgWrap">
-          <img id="menuStamp3" src="stamp_unknown.jpg">
-        </div>
-        <div class="stampBottomTextBar">
-          <div class="stampNameText" id="nameStamp3">？？？</div>
-        </div>
-      </div>
-
-      <div class="stampCardContainer">
-        <div class="stampCardImgWrap">
-          <img id="menuStamp4" src="stamp_unknown.jpg">
-        </div>
-        <div class="stampBottomTextBar">
-          <div class="stampNameText" id="nameStamp4">？？？</div>
-        </div>
-      </div>
-
-      <div class="stampCardContainer">
-        <div class="stampCardImgWrap">
-          <img id="menuStamp5" src="stamp_unknown.jpg">
-        </div>
-        <div class="stampBottomTextBar">
-          <div class="stampNameText" id="nameStamp5">？？？</div>
-        </div>
-      </div>
-
+      <div class="stampCardContainer"><div class="stampCardImgWrap"><img id="menuStamp1" src="stamp_unknown.jpg"></div><div class="stampBottomTextBar"><div class="stampNameText" id="nameStamp1">？？？</div></div></div>
+      <div class="stampCardContainer"><div class="stampCardImgWrap"><img id="menuStamp2" src="stamp_unknown.jpg"></div><div class="stampBottomTextBar"><div class="stampNameText" id="nameStamp2">？？？</div></div></div>
+      <div class="stampCardContainer"><div class="stampCardImgWrap"><img id="menuStamp3" src="stamp_unknown.jpg"></div><div class="stampBottomTextBar"><div class="stampNameText" id="nameStamp3">？？？</div></div></div>
+      <div class="stampCardContainer"><div class="stampCardImgWrap"><img id="menuStamp4" src="stamp_unknown.jpg"></div><div class="stampBottomTextBar"><div class="stampNameText" id="nameStamp4">？？？</div></div></div>
+      <div class="stampCardContainer"><div class="stampCardImgWrap"><img id="menuStamp5" src="stamp_unknown.jpg"></div><div class="stampBottomTextBar"><div class="stampNameText" id="nameStamp5">？？？</div></div></div>
     </div>
   </div>
   <button id="closeStampBtn" class="backBtn">戻る</button>
@@ -524,23 +389,13 @@ body {
 </div>
 
 <script>
-// ======================
-// 状態管理と要素キャッシュ
-// ======================
 const state = {
   stamps: [false, false, false, false, false], 
   get foundCount() { return state.stamps.filter(Boolean).length; },
   total: 5
 };
 
-const stampNames = [
-  "天界",
-  "神さま山",
-  "あしあとタウン",
-  "摩界",
-  "おとなり島"
-];
-
+const stampNames = ["天界", "神さま山", "あしあとタウン", "摩界", "おとなり島"];
 let openedFromMenu = false;
 
 const UI = {
@@ -557,25 +412,10 @@ const UI = {
   completeWrap: document.querySelector("#completeWrap"),
   bonusGroup: document.querySelector("#bonusGroup"),
   howToScreen: document.querySelector("#howToScreen"),
-  menuStamps: [
-    document.querySelector("#menuStamp1"),
-    document.querySelector("#menuStamp2"),
-    document.querySelector("#menuStamp3"),
-    document.querySelector("#menuStamp4"),
-    document.querySelector("#menuStamp5")
-  ],
-  nameStamps: [
-    document.querySelector("#nameStamp1"),
-    document.querySelector("#nameStamp2"),
-    document.querySelector("#nameStamp3"),
-    document.querySelector("#nameStamp4"),
-    document.querySelector("#nameStamp5")
-  ]
+  menuStamps: Array.from({length: 5}, (_, i) => document.querySelector(`#menuStamp${i + 1}`)),
+  nameStamps: Array.from({length: 5}, (_, i) => document.querySelector(`#nameStamp${i + 1}`))
 };
 
-// ======================
-// セーブ / ロード
-// ======================
 function saveGame() {
   localStorage.setItem("stampSave", JSON.stringify(state.stamps));
 }
@@ -587,54 +427,37 @@ function loadGame() {
       state.stamps = saved;
     }
   } catch(e) {}
-
   updateStampBook();
   updateBonusButton();
 }
 
-// ======================
-// カメラ制御関数
-// ======================
 async function startCamera() {
   UI.menuScreen.style.display = "none";
   UI.mainScene.style.display = "block";
   UI.backToMenuBtn.style.display = "block";
-
   await new Promise(r => setTimeout(r, 200));
   const arSystem = UI.mainScene.systems["mindar-image-system"];
-  if (arSystem) {
-    try { await arSystem.start(); } catch(e) {}
-  }
+  if (arSystem) { try { await arSystem.start(); } catch(e) {} }
 }
 
 async function stopCamera() {
   const arSystem = UI.mainScene.systems["mindar-image-system"];
   if (arSystem) { try { await arSystem.stop(); } catch(e) {} }
-
   const video = document.querySelector("video");
   if (video) {
     if (video.srcObject) video.srcObject.getTracks().forEach(track => track.stop());
     video.remove();
   }
-
   UI.mainScene.style.display = "none";
   UI.backToMenuBtn.style.display = "none";
   UI.stampBox.style.display = "none";
 }
 
-// ======================
-// 画面更新ロジック
-// ======================
 function updateStampBook() {
   UI.stampCount.textContent = `${state.foundCount} / ${state.total}`;
   state.stamps.forEach((isGet, index) => {
-    if (isGet) {
-      UI.menuStamps[index].src = `stamp${index + 1}.png`;
-      UI.nameStamps[index].textContent = stampNames[index] + "スタンプ";
-    } else {
-      UI.menuStamps[index].src = `stamp_unknown.jpg`;
-      UI.nameStamps[index].textContent = "？？？";
-    }
+    UI.menuStamps[index].src = isGet ? `stamp${index + 1}.png` : `stamp_unknown.jpg`;
+    UI.nameStamps[index].textContent = isGet ? stampNames[index] + "スタンプ" : "？？？";
   });
 }
 
@@ -658,38 +481,29 @@ function showStampEffect(text) {
   UI.stampEffect.style.display = "none";
   void UI.stampEffect.offsetWidth;
   UI.stampEffect.style.display = "block";
-  setTimeout(() => { 
-    UI.stampEffect.style.display = "none"; 
-  }, 1600);
+  setTimeout(() => { UI.stampEffect.style.display = "none"; }, 1600);
 }
 
-// ======================
-// スタンプ検出イベントの共通処理化
-// ======================
-function registerStampListener(index) {
-  document.querySelector(`#targetStamp${index + 1}`).addEventListener("targetFound", () => {
+// 検出イベント登録をループでまとめてシンプル化
+for (let i = 0; i < state.total; i++) {
+  document.querySelector(`#targetStamp${i + 1}`).addEventListener("targetFound", () => {
     UI.stampBox.style.display = "block";
-    UI.stampPreview.src = `stamp${index + 1}.png`;
+    UI.stampPreview.src = `stamp${i + 1}.png`;
 
-    if (!state.stamps[index]) {
-      state.stamps[index] = true;
+    if (!state.stamps[i]) {
+      state.stamps[i] = true;
       saveGame();
       updateStampBook();
-      showStampEffect(`${stampNames[index]}スタンプ\n発見！！`);
+      showStampEffect(`${stampNames[i]}スタンプ\n発見！！`);
       checkComplete();
     } else {
       showStampEffect("取得済みスタンプです！");
     }
   });
 }
-for (let i = 0; i < state.total; i++) { registerStampListener(i); }
 
-// ======================
-// 画面遷移・イベントリスナー
-// ======================
-UI.startBtn.addEventListener("click", () => {
-  startCamera();
-});
+// イベントリスナー
+UI.startBtn.addEventListener("click", startCamera);
 
 UI.backToMenuBtn.addEventListener("click", async () => {
   await stopCamera();
@@ -706,7 +520,6 @@ document.querySelector("#closeStampBtn").addEventListener("click", () => { UI.st
 document.querySelector("#closeComplete").addEventListener("click", async (e) => {
   e.stopPropagation();
   UI.completeWrap.style.display = "none";
-  
   if (openedFromMenu) {
     UI.menuScreen.style.display = "flex";
   } else {
