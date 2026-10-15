@@ -14,9 +14,6 @@ body{
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
 }
 
-/* ======================
-   メニュー（スクロール＆画面最適化）
-====================== */
 #menuScreen{
   position:fixed;
   inset:0;
@@ -115,9 +112,6 @@ body{
   box-shadow: 0 6px 16px rgba(0, 137, 123, 0.35), inset 0 2px 4px rgba(255,255,255,0.4);
 }
 
-/* ======================
-   戻る・画面切り替え UI
-===================== */
 #backToMenuBtn{
   position:fixed;
   top:20px;
@@ -288,9 +282,6 @@ body{
   cursor: pointer;
 }
 
-/* ========================================================
-   【フォトフレーム・UI配置調整】
-======================================================== */
 #photoFrameOverlay {
   position: fixed;
   inset: 0;
@@ -305,7 +296,6 @@ body{
   object-fit: fill;   
 }
 
-/* 撮影ボタン：少し小さくして左端に寄せる（横向き状態） */
 #captureBtn{
   position:fixed;
   left:10px;
@@ -325,7 +315,6 @@ body{
   white-space: nowrap;
 }
 
-/* 閉じるボタン：右下に配置（横向き状態） */
 #closeFrameBtn {
   position: fixed;
   bottom: 20px;
@@ -345,7 +334,6 @@ body{
   white-space: nowrap;
 }
 
-/* MindARのスキャンUI（四角いマーカー枠など）をフレーム表示中に非表示にするためのクラス */
 .mindar-ui-scanning {
   display: inherit;
 }
@@ -390,7 +378,6 @@ device-orientation-permission-ui="enabled:false">
 
 <div id="hintScreen">
   <h1 style="margin: 0; font-size: 38px;">場所確認</h1>
-  
   <div class="hintContainer">
     <div class="hint-set-card" data-spot-id="8" data-frame-src="frame.png">
       <div class="set-cell cell-frame">
@@ -405,7 +392,6 @@ device-orientation-permission-ui="enabled:false">
       </div>
     </div>
   </div>
-  
   <button id="closeHintBtn" class="backBtn">戻る</button>
 </div>
 
@@ -435,101 +421,82 @@ device-orientation-permission-ui="enabled:false">
 <canvas id="captureCanvas" style="display:none;"></canvas>
 
 <script>
-const menuScreen = document.querySelector("#menuScreen");
-const mainScene = document.querySelector("#mainScene");
-const startBtn = document.querySelector("#startBtn");
-const backBtn = document.querySelector("#backToMenuBtn");
-const hintScreen = document.querySelector("#hintScreen");
-const explainScreen = document.querySelector("#explainScreen"); 
-const captureBtn = document.querySelector("#captureBtn");
-const targetPhoto = document.querySelector("#targetPhoto");
-const photoFrameOverlay = document.querySelector("#photoFrameOverlay");
-const closeFrameBtn = document.querySelector("#closeFrameBtn");
-const bodyRoot = document.querySelector("#bodyRoot");
+const el = (sel) => document.querySelector(sel);
+const menuScreen = el("#menuScreen");
+const mainScene = el("#mainScene");
+const startBtn = el("#startBtn");
+const backBtn = el("#backToMenuBtn");
+const hintScreen = el("#hintScreen");
+const explainScreen = el("#explainScreen"); 
+const captureBtn = el("#captureBtn");
+const targetPhoto = el("#targetPhoto");
+const photoFrameOverlay = el("#photoFrameOverlay");
+const closeFrameBtn = el("#closeFrameBtn");
+const bodyRoot = el("#bodyRoot");
 
-const canvas = document.querySelector("#captureCanvas");
+const canvas = el("#captureCanvas");
 const ctx = canvas.getContext("2d", { alpha: false }); 
-const frame = document.querySelector("#overlayFrameImg");
+const frame = el("#overlayFrameImg");
 
 let isFrameActive = false;
 
-/* ======================
-AR開始
-====================== */
-startBtn.addEventListener("click", async ()=>{
-  menuScreen.style.display="none";
-  mainScene.style.display="block";
-  backBtn.style.display="block";
+startBtn.addEventListener("click", async () => {
+  menuScreen.style.display = "none";
+  mainScene.style.display = "block";
+  backBtn.style.display = "block";
 
-  await new Promise(resolve=> setTimeout(resolve,200));
-
+  await new Promise(r => setTimeout(r, 200));
   const arSystem = mainScene.systems["mindar-image-system"];
-  if(arSystem) await arSystem.start(); 
+  if (arSystem) await arSystem.start(); 
 });
 
-/* ======================
-戻る（カメラ完全終了）
-====================== */
-backBtn.addEventListener("click", async ()=>{
+backBtn.addEventListener("click", async () => {
   const arSystem = mainScene.systems["mindar-image-system"];
-  if(arSystem){
-    try{ await arSystem.stop(); }catch(e){ console.log(e); }
+  if (arSystem) {
+    try { await arSystem.stop(); } catch(e) { console.log(e); }
   }
 
-  const video = document.querySelector("video");
+  const video = el("video");
   if (video) {
     if (video.srcObject) {
-      video.srcObject.getTracks().forEach(track => track.stop()); 
+      video.srcObject.getTracks().forEach(t => t.stop()); 
     }
     video.remove(); 
   }
 
   resetPhotoFrame();
-  mainScene.style.display="none";
-  menuScreen.style.display="flex";
-  backBtn.style.display="none";
+  mainScene.style.display = "none";
+  menuScreen.style.display = "flex";
+  backBtn.style.display = "none";
 });
 
-/* ======================
-画面開閉処理
-====================== */
-document.querySelector("#openHintBtn").addEventListener("click",()=>{ 
+el("#openHintBtn").addEventListener("click", () => { 
   updateHintPreviewUI();
-  hintScreen.style.display="flex"; 
+  hintScreen.style.display = "flex"; 
 });
 
-document.querySelector("#closeHintBtn").addEventListener("click",()=>{ 
-  hintScreen.style.display="none"; 
-});
-document.querySelector("#openExplainBtn").addEventListener("click",()=>{ explainScreen.style.display="flex"; });
-document.querySelector("#closeExplainBtn").addEventListener("click",()=>{ explainScreen.style.display="none"; });
+el("#closeHintBtn").addEventListener("click", () => { hintScreen.style.display = "none"; });
+el("#openExplainBtn").addEventListener("click", () => { explainScreen.style.display = "flex"; });
+el("#closeExplainBtn").addEventListener("click", () => { explainScreen.style.display = "none"; });
 
 function resetPhotoFrame() {
   isFrameActive = false;
   photoFrameOverlay.style.display = "none";
   captureBtn.style.display = "none";
   closeFrameBtn.style.display = "none";
-  bodyRoot.classList.remove("hide-scanning"); // スキャンガイドを再表示
+  bodyRoot.classList.remove("hide-scanning");
   backBtn.style.display = "block";
 }
 closeFrameBtn.addEventListener("click", resetPhotoFrame);
 
-/* ======================
-状態判定自動ループシステム
-====================== */
 function updateHintPreviewUI() {
-  const cards = document.querySelectorAll(".hint-set-card");
-  
-  cards.forEach(card => {
+  document.querySelectorAll(".hint-set-card").forEach(card => {
     const spotId = card.getAttribute("data-spot-id");         
     const realFrameSrc = card.getAttribute("data-frame-src"); 
-    
     const tag = card.querySelector(".cell-tag");
     const img = card.querySelector(".frame-preview-img");
     
-    const isScanned = localStorage.getItem(`ar_spot_scanned_${spotId}`);
-
-    if (isScanned === "true") {
+    if (localStorage.getItem(`ar_spot_scanned_${spotId}`) === "true") {
       tag.innerHTML = "獲得済み！";
       tag.style.background = "#28a745"; 
       img.src = realFrameSrc;           
@@ -541,18 +508,15 @@ function updateHintPreviewUI() {
   });
 }
 
-/* ======================
-写真撮影と保存合成
-====================== */
-captureBtn.addEventListener("click", async ()=>{
-  try{
-    captureBtn.style.display="none";
-    closeFrameBtn.style.display="none";
-    const video = document.querySelector("video");
-    if(!video){
+captureBtn.addEventListener("click", async () => {
+  try {
+    captureBtn.style.display = "none";
+    closeFrameBtn.style.display = "none";
+    const video = el("video");
+    if (!video) {
       alert("カメラ取得失敗");
-      captureBtn.style.display="block";
-      closeFrameBtn.style.display="block";
+      captureBtn.style.display = "block";
+      closeFrameBtn.style.display = "block";
       return;
     }
 
@@ -565,7 +529,7 @@ captureBtn.addEventListener("click", async ()=>{
     ctx.drawImage(video, -video.videoWidth / 2, -video.videoHeight / 2, video.videoWidth, video.videoHeight);
     ctx.restore();
 
-    if(frame.complete){
+    if (frame.complete) {
       ctx.save();
       ctx.translate(canvas.width / 2, canvas.height / 2);
       ctx.rotate(270 * Math.PI / 180);
@@ -573,30 +537,26 @@ captureBtn.addEventListener("click", async ()=>{
       ctx.restore();
     }
 
-    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if(isIOS){
-      const imageURL = canvas.toDataURL("image/jpeg", 0.95);
+    const imageURL = canvas.toDataURL("image/jpeg", 0.95);
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       const win = window.open();
-      if(win) win.document.write('<img src="'+imageURL+'" style="width:100%">');
+      if (win) win.document.write('<img src="' + imageURL + '" style="width:100%">');
       location.href = imageURL;
     } else {
       const link = document.createElement("a");
       link.download = "photo_spot.jpg";
-      link.href = canvas.toDataURL("image/jpeg", 0.95);
+      link.href = imageURL;
       link.click();
     }
-  } catch(e){
+  } catch(e) {
     console.error(e);
     alert("撮影失敗");
   }
-  captureBtn.style.display="block";
-  closeFrameBtn.style.display="block";
+  captureBtn.style.display = "block";
+  closeFrameBtn.style.display = "block";
 });
 
-/* ======================
-ターゲット認識（マーカー読み込み時のみフレーム表示＆スキャン枠オフ）
-====================== */
-targetPhoto.addEventListener("targetFound", ()=>{
+targetPhoto.addEventListener("targetFound", () => {
   localStorage.setItem("ar_spot_scanned_8", "true");
 
   if (isFrameActive) return;
@@ -604,10 +564,9 @@ targetPhoto.addEventListener("targetFound", ()=>{
   photoFrameOverlay.style.display = "block"; 
   captureBtn.style.display = "block";       
   closeFrameBtn.style.display = "block";   
-  bodyRoot.classList.add("hide-scanning"); // マーカー読み込み用四角（スキャンUI）をオフにする
+  bodyRoot.classList.add("hide-scanning"); 
   backBtn.style.display = "none";          
 });
 </script>
 </body>
 </html>
-```[cite: 2]
