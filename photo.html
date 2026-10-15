@@ -289,12 +289,12 @@ body{
 }
 
 /* ========================================================
-   【マーカー検出時のみ表示・横長フレーム対応】UI
+   【横長フレーム対応・UIも横向き対応】
 ======================================================== */
 #photoFrameOverlay {
   position: fixed;
   inset: 0;
-  display: none; /* 初期状態は非表示 */
+  display: none; 
   z-index: 9998; 
   pointer-events: none; 
   align-items: center;
@@ -308,11 +308,13 @@ body{
   object-fit: contain;   
 }
 
+/* 撮影ボタンを画面右側に縦に配置（スマホを縦持ちした時に横向きに見えるように） */
 #captureBtn{
   position:fixed;
-  bottom:50px; 
-  left:50%;
-  transform:translateX(-50%);
+  right:30px;
+  top:50%;
+  transform:translateY(-50%) rotate(90deg);
+  transform-origin: center center;
   padding:18px 32px;
   font-size:24px;
   border:none;
@@ -320,16 +322,20 @@ body{
   background:#ff9800;
   color:white;
   z-index:9999;
-  display:none; /* 初期状態は非表示 */
+  display:none; 
   cursor: pointer;
   box-shadow: 0 6px 18px rgba(0,0,0,.4);
+  white-space: nowrap;
 }
 
+/* 閉じるボタンを画面左側に縦に配置 */
 #closeFrameBtn {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 12px 18px;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: center center;
+  padding: 12px 22px;
   font-size: 20px;
   border: none;
   border-radius: 14px;
@@ -337,8 +343,9 @@ body{
   color: white;
   font-weight: bold;
   z-index: 9999;
-  display: none; /* 初期状態は非表示 */
+  display: none; 
   cursor: pointer;
+  white-space: nowrap;
 }
 </style>
 </head>
@@ -405,7 +412,7 @@ device-orientation-permission-ui="enabled:false">
     <img src="photo_img.jpg" class="explainImg" alt="マーカーの例">
 
     <h3>② 写真の保存の仕方</h3>
-    <p>マーカーを読み込むと横長のフォトフレームが出現します。<strong>「📸 撮影する」</strong>ボタンを押すと、右に90度回転した状態のまま写真が保存されます。</p>
+    <p>マーカーを読み込むと横長のフォトフレームが出現します。ボタンを押すと、横向きに合わせた角度で写真が保存されます。</p>
     <h3>📱 iPhone (iOS) をお使いの方</h3>
     <p>撮影ボタンを押すと別タブ（白い画面）で写真が開きます。開いた写真を<strong><span>「長押し」</span></strong>して「"写真"に追加」または保存を選んでください。</p>
     <h3>🤖 Android をお使いの方</h3>
@@ -528,7 +535,7 @@ function updateHintPreviewUI() {
 }
 
 /* ======================
-写真撮影と保存合成（右に90度回転してそのまま保存）
+写真撮影と保存合成（上下反転・向きの調整）
 ====================== */
 captureBtn.addEventListener("click", async ()=>{
   try{
@@ -542,37 +549,36 @@ captureBtn.addEventListener("click", async ()=>{
       return;
     }
 
-    // キャンバスサイズを入れ替え（幅と高さを反転して右90度回転に対応）
+    // キャンバスサイズを入れ替え（右90度回転用）
     canvas.width = video.videoHeight;
     canvas.height = video.videoWidth;
 
     ctx.save();
-    // 座標系を右に90度回転させる
-    ctx.translate(canvas.width, 0);
-    ctx.rotate(90 * Math.PI / 180);
-
-    // 回転させた状態で動画を描画
-    ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+    // 270度（＝逆向きの90度、あるいは上下反転を考慮した回転）に調整
+    // 上下180度逆にしたい場合は、回転角度を 270度（または -90度 / 逆向き）に調整します
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.rotate(270 * Math.PI / 180);
+    ctx.drawImage(video, -video.videoWidth / 2, -video.videoHeight / 2, video.videoWidth, video.videoHeight);
     ctx.restore();
 
-    // フレームも同様に右に90度回転させて合成
+    // フレームも同様の角度で合成
     if(frame.complete){
       ctx.save();
-      ctx.translate(canvas.width, 0);
-      ctx.rotate(90 * Math.PI / 180);
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate(270 * Math.PI / 180);
 
       const videoAspect = video.videoWidth / video.videoHeight;
       const frameAspect = frame.naturalWidth / frame.naturalHeight;
-      let drawW = video.videoWidth, drawH = video.videoHeight, drawX = 0, drawY = 0;
+      let drawW = video.videoWidth, drawH = video.videoHeight, drawX = -video.videoWidth / 2, drawY = -video.videoHeight / 2;
 
       if (frameAspect > videoAspect) {
         drawW = video.videoWidth;
         drawH = video.videoWidth / frameAspect;
-        drawY = (video.videoHeight - drawH) / 2;
+        drawY = -drawH / 2;
       } else {
         drawH = video.videoHeight;
         drawW = video.videoHeight * frameAspect;
-        drawX = (video.videoWidth - drawW) / 2;
+        drawX = -drawW / 2;
       }
       ctx.drawImage(frame, drawX, drawY, drawW, drawH);
       ctx.restore();
