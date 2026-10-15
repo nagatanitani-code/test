@@ -289,7 +289,7 @@ body{
 }
 
 /* ========================================================
-   【フォトフレーム縦横いっぱい ＆ ボタン配置調整】
+   【フォトフレーム画面いっぱいにストレッチ ＆ ボタン配置】
 ======================================================== */
 #photoFrameOverlay {
   position: fixed;
@@ -302,15 +302,15 @@ body{
 #photoFrameOverlay img {
   width: 100%;
   height: 100%;
-  object-fit: fill;   /* 縦横目いっぱいに引き伸ばして表示 */
+  object-fit: fill;   /* 縦横それぞれ伸ばして端から端まで表示 */
 }
 
-/* 撮影ボタン：中央下に配置（横向き状態を維持） */
+/* 撮影ボタン：高さ真ん中の左端に配置（横向き状態を維持） */
 #captureBtn{
   position:fixed;
-  bottom:30px;
-  left:50%;
-  transform:translateX(-50%) rotate(90deg);
+  left:20px;
+  top:50%;
+  transform:translateY(-50%) rotate(90deg);
   transform-origin: center center;
   padding:16px 28px;
   font-size:22px;
@@ -325,10 +325,10 @@ body{
   white-space: nowrap;
 }
 
-/* 閉じるボタン：右上方向に配置（横向き状態を維持） */
+/* 閉じるボタン：右下に配置（横向き状態を維持） */
 #closeFrameBtn {
   position: fixed;
-  top: 30px;
+  bottom: 30px;
   right: 30px;
   transform: rotate(90deg);
   transform-origin: center center;
@@ -409,7 +409,7 @@ device-orientation-permission-ui="enabled:false">
     <img src="photo_img.jpg" class="explainImg" alt="マーカーの例">
 
     <h3>② 写真の保存の仕方</h3>
-    <p>マーカーを読み込むと横長のフォトフレームが画面いっぱいに表示されます。<strong>「📸 撮影する」</strong>ボタンを押すと写真が保存されます。</p>
+    <p>マーカーを読み込むとフォトフレームが画面いっぱいに引き伸ばされて表示されます。<strong>「📸 撮影する」</strong>ボタンを押すと写真が保存されます。</p>
     <h3>📱 iPhone (iOS) をお使いの方</h3>
     <p>撮影ボタンを押すと別タブ（白い画面）で写真が開きます。開いた写真を<strong><span>「長押し」</span></strong>して「"写真"に追加」または保存を選んでください。</p>
     <h3>🤖 Android をお使いの方</h3>
@@ -532,7 +532,7 @@ function updateHintPreviewUI() {
 }
 
 /* ======================
-写真撮影と保存合成（縦横いっぱいにフィットさせて保存）
+写真撮影と保存合成（フレームを縦横引き伸ばして保存）
 ====================== */
 captureBtn.addEventListener("click", async ()=>{
   try{
@@ -556,7 +556,7 @@ captureBtn.addEventListener("click", async ()=>{
     ctx.drawImage(video, -video.videoWidth / 2, -video.videoHeight / 2, video.videoWidth, video.videoHeight);
     ctx.restore();
 
-    // フレームをキャンバス全体（縦横いっぱい）に描画・合成
+    // フレームをキャンバス全体に縦横引き伸ばして合成
     if(frame.complete){
       ctx.save();
       ctx.translate(canvas.width / 2, canvas.height / 2);
