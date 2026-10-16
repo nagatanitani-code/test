@@ -200,6 +200,11 @@ body{
   object-fit: cover; 
 }
 
+/* 獲得済みのframe.pngだけ反時計回りに90度回転させるクラス */
+.rotate-frame {
+  transform: rotate(-90deg);
+}
+
 .cell-tag {
   position: absolute;
   top: 8px;
@@ -403,7 +408,7 @@ device-orientation-permission-ui="enabled:false">
     <img src="photo_img.jpg" class="explainImg" alt="マーカーの例">
 
     <h3>② 写真の保存の仕方</h3>
-    <p>マーカーを読み込むとフォトフレームが画面いっぱいに表示され、スキャン枠が非表示になります。<strong>「📸 撮影する」</strong>ボタンを押すと写真が保存されます。</p>
+    <p>マーカーを読み込むとフォトフレームが画面いっぱいに表示され、スキャン枠が非表示になります。<strong><span>「📸 撮影する」</span></strong>ボタンを押すと写真が保存されます。</p>
     <h3>📱 iPhone (iOS) をお使いの方</h3>
     <p>撮影ボタンを押すと別タブ（白い画面）で写真が開きます。開いた写真を<strong><span>「長押し」</span></strong>して「"写真"に追加」または保存を選んでください。</p>
     <h3>🤖 Android をお使いの方</h3>
@@ -500,10 +505,12 @@ function updateHintPreviewUI() {
       tag.innerHTML = "獲得済み！";
       tag.style.background = "#28a745"; 
       img.src = realFrameSrc;           
+      img.classList.add("rotate-frame"); // 獲得済みのframe.pngだけ回転させる
     } else {
       tag.innerHTML = "未獲得";
       tag.style.background = "#4da0ff"; 
       img.src = "unknown_photo.jpg";    
+      img.classList.remove("rotate-frame"); // 未獲得のunknown_photoは回転させない
     }
   });
 }
