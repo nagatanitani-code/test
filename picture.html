@@ -319,13 +319,13 @@
       100% { transform: scale(1); opacity: 1; }
     }
     .charModalImg {
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: 120px;
       border-radius: 16px;
-      background-size: cover;
-      background-position: center;
-      border: 3px solid #ffe082;
+      background-repeat: no-repeat;
       background-color: #eee;
+      border: 3px solid #ffe082;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
     .charModalTitle {
       font-size: 20px;
@@ -539,7 +539,7 @@ const targetGroups = {
     list: [
       { id: "alienEye",      name: "ガーコ", x: -0.41, y:  0.36, guideSize: 0.25, hitSize: 0.4, found: false, desc: "動物たちにちょっかいをかけては、その反応を楽しんでいるカラス。いつも余裕たっぷりの笑みを浮かべているのがちょっぴり鼻につくが、どこか憎めない。" },
       { id: "alienMouth",    name: "ボビー", x:  0.22, y: -0.12, guideSize: 0.4,  hitSize: 0.5, found: false, desc: "ジョンの相棒。凛々しい眉が自慢のしっかり者。相棒のジョンにいつも巻き込まれて大忙し。でも、なんだかんだジョンのことが大切。" },
-      { id: "alienBlackCat", name: "くろ",   x:  0.0,  y:  0.0,  guideSize: 0.3,  hitSize: 0.4, found: false, desc: "あしあとタウンに住んでいる黒猫。はなちゃんとの冒険はいつもハラハラドキドキ。大人しい性格だが、爪はとても鋭いので気を付けて。" }
+      { id: "alienBlackCat", name: "くろ",   x:  0.24,  y:  0.1,  guideSize: 0.3,  hitSize: 0.4, found: false, desc: "あしあとタウンに住んでいる黒猫。はなちゃんとの冒険はいつもハラハラドキドキ。大人しい性格だが、爪はとても鋭いので気を付けて。" }
     ]
   },
   fantasy: {
@@ -944,18 +944,18 @@ function updateClearScreen() {
   });
 }
 
-// クリア画面のキャラクターをタップしたときの処理
+// クリア画面のキャラクターをタップしたときの処理（モーダル表示＆ガイドと同じ切り抜き画像を設定）
 document.querySelectorAll(".clearItem").forEach(item => {
   item.addEventListener("click", () => {
     const targetId = item.getAttribute("data-target-id");
     let foundTarget = null;
-    let foundGroupImg = "";
+    let foundGroupKey = "";
 
     for (let gKey in targetGroups) {
       const found = targetGroups[gKey].list.find(t => t.id === targetId);
       if (found) {
         foundTarget = found;
-        foundGroupImg = targetGroups[gKey].img;
+        foundGroupKey = gKey;
         break;
       }
     }
@@ -964,7 +964,27 @@ document.querySelectorAll(".clearItem").forEach(item => {
       if (foundTarget.found) {
         document.getElementById("modalCharTitle").textContent = foundTarget.name.replace("\n", "");
         document.getElementById("modalCharDesc").textContent = foundTarget.desc;
-        document.getElementById("modalCharImg").style.backgroundImage = `url("${foundGroupImg}")`;
+
+        // ガイドと同じように画像を切り抜いてモーダルに適用
+        const modalImg = document.getElementById("modalCharImg");
+        const group = targetGroups[foundGroupKey];
+        const meta = imageMetaCache[foundGroupKey] || { iw: 1000, ih: 1000, planeW: 2.5, planeH: 2.5 };
+        const boxSize = 120; // モーダル画像の表示サイズ
+
+        const imageX = ((foundTarget.x * meta.planeW) + meta.planeW / 2) / meta.planeW * meta.iw;
+        const imageY = ((meta.planeH / 2) - (foundTarget.y * meta.planeH)) / meta.planeH * meta.ih;
+        const cropW = (foundTarget.guideSize / meta.planeW) * meta.iw;
+        const cropH = (foundTarget.guideSize / meta.planeH) * meta.ih;
+
+        const bgW = meta.iw * (boxSize / cropW);
+        const bgH = meta.ih * (boxSize / cropH);
+        const posX = boxSize / 2 - imageX * (boxSize / cropW);
+        const posY = boxSize / 2 - imageY * (boxSize / cropH);
+
+        modalImg.style.backgroundImage = `url("${group.img}")`;
+        modalImg.style.backgroundSize = `${bgW}px ${bgH}px`;
+        modalImg.style.backgroundPosition = `${posX}px ${posY}px`;
+
         document.getElementById("charDetailModal").style.display = "flex";
       } else {
         showEffect("まだ見つけていないよ！");
