@@ -214,7 +214,7 @@ body{
   padding: 3px 8px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-  z-index: 2;
+  z-index: 30000;
 }
 .tag-frame {
   background: #4da0ff;
@@ -339,6 +339,38 @@ body{
   white-space: nowrap;
 }
 
+/* 📱 スマホ横向き時の縦画面推奨メッセージ用オーバーレイ */
+#landscapeWarning {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  z-index: 99999;
+  display: none; /* デフォルトは非表示 */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#landscapeWarning div {
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 1.6;
+  background: linear-gradient(to bottom, #ffffff 0%, #ffdf6d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 画面が横向き (width > height) のときだけ #landscapeWarning を表示する */
+@media screen and (orientation: landscape) {
+  #landscapeWarning {
+    display: flex !important;
+  }
+}
+
 .mindar-ui-scanning {
   display: inherit;
 }
@@ -350,10 +382,15 @@ body{
 
 <body id="bodyRoot">
 
+<!-- 横向き警告メッセージ -->
+<div id="landscapeWarning">
+  <div>📱 縦画面専用です<br>スマホを縦向きにしてご利用ください</div>
+</div>
+
 <a-scene
 id="mainScene"
 style="display:none"
-mindar-image="imageTargetSrc: targets.mind; maxTrack:1; autoStart:false;"
+mindar-image="imageTargetSrc: targets.mind; maxTrack:1; autoStart:false; uiScanning:yes;"
 vr-mode-ui="enabled:false"
 device-orientation-permission-ui="enabled:false">
   <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
@@ -408,9 +445,9 @@ device-orientation-permission-ui="enabled:false">
     <img src="photo_img.jpg" class="explainImg" alt="マーカーの例">
 
     <h3>② 写真の保存の仕方</h3>
-    <p>マーカーを読み込むとフォトフレームが画面いっぱいに表示され、スキャン枠が非表示になります。<strong><span>「📸 撮影する」</span></strong>ボタンを押すと写真が保存されます。</p>
+    <p>マーカーを読み込むとフォトフレームが画面いっぱいに表示され、スキャン枠が非表示になります。<strong><span>📸 撮影する</span></strong>ボタンを押すと写真が保存されます。</p>
     <h3>📱 iPhone (iOS) をお使いの方</h3>
-    <p>撮影ボタンを押すと別タブ（白い画面）で写真が開きます。開いた写真を<strong><span>「長押し」</span></strong>して「"写真"に追加」または保存を選んでください。</p>
+    <p>撮影ボタンを押すと別タブ（白い画面）で写真が開きます。開いた写真を<strong><span>長押し</span></strong>して「"写真"に追加」または保存を選んでください。</p>
     <h3>🤖 Android をお使いの方</h3>
     <p>撮影ボタンを押すと、自動的にファイル（photo_spot.jpg）が端末にダウンロードされます。</p>
   </div>
@@ -452,7 +489,28 @@ startBtn.addEventListener("click", async () => {
 
   await new Promise(r => setTimeout(r, 200));
   const arSystem = mainScene.systems["mindar-image-system"];
-  if (arSystem) await arSystem.start(); 
+  if (arSystem) {
+    try {
+      await arSystem.start(); 
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  // カメラが高解像度（HDなど）で取得できるようにビデオ要素の制約を調整
+  setTimeout(() => {
+    const video = el("video");
+    if (video && video.srcObject) {
+      const track = video.srcObject.getVideoTracks()[0];
+      if (track) {
+        // 可能であれば高解像度を要求
+        track.applyConstraints({
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        }).catch(err => console.log("Constraints not supported", err));
+      }
+    }
+  }, 1000);
 });
 
 backBtn.addEventListener("click", async () => {
@@ -505,12 +563,12 @@ function updateHintPreviewUI() {
       tag.innerHTML = "獲得済み！";
       tag.style.background = "#28a745"; 
       img.src = realFrameSrc;           
-      img.classList.add("rotate-frame"); // 獲得済みのframe.pngだけ回転させる
+      img.classList.add("rotate-frame"); 
     } else {
       tag.innerHTML = "未獲得";
       tag.style.background = "#4da0ff"; 
       img.src = "unknown_photo.jpg";    
-      img.classList.remove("rotate-frame"); // 未獲得のunknown_photoは回転させない
+      img.classList.remove("rotate-frame"); 
     }
   });
 }
@@ -527,6 +585,7 @@ captureBtn.addEventListener("click", async () => {
       return;
     }
 
+    // カメラの実際の高解像度に合わせてCanvasサイズを決定
     canvas.width = video.videoHeight;
     canvas.height = video.videoWidth;
 
