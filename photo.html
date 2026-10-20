@@ -497,17 +497,16 @@ startBtn.addEventListener("click", async () => {
     }
   }
 
-  // カメラが高解像度（HDなど）で取得できるようにビデオ要素の制約を調整
+  // カメラの解像度を最高画質（4K相当 3840x2160）に設定
   setTimeout(() => {
     const video = el("video");
     if (video && video.srcObject) {
       const track = video.srcObject.getVideoTracks()[0];
       if (track) {
-        // 可能であれば高解像度を要求
         track.applyConstraints({
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
-        }).catch(err => console.log("Constraints not supported", err));
+          width: { ideal: 3840 },
+          height: { ideal: 2160 }
+        }).catch(err => console.log("4K constraints not supported, falling back", err));
       }
     }
   }, 1000);
@@ -585,7 +584,7 @@ captureBtn.addEventListener("click", async () => {
       return;
     }
 
-    // カメラの実際の高解像度に合わせてCanvasサイズを決定
+    // 取得したカメラの最大解像度（高画質）に合わせてCanvasサイズを決定
     canvas.width = video.videoHeight;
     canvas.height = video.videoWidth;
 
