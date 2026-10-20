@@ -203,13 +203,44 @@ body {
   box-shadow: 0 4px 8px rgba(0,0,0,0.4);
 }
 
+/* ======================
+   画面中央ポップアップ演出
+====================== */
+#centerPopupOverlay {
+  position: fixed; inset: 0;
+  display: none; justify-content: center; align-items: center;
+  z-index: 99998;
+  pointer-events: none; /* タップを邪魔しない */
+  background: rgba(0, 0, 0, 0.3); /* ほんのり背景を暗くして見やすくする */
+  animation: fadeInOverlay 0.3s ease forwards;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+#centerPopupImg {
+  width: min(65vw, 260px);
+  aspect-ratio: 1;
+  object-fit: contain;
+  border-radius: 16px;
+  border: 3px solid #ffd700;
+  background: rgba(14, 36, 28, 0.9);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  animation: centerPopupBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes centerPopupBounce {
+  0% { transform: scale(0.3); opacity: 0; }
+  70% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 #treasureEffect {
-  position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
-  background: rgba(14, 36, 28, 0.92); color: #ffd700; font-size: 22px; font-weight: bold;
+  position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+  background: gold; color: black; font-size: 24px; font-weight: bold;
   padding: 12px 24px; border-radius: 14px; display: none; z-index: 99999;
-  border: 2px solid #c5a059; text-align: center; line-height: 1.5;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-  white-space: pre-line; /* 改行を有効にする */
 }
 
 #howToScreen, #treasureScreen, #hintScreen { z-index: 20000; display: none; }
@@ -376,7 +407,12 @@ body {
   <img id="treasureImage" src="">
 </div>
 
-<div id="treasureEffect"></div>
+<!-- 画面中央ポップアップ用 -->
+<div id="centerPopupOverlay">
+  <img id="centerPopupImg" src="">
+</div>
+
+<div id="treasureEffect">宝発見！</div>
 
 <div id="howToScreen" class="treasureBg">
   <h1 class="screenTitleStyle">操作説明</h1>
@@ -424,7 +460,7 @@ body {
 
 <div id="atariBonusScreen">
   <div id="closeAtariBonusBtn">×</div>
-  <div id="atariBonusText">あたり<br>発見！<br>壁紙をゲットしよう！</div>
+  <div id="atariBonusText">あたり発見！<br>壁紙をゲットしよう！</div>
   <button id="downloadWallpaperBtn">壁紙入手!</button>
 </div>
 
@@ -440,11 +476,11 @@ const state = {
   get foundCount() { return state.treasures.filter(Boolean).length; },
   total: 5,
   config: [
-    { id: "Treasure1", src: "takara1.png", detailSrc: "当たり.png", msg: "あたり\n発見！", desc: "1 お宝（あたり）" },
-    { id: "Treasure2", src: "takara2.png", detailSrc: "ハズレ.png", msg: "はずれ\n発見...", desc: "2 お宝（はずれ）" },
-    { id: "Treasure3", src: "takara3.png", detailSrc: "ハズレ.png", msg: "はずれ\n発見...", desc: "3 お宝（はずれ）" },
-    { id: "Treasure4", src: "takara4.png", detailSrc: "ハズレ.png", msg: "はずれ\n発見...", desc: "4 お宝（はずれ）" },
-    { id: "Treasure5", src: "takara5.png", detailSrc: "ハズレ.png", msg: "はずれ\n発見...", desc: "5 お宝（はずれ）" }
+    { id: "Treasure1", src: "takara1.png", detailSrc: "当たり.png", msg: "あたり発見！！", desc: "1 お宝（あたり）" },
+    { id: "Treasure2", src: "takara2.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "2 お宝（はずれ）" },
+    { id: "Treasure3", src: "takara3.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "3 お宝（はずれ）" },
+    { id: "Treasure4", src: "takara4.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "4 お宝（はずれ）" },
+    { id: "Treasure5", src: "takara5.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "5 お宝（はずれ）" }
   ]
 };
 
@@ -457,6 +493,8 @@ const UI = {
   treasureImage: document.querySelector("#treasureImage"),
   treasureCount: document.querySelector("#treasureCount"),
   treasureEffect: document.querySelector("#treasureEffect"),
+  centerPopupOverlay: document.querySelector("#centerPopupOverlay"),
+  centerPopupImg: document.querySelector("#centerPopupImg"),
   bonusGroup: document.querySelector("#bonusGroup"),
   atariBonusScreen: document.querySelector("#atariBonusScreen"),
   howToScreen: document.querySelector("#howToScreen"),
@@ -513,16 +551,28 @@ function showEffect(text) {
   setTimeout(() => { UI.treasureEffect.style.display = "none"; }, 1500);
 }
 
+// 中央ポップアップを数秒後にフェードアウトして非表示にする関数
+function showCenterPopup(imgSrc) {
+  UI.centerPopupImg.src = imgSrc;
+  UI.centerPopupOverlay.style.display = "flex";
+  setTimeout(() => {
+    UI.centerPopupOverlay.style.display = "none";
+  }, 1800); // 1.8秒後に自動で消える
+}
+
 state.config.forEach((item, index) => {
   document.querySelector(`#target${item.id}`).addEventListener("targetFound", () => {
     UI.treasureBox.style.display = "flex";
     UI.treasureImage.src = item.detailSrc;
 
+    // 新規発見時のみ中央ポップアップを表示
     if (!state.treasures[index]) {
       state.treasures[index] = true;
       saveGame();
       updateTreasureUI();
       showEffect(item.msg);
+      showCenterPopup(item.detailSrc); // 👈 中央に大きく出現！
+
       if (index === 0) {
         updateBonusButton();
         setTimeout(() => {
