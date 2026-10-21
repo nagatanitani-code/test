@@ -200,7 +200,6 @@ body{
   object-fit: cover; 
 }
 
-/* 獲得済みのframe.pngだけ反時計回りに90度回転させるクラス */
 .rotate-frame {
   transform: rotate(-90deg);
 }
@@ -339,14 +338,13 @@ body{
   white-space: nowrap;
 }
 
-/* 📱 スマホ横向き時の縦画面推奨メッセージ用オーバーレイ */
 #landscapeWarning {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.9);
   color: white;
   z-index: 99999;
-  display: none; /* デフォルトは非表示 */
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -364,7 +362,6 @@ body{
   -webkit-text-fill-color: transparent;
 }
 
-/* 画面が横向き (width > height) のときだけ #landscapeWarning を表示する */
 @media screen and (orientation: landscape) {
   #landscapeWarning {
     display: flex !important;
@@ -382,7 +379,6 @@ body{
 
 <body id="bodyRoot">
 
-<!-- 横向き警告メッセージ -->
 <div id="landscapeWarning">
   <div>📱 縦画面専用です<br>スマホを縦向きにしてご利用ください</div>
 </div>
@@ -450,7 +446,7 @@ device-orientation-permission-ui="enabled:false">
     <h3>③ 写真の保存の仕方</h3>
     <p>マーカーを読み込むとフォトフレームが画面いっぱいに表示され、スキャン枠が非表示になります。<strong><span>📸 撮影する</span></strong>ボタンを押すと写真が保存されます。</p>
     <h3>📱 iPhone (iOS) をお使いの方</h3>
-    <p>撮影ボタンを押すと別タブ（白い画面）で写真が開きます。開いた写真を<strong><span>長押し</span></strong>して「"写真"に追加」または保存を選んでください。</p>
+    <p>撮影ボタンを押すと別タブ（白い画面）で写真が開きます。開いた写真を<strong><span>長押し</span></strong>して公式の「"写真"に追加」または保存を選んでください。</p>
     <h3>🤖 Android をお使いの方</h3>
     <p>撮影ボタンを押すと、自動的にファイル（photo_spot.jpg）が端末にダウンロードされます。</p>
   </div>
@@ -500,7 +496,6 @@ startBtn.addEventListener("click", async () => {
     }
   }
 
-  // カメラの解像度を最高画質（4K相当 3840x2160）に設定
   setTimeout(() => {
     const video = el("video");
     if (video && video.srcObject) {
@@ -587,7 +582,6 @@ captureBtn.addEventListener("click", async () => {
       return;
     }
 
-    // 取得したカメラの最大解像度（高画質）に合わせてCanvasサイズを決定
     canvas.width = video.videoHeight;
     canvas.height = video.videoWidth;
 
@@ -635,6 +629,10 @@ targetPhoto.addEventListener("targetFound", () => {
   bodyRoot.classList.add("hide-scanning"); 
   backBtn.style.display = "none";          
 });
+
+// スマホでのスクロールやタッチ操作の負荷を抑えるためのパッシブリスナー追加
+window.addEventListener("touchstart", () => {}, { passive: true });
+window.addEventListener("touchmove", () => {}, { passive: true });
 </script>
 </body>
 </html>
