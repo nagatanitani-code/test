@@ -502,7 +502,7 @@ for (let i = 0; i < state.total; i++) {
   });
 }
 
-// イベントリスナー
+// イベントリスナー（スマホでのスクロールやタッチ操作の負荷を抑えるため passive: true を適用）
 UI.startBtn.addEventListener("click", startCamera);
 
 UI.backToMenuBtn.addEventListener("click", async () => {
@@ -537,6 +537,10 @@ document.querySelector("#openBonusBtn").addEventListener("click", async () => {
   UI.menuScreen.style.display = "none";
   UI.completeWrap.style.display = "flex";
 });
+
+// スクロールやタッチ操作を最適化するパッシブリスナーの追加
+window.addEventListener("touchstart", () => {}, { passive: true });
+window.addEventListener("touchmove", () => {}, { passive: true });
 
 loadGame();
 </script>
