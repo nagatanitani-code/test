@@ -210,8 +210,8 @@ body {
   position: fixed; inset: 0;
   display: none; justify-content: center; align-items: center;
   z-index: 99998;
-  pointer-events: none; /* タップを邪魔しない */
-  background: rgba(0, 0, 0, 0.3); /* ほんのり背景を暗くして見やすくする */
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.3);
   animation: fadeInOverlay 0.3s ease forwards;
 }
 
@@ -407,7 +407,6 @@ body {
   <img id="treasureImage" src="">
 </div>
 
-<!-- 画面中央ポップアップ用 -->
 <div id="centerPopupOverlay">
   <img id="centerPopupImg" src="">
 </div>
@@ -551,13 +550,12 @@ function showEffect(text) {
   setTimeout(() => { UI.treasureEffect.style.display = "none"; }, 1500);
 }
 
-// 中央ポップアップを数秒後にフェードアウトして非表示にする関数
 function showCenterPopup(imgSrc) {
   UI.centerPopupImg.src = imgSrc;
   UI.centerPopupOverlay.style.display = "flex";
   setTimeout(() => {
     UI.centerPopupOverlay.style.display = "none";
-  }, 1800); // 1.8秒後に自動で消える
+  }, 1800);
 }
 
 state.config.forEach((item, index) => {
@@ -565,13 +563,12 @@ state.config.forEach((item, index) => {
     UI.treasureBox.style.display = "flex";
     UI.treasureImage.src = item.detailSrc;
 
-    // 新規発見時のみ中央ポップアップを表示
     if (!state.treasures[index]) {
       state.treasures[index] = true;
       saveGame();
       updateTreasureUI();
       showEffect(item.msg);
-      showCenterPopup(item.detailSrc); // 👈 中央に大きく出現！
+      showCenterPopup(item.detailSrc);
 
       if (index === 0) {
         updateBonusButton();
@@ -639,6 +636,10 @@ document.querySelector("#downloadWallpaperBtn").addEventListener("click", () => 
   link.click();
   document.body.removeChild(link);
 });
+
+// スクロールやタッチ操作を最適化するパッシブリスナーの追加
+window.addEventListener("touchstart", () => {}, { passive: true });
+window.addEventListener("touchmove", () => {}, { passive: true });
 
 loadGame();
 </script>
