@@ -460,7 +460,7 @@ body {
 
 <div id="atariBonusScreen">
   <div id="closeAtariBonusBtn">×</div>
-  <div id="atariBonusText">あたり発見！<br>壁紙をゲットしよう！</div>
+  <div id="atariBonusText">あたり発見！壁紙をゲットしよう！</div>
   <button id="downloadWallpaperBtn">壁紙入手!</button>
 </div>
 
@@ -476,7 +476,7 @@ const state = {
   get foundCount() { return state.treasures.filter(Boolean).length; },
   total: 5,
   config: [
-    { id: "Treasure1", src: "takara1.png", detailSrc: "当たり.png", msg: "あたり発見！！", desc: "1 お宝（あたり）" },
+    { id: "Treasure1", src: "takara1.png", detailSrc: "当たり.png", msg: "あたり<br>発見！！", desc: "1 お宝（あたり）" },
     { id: "Treasure2", src: "takara2.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "2 お宝（はずれ）" },
     { id: "Treasure3", src: "takara3.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "3 お宝（はずれ）" },
     { id: "Treasure4", src: "takara4.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "4 お宝（はずれ）" },
@@ -546,7 +546,7 @@ function updateBonusButton() {
 }
 
 function showEffect(text) {
-  UI.treasureEffect.textContent = text;
+  UI.treasureEffect.innerHTML = text;
   UI.treasureEffect.style.display = "block";
   setTimeout(() => { UI.treasureEffect.style.display = "none"; }, 1500);
 }
