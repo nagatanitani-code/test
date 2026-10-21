@@ -589,13 +589,15 @@ function updateTransformLoop() {
   const dx = targetX - currentX;
   const dy = targetY - currentY;
 
-  currentScale += ds * 0.25;
-  currentX += dx * 0.25;
-  currentY += dy * 0.25;
+  // 【軽量化】係数を少し小さくして、アニメーション収束を滑らかにしつつ無駄なループを早期に終了
+  currentScale += ds * 0.2;
+  currentX += dx * 0.2;
+  currentY += dy * 0.2;
 
   stageContainer.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px)) scale(${currentScale})`;
 
-  if (Math.abs(ds) < 0.001 && Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1 && !isDragging && !initialPinchDistance) {
+  // 【軽量化】終了判定のしきい値をわずかに持たせて無駄なフレーム描画をカット
+  if (Math.abs(ds) < 0.002 && Math.abs(dx) < 0.2 && Math.abs(dy) < 0.2 && !isDragging && !initialPinchDistance) {
     currentScale = targetScale;
     currentX = targetX;
     currentY = targetY;
@@ -704,10 +706,9 @@ function setupPanZoom() {
       initialScale = targetScale;
       requestRender();
     }
-  }, { passive: false });
+  }, { passive: true }); // 【軽量化】スクロールパフォーマンス向上
 
   viewport.addEventListener("touchmove", (e) => {
-    e.preventDefault();
     hotspotContainer.style.pointerEvents = "none";
 
     if (e.touches.length === 1 && isDragging) {
@@ -723,7 +724,7 @@ function setupPanZoom() {
       targetScale = Math.min(Math.max(0.15, initialScale * factor), 5.0);
       requestRender();
     }
-  }, { passive: false });
+  }, { passive: true }); // 【軽量化】スクロールパフォーマンス向上
 
   viewport.addEventListener("touchend", (e) => {
     isDragging = false;
@@ -737,14 +738,13 @@ function setupPanZoom() {
       }, 80);
     }
     requestRender();
-  });
+  }, { passive: true });
 
   viewport.addEventListener("wheel", (e) => {
-    e.preventDefault();
     const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
     targetScale = Math.min(Math.max(0.15, targetScale * zoomFactor), 5.0);
     requestRender();
-  }, { passive: false });
+  }, { passive: true });
 }
 
 function saveGame() {
