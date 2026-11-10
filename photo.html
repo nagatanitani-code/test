@@ -338,36 +338,6 @@ body{
   white-space: nowrap;
 }
 
-#landscapeWarning {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
-  z-index: 99999;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-#landscapeWarning div {
-  font-size: 22px;
-  font-weight: bold;
-  line-height: 1.6;
-  background: linear-gradient(to bottom, #ffffff 0%, #ffdf6d 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-@media screen and (orientation: landscape) {
-  #landscapeWarning {
-    display: flex !important;
-  }
-}
-
 .mindar-ui-scanning {
   display: inherit;
 }
@@ -378,10 +348,6 @@ body{
 </head>
 
 <body id="bodyRoot">
-
-<div id="landscapeWarning">
-  <div>📱 縦画面専用です<br>設定で縦画面固定にしてご利用ください</div>
-</div>
 
 <a-scene
 id="mainScene"
@@ -436,19 +402,16 @@ device-orientation-permission-ui="enabled:false">
 <div id="explainScreen">
   <h1 style="margin: 0; font-size: 38px;">操作説明</h1>
   <div class="explainBox">
-    <h3>① 画面の向きについて</h3>
-    <p>当アプリは<strong>縦画面専用</strong>です。ご利用の際は、お使いのスマートフォンの自動回転（縦画面ロックなど）を解除し、<strong>縦向き</strong>に固定してご使用ください。</p>
-
-    <h3>② 始め方</h3>
-    <p>「読み込み開始」をタップしてカメラへのアクセスを許可します。指定のフォトスポット（マーカー）にかざしてください。</p>
+    <h3>① 始め方</h3>
+    <p>「読み込み開始」をタップしてカメラへのアクセスを許可します。指定のフォトスポット（マーカー）にかざしてください[cite: 9]。</p>
     <img src="photo_img.jpg" class="explainImg" alt="マーカーの例">
 
-    <h3>③ 写真の保存の仕方</h3>
-    <p>マーカーを読み込むとフォトフレームが画面いっぱいに表示され、スキャン枠が非表示になります。<strong><span>📸 撮影する</span></strong>ボタンを押すと写真が保存されます。</p>
+    <h3>② 写真の保存の仕方</h3>
+    <p>マーカーを読み込むとフォトフレームが画面いっぱいに表示され、スキャン枠が非表示になります。<strong><span>📸 撮影する</span></strong>ボタンを押すと写真が保存されます[cite: 9]。</p>
     <h3>📱 iPhone (iOS) をお使いの方</h3>
-    <p>撮影ボタンを押すと別タブ（白い画面）で写真が開きます。開いた写真を<strong><span>長押し</span></strong>して公式の「"写真"に追加」または保存を選んでください。</p>
+    <p>撮影ボタンを押すと別タブ（白い画面）で写真が開きます。開いた写真を<strong><span>長押し</span></strong>して公式の「"写真"に追加」または保存を選んでください[cite: 9]。</p>
     <h3>🤖 Android をお使いの方</h3>
-    <p>撮影ボタンを押すと、自動的にファイル（photo_spot.jpg）が端末にダウンロードされます。</p>
+    <p>撮影ボタンを押すと、自動的にファイル（photo_spot.jpg）が端末にダウンロードされます[cite: 9]。</p>
   </div>
   <button id="closeExplainBtn" class="backBtn">戻る</button>
 </div>
@@ -630,7 +593,6 @@ targetPhoto.addEventListener("targetFound", () => {
   backBtn.style.display = "none";          
 });
 
-// スマホでのスクロールやタッチ操作の負荷を抑えるためのパッシブリスナー追加
 window.addEventListener("touchstart", () => {}, { passive: true });
 window.addEventListener("touchmove", () => {}, { passive: true });
 </script>
