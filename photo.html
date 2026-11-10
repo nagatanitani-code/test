@@ -300,41 +300,42 @@ body{
   object-fit: fill;   
 }
 
+/* 撮影ボタン：中央下部に配置 */
 #captureBtn{
-  position:fixed;
-  left:10px;
-  top:50%;
-  transform:translateY(-50%) rotate(90deg);
-  transform-origin: center center;
-  padding:12px 20px;
-  font-size:18px;
-  border:none;
-  border-radius:16px;
-  background:#ff9800;
-  color:white;
-  z-index:9999;
-  display:none; 
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 16px 36px;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #ffaa00 0%, #ff5500 100%);
+  color: white;
+  z-index: 9999;
+  display: none; 
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,.4);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
   white-space: nowrap;
 }
 
+/* 閉じるボタン：右上部に配置 */
 #closeFrameBtn {
   position: fixed;
-  bottom: 20px;
+  top: 20px;
   right: 20px;
-  transform: rotate(90deg);
-  transform-origin: center center;
-  padding: 8px 14px;
+  padding: 10px 18px;
   font-size: 16px;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   background: rgba(255, 59, 48, 0.9);
   color: white;
   font-weight: bold;
   z-index: 9999;
   display: none; 
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   white-space: nowrap;
 }
 
@@ -533,6 +534,7 @@ function updateHintPreviewUI() {
   });
 }
 
+// 撮影処理（回転させず、そのままの向きでキャンバスに描画・出力）
 captureBtn.addEventListener("click", async () => {
   try {
     captureBtn.style.display = "none";
@@ -545,21 +547,15 @@ captureBtn.addEventListener("click", async () => {
       return;
     }
 
-    canvas.width = video.videoHeight;
-    canvas.height = video.videoWidth;
+    // カメラ映像の実際の解像度をそのままキャンバスに反映
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
-    ctx.save();
-    ctx.translate(canvas.width / 2, canvas.height / 2);
-    ctx.rotate(270 * Math.PI / 180);
-    ctx.drawImage(video, -video.videoWidth / 2, -video.videoHeight / 2, video.videoWidth, video.videoHeight);
-    ctx.restore();
+    // 回転処理を入れず、そのまま描画
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     if (frame.complete) {
-      ctx.save();
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate(270 * Math.PI / 180);
-      ctx.drawImage(frame, -video.videoWidth / 2, -video.videoHeight / 2, video.videoWidth, video.videoHeight);
-      ctx.restore();
+      ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
     }
 
     const imageURL = canvas.toDataURL("image/jpeg", 0.95);
