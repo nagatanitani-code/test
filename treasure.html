@@ -204,15 +204,15 @@ body {
 }
 
 /* ======================
-   画面中央ポップアップ演出
+   お宝オープン演出＆結果ポップアップ用
 ====================== */
-#centerPopupOverlay {
+#openEffectOverlay {
   position: fixed; inset: 0;
-  display: none; justify-content: center; align-items: center;
+  display: none; flex-direction: column; justify-content: center; align-items: center;
   z-index: 99998;
-  pointer-events: none;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.75);
   animation: fadeInOverlay 0.3s ease forwards;
+  cursor: pointer;
 }
 
 @keyframes fadeInOverlay {
@@ -220,7 +220,15 @@ body {
   to { opacity: 1; }
 }
 
-#centerPopupImg {
+.openContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#effectTreasureImg {
   width: min(65vw, 260px);
   aspect-ratio: 1;
   object-fit: contain;
@@ -228,13 +236,39 @@ body {
   border: 3px solid #ffd700;
   background: rgba(14, 36, 28, 0.9);
   box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-  animation: centerPopupBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-@keyframes centerPopupBounce {
-  0% { transform: scale(0.3); opacity: 0; }
-  70% { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+/* yubi.png をお宝の右下に配置してタップを促すアニメーション */
+#effectYubiImg {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  animation: yubiTap 1s infinite ease-in-out;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+}
+
+@keyframes yubiTap {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(0.85) translate(6px, 6px); }
+}
+
+.openInstructionText {
+  color: #ffd700;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 25px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  letter-spacing: 1px;
+  text-align: center;
+  animation: textBlink 1.5s infinite ease-in-out;
+}
+
+@keyframes textBlink {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
 }
 
 #treasureEffect {
@@ -407,8 +441,13 @@ body {
   <img id="treasureImage" src="">
 </div>
 
-<div id="centerPopupOverlay">
-  <img id="centerPopupImg" src="">
+<!-- お宝開封演出用オーバーレイ (お宝画像 + yubi.png) -->
+<div id="openEffectOverlay">
+  <div class="openContainer">
+    <img id="effectTreasureImg" src="">
+    <img id="effectYubiImg" src="yubi.png">
+  </div>
+  <div class="openInstructionText">タッチして開けよう！</div>
 </div>
 
 <div id="treasureEffect">宝発見！</div>
@@ -492,8 +531,8 @@ const UI = {
   treasureImage: document.querySelector("#treasureImage"),
   treasureCount: document.querySelector("#treasureCount"),
   treasureEffect: document.querySelector("#treasureEffect"),
-  centerPopupOverlay: document.querySelector("#centerPopupOverlay"),
-  centerPopupImg: document.querySelector("#centerPopupImg"),
+  openEffectOverlay: document.querySelector("#openEffectOverlay"),
+  effectTreasureImg: document.querySelector("#effectTreasureImg"),
   bonusGroup: document.querySelector("#bonusGroup"),
   atariBonusScreen: document.querySelector("#atariBonusScreen"),
   howToScreen: document.querySelector("#howToScreen"),
@@ -550,34 +589,61 @@ function showEffect(text) {
   setTimeout(() => { UI.treasureEffect.style.display = "none"; }, 1500);
 }
 
-function showCenterPopup(imgSrc) {
-  UI.centerPopupImg.src = imgSrc;
-  UI.centerPopupOverlay.style.display = "flex";
-  setTimeout(() => {
-    UI.centerPopupOverlay.style.display = "none";
-  }, 1800);
-}
+// ステップ1: お宝画像とyubi.pngを表示して開けるのを待つ
+function startOpenEffect(item, index) {
+  UI.effectTreasureImg.src = item.src; // まだ開ける前のお宝画像
+  UI.openEffectOverlay.style.display = "flex";
 
-state.config.forEach((item, index) => {
-  document.querySelector(`#target${item.id}`).addEventListener("targetFound", () => {
-    UI.treasureBox.style.display = "flex";
-    UI.treasureImage.src = item.detailSrc;
+  // タップされたら、または演出として次のステップ（あたり・はずれ表示）へ進む処理
+  const handleOpenClick = () => {
+    UI.openEffectOverlay.removeEventListener("click", handleOpenClick);
+    
+    // ステップ2: 当たり/はずれの画像へ切り替える演出
+    UI.effectTreasureImg.src = item.detailSrc; // 「当たり.png」または「ハズレ.png」
+    
+    // yubi.pngを非表示にするために隠すか、要素を書き換える
+    const yubiImg = document.querySelector("#effectYubiImg");
+    if(yubiImg) yubiImg.style.display = "none";
+    
+    const instrText = document.querySelector(".openInstructionText");
+    if(instrText) instrText.textContent = item.id === "Treasure1" ? "あたり発見！！" : "はずれ...";
 
-    if (!state.treasures[index]) {
-      state.treasures[index] = true;
-      saveGame();
-      updateTreasureUI();
-      showEffect(item.msg);
-      showCenterPopup(item.detailSrc);
+    showEffect(item.msg);
+
+    // 少し見せたあとにオーバーレイを閉じてUIを更新
+    setTimeout(() => {
+      UI.openEffectOverlay.style.display = "none";
+      if(yubiImg) yubiImg.style.display = "block"; // 次回のために復元
+      if(instrText) instrText.textContent = "タッチして開けよう！";
+
+      UI.treasureBox.style.display = "flex";
+      UI.treasureImage.src = item.detailSrc;
 
       if (index === 0) {
         updateBonusButton();
         setTimeout(() => {
           UI.atariBonusScreen.style.display = "flex";
           UI.backToMenuBtn.style.display = "none";
-        }, 1000);
+        }, 500);
       }
+    }, 1500);
+  };
+
+  UI.openEffectOverlay.addEventListener("click", handleOpenClick, { once: true });
+}
+
+state.config.forEach((item, index) => {
+  document.querySelector(`#target${item.id}`).addEventListener("targetFound", () => {
+    if (!state.treasures[index]) {
+      state.treasures[index] = true;
+      saveGame();
+      updateTreasureUI();
+      
+      // 開ける演出（宝箱/宝画像 + yubi.png）を発動
+      startOpenEffect(item, index);
     } else {
+      UI.treasureBox.style.display = "flex";
+      UI.treasureImage.src = item.detailSrc;
       showEffect("発見済みのお宝");
     }
   });
@@ -637,7 +703,6 @@ document.querySelector("#downloadWallpaperBtn").addEventListener("click", () => 
   document.body.removeChild(link);
 });
 
-// スクロールやタッチ操作を最適化するパッシブリスナーの追加
 window.addEventListener("touchstart", () => {}, { passive: true });
 window.addEventListener("touchmove", () => {}, { passive: true });
 
