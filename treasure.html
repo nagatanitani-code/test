@@ -275,6 +275,7 @@ body {
   position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
   background: gold; color: black; font-size: 24px; font-weight: bold;
   padding: 12px 24px; border-radius: 14px; display: none; z-index: 99999;
+  text-align: center;
 }
 
 #howToScreen, #treasureScreen, #hintScreen { z-index: 20000; display: none; }
@@ -346,7 +347,7 @@ body {
   justify-content: center; align-items: center; gap: 25px;
   background: rgba(0,0,0,.85); z-index: 30000;
 }
-#atariBonusText { font-size: 36px; font-weight: bold; color: gold; text-align: center; padding: 0 20px; }
+#atariBonusText { font-size: 32px; font-weight: bold; color: gold; text-align: center; padding: 0 20px; line-height: 1.5; }
 #downloadWallpaperBtn { padding: 18px 30px; border: none; border-radius: 18px; font-size: 24px; color: white; background: linear-gradient(135deg, #00c6ff, #0072ff); cursor: pointer; }
 #closeAtariBonusBtn {
   position: absolute; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%;
@@ -411,7 +412,7 @@ body {
   <div class="scrollIndicator">▼ 下へスクロールしてね ▼</div>
 
   <div class="menuGroup" id="bonusGroup" style="display: none;">
-    <div class="menuGuide" style="color: #ffd700; text-shadow: 0 0 5px rgba(255,215,0,0.5); font-weight: bold;">🎉 あたり発見特典！</div>
+    <div class="menuGuide" style="color: #ffd700; text-shadow: 0 0 5px rgba(255,215,0,0.5); font-weight: bold;">🎉 あたり3つコンプ特典！</div>
     <button id="openBonusBtn" class="menuBtn">壁紙ゲット！</button>
   </div>
 
@@ -461,6 +462,7 @@ body {
       <li>「場所確認」に眠る古文書の手がかりを頼りに、怪しい場所（マーカー）を探しましょう。下のような絵がマーカーです。</li>
       <img src="treasure_img.jpg" class="explainMarkerImg" alt="スタンプマーカーの例">    
       <li>見つけた場所にカメラをまっすぐかざすと、空間から隠された「秘宝」がその姿を現します！</li>
+      <li>5つのお宝のうち<strong>「あたり」は3つ</strong>！3つすべて見つけると特製壁紙がゲットできます！</li>
     </ol>
   </div>
   <button id="closeHowToBtn" class="backBtn">戻る</button>
@@ -498,7 +500,7 @@ body {
 
 <div id="atariBonusScreen">
   <div id="closeAtariBonusBtn">×</div>
-  <div id="atariBonusText">あたり発見！壁紙をゲットしよう！</div>
+  <div id="atariBonusText">あたり3つコンプリート！<br>壁紙をゲットしよう！</div>
   <button id="downloadWallpaperBtn">壁紙入手!</button>
 </div>
 
@@ -512,13 +514,24 @@ body {
 const state = {
   treasures: [false, false, false, false, false], 
   get foundCount() { return state.treasures.filter(Boolean).length; },
+  // あたりを発見した数
+  get foundAtariCount() {
+    return state.config.reduce((count, item, idx) => {
+      return count + (item.isAtari && state.treasures[idx] ? 1 : 0);
+    }, 0);
+  },
+  // あたり3つすべてコンプリートしたか判定
+  get isAtariComplete() {
+    return state.config.every((item, idx) => !item.isAtari || state.treasures[idx]);
+  },
   total: 5,
+  // 1番・3番・5番の3つを「あたり(isAtari: true)」に設定（別の番号にしたい場合は true/false を入れ替えてください）
   config: [
-    { id: "Treasure1", src: "takara1.png", detailSrc: "当たり.png", msg: "あたり<br>発見！！", desc: "1 お宝（あたり）" },
-    { id: "Treasure2", src: "takara2.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "2 お宝（はずれ）" },
-    { id: "Treasure3", src: "takara3.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "3 お宝（はずれ）" },
-    { id: "Treasure4", src: "takara4.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "4 お宝（はずれ）" },
-    { id: "Treasure5", src: "takara5.png", detailSrc: "ハズレ.png", msg: "はずれ...", desc: "5 お宝（はずれ）" }
+    { id: "Treasure1", isAtari: true,  src: "takara1.png", detailSrc: "当たり.png", msg: "あたり<br>発見！！", desc: "1 お宝（あたり）" },
+    { id: "Treasure2", isAtari: false, src: "takara2.png", detailSrc: "ハズレ.png", msg: "はずれ<br>発見...", desc: "2 お宝（はずれ）" },
+    { id: "Treasure3", isAtari: true,  src: "takara3.png", detailSrc: "当たり.png", msg: "あたり<br>発見！！", desc: "3 お宝（あたり）" },
+    { id: "Treasure4", isAtari: false, src: "takara4.png", detailSrc: "ハズレ.png", msg: "はずれ<br>発見...", desc: "4 お宝（はずれ）" },
+    { id: "Treasure5", isAtari: true,  src: "takara5.png", detailSrc: "当たり.png", msg: "あたり<br>発見！！", desc: "5 お宝（あたり）" }
   ]
 };
 
@@ -547,12 +560,12 @@ const UI = {
 };
 
 function saveGame() {
-  localStorage.setItem("treasureSave_v4", JSON.stringify(state.treasures));
+  localStorage.setItem("treasureSave_v5", JSON.stringify(state.treasures));
 }
 
 function loadGame() {
   try {
-    const saved = JSON.parse(localStorage.getItem("treasureSave_v4"));
+    const saved = JSON.parse(localStorage.getItem("treasureSave_v5"));
     if (Array.isArray(saved) && saved.length === state.total) {
       state.treasures = saved;
     }
@@ -579,8 +592,9 @@ function updateTreasureUI() {
   });
 }
 
+// 3つのあたりすべてをコンプリートしたときだけメニューの特典ボタンを表示
 function updateBonusButton() {
-  UI.bonusGroup.style.display = state.treasures[0] ? "block" : "none";
+  UI.bonusGroup.style.display = state.isAtariComplete ? "flex" : "none";
 }
 
 function showEffect(text) {
@@ -591,35 +605,38 @@ function showEffect(text) {
 
 // ステップ1: お宝画像とyubi.pngを表示して開けるのを待つ
 function startOpenEffect(item, index) {
-  UI.effectTreasureImg.src = item.src; // まだ開ける前のお宝画像
+  UI.effectTreasureImg.src = item.src;
   UI.openEffectOverlay.style.display = "flex";
 
-  // タップされたら、または演出として次のステップ（あたり・はずれ表示）へ進む処理
   const handleOpenClick = () => {
     UI.openEffectOverlay.removeEventListener("click", handleOpenClick);
     
     // ステップ2: 当たり/はずれの画像へ切り替える演出
-    UI.effectTreasureImg.src = item.detailSrc; // 「当たり.png」または「ハズレ.png」
+    UI.effectTreasureImg.src = item.detailSrc;
     
-    // yubi.pngを非表示にするために隠すか、要素を書き換える
     const yubiImg = document.querySelector("#effectYubiImg");
-    if(yubiImg) yubiImg.style.display = "none";
+    if (yubiImg) yubiImg.style.display = "none";
     
     const instrText = document.querySelector(".openInstructionText");
-    if(instrText) instrText.textContent = item.id === "Treasure1" ? "あたり発見！！" : "はずれ...";
+    if (instrText) {
+      instrText.textContent = item.isAtari
+        ? `あたり発見！！ (${state.foundAtariCount} / 3)`
+        : "はずれ...";
+    }
 
     showEffect(item.msg);
 
     // 少し見せたあとにオーバーレイを閉じてUIを更新
     setTimeout(() => {
       UI.openEffectOverlay.style.display = "none";
-      if(yubiImg) yubiImg.style.display = "block"; // 次回のために復元
-      if(instrText) instrText.textContent = "タッチして開けよう！";
+      if (yubiImg) yubiImg.style.display = "block";
+      if (instrText) instrText.textContent = "タッチして開けよう！";
 
       UI.treasureBox.style.display = "flex";
       UI.treasureImage.src = item.detailSrc;
 
-      if (index === 0) {
+      // 今回見つけたのが「あたり」で、かつ3つすべて揃った場合に壁紙ゲット画面を表示
+      if (item.isAtari && state.isAtariComplete) {
         updateBonusButton();
         setTimeout(() => {
           UI.atariBonusScreen.style.display = "flex";
@@ -639,7 +656,7 @@ state.config.forEach((item, index) => {
       saveGame();
       updateTreasureUI();
       
-      // 開ける演出（宝箱/宝画像 + yubi.png）を発動
+      // 開ける演出（お宝画像 + yubi.png）を発動
       startOpenEffect(item, index);
     } else {
       UI.treasureBox.style.display = "flex";
