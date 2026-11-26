@@ -338,6 +338,7 @@ body {
   color: #8fa399;
 }
 
+.hintCardContainer { cursor: pointer; }
 .hintCardContainer:hover .cardImgWrap img { transform: scale(1.06); }
 .treasureCardContainer.is-found { cursor: pointer; }
 .treasureCardContainer.is-found:hover .cardImgWrap img { transform: scale(1.06); }
@@ -375,10 +376,12 @@ body {
 }
 #modalDetailDesc {
   color: #ffd700;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: bold;
   text-align: center;
   text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  padding: 0 10px;
+  line-height: 1.5;
 }
 </style>
 </head>
@@ -486,14 +489,14 @@ body {
 <div id="hintScreen" class="treasureBg">
   <h1 class="screenTitleStyle">場所確認</h1>
   <div class="contentCard">
-    <div class="menuGuide">古文書が示す手がかりの場所だ！</div>
+    <div class="menuGuide">古文書が示す手がかりの場所だ！<br><span style="font-size: 12px; color: #ffd700;">※カードをタッチすると拡大表示できるよ！</span></div>
     <div class="hintGrid">
-      <div class="hintCardContainer"><div class="cardImgWrap"><img src="hint1.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">1コリントの木の近くに？ </div></div></div>
+      <div class="hintCardContainer"><div class="cardImgWrap"><img src="hint1.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">1コリントの木の近くに？</div></div></div>
       <div class="hintCardContainer"><div class="cardImgWrap"><img src="hint2.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">2竹キーホルダーの手前の木に？</div></div></div>
       <div class="hintCardContainer"><div class="cardImgWrap"><img src="hint3.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">3魚釣りの切り株近くに？</div></div></div>
       <div class="hintCardContainer"><div class="cardImgWrap"><img src="hint4.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">4ストラックアウトの看板近くに？</div></div></div>
       <div class="hintCardContainer"><div class="cardImgWrap"><img src="hint5.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">5ストラックアウト奥の大きな木の近くに？</div></div></div>
-　　　<div class="hintCardContainer"><div class="cardImgWrap"><img src="hint6.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">6竹迷路の入口前に？</div></div></div>
+      <div class="hintCardContainer"><div class="cardImgWrap"><img src="hint6.jpg"></div><div class="cardBottomBar"><div class="cardBottomText">6竹迷路の入口前に？</div></div></div>
     </div>
   </div>
   <button id="closeHintBtn" class="backBtn">戻る</button>
@@ -674,6 +677,19 @@ state.config.forEach((item, index) => {
   });
 });
 
+// 場所確認のカードをタッチしたときに拡大表示モーダルを開く
+document.querySelectorAll(".hintCardContainer").forEach(card => {
+  card.addEventListener("click", () => {
+    const imgEl = card.querySelector("img");
+    const textEl = card.querySelector(".cardBottomText");
+    if (!imgEl || !textEl) return;
+
+    UI.modalDetailImg.src = imgEl.src;
+    UI.modalDetailDesc.textContent = textEl.textContent;
+    UI.treasureDetailModal.style.display = "flex";
+  });
+});
+
 UI.startBtn.addEventListener("click", async () => {
   UI.menuScreen.style.display = "none";
   UI.mainScene.style.display = "block";
@@ -711,6 +727,13 @@ document.querySelector("#closeAtariBonusBtn").addEventListener("click", () => {
 
 document.querySelector("#openBonusBtn").addEventListener("click", () => { UI.atariBonusScreen.style.display = "flex"; });
 document.querySelector("#closeDetailModalBtn").addEventListener("click", () => { UI.treasureDetailModal.style.display = "none"; });
+
+// モーダルの背景タッチでも閉じられるように対応
+UI.treasureDetailModal.addEventListener("click", (e) => {
+  if (e.target === UI.treasureDetailModal) {
+    UI.treasureDetailModal.style.display = "none";
+  }
+});
 
 document.querySelector("#downloadWallpaperBtn").addEventListener("click", () => {
   const link = document.createElement("a");
