@@ -219,10 +219,6 @@ body{
   object-fit: cover; 
 }
 
-.rotate-frame {
-  transform: rotate(-90deg);
-}
-
 .cell-tag {
   position: absolute;
   top: 8px;
@@ -340,7 +336,7 @@ body{
   object-fit: fill;   
 }
 
-/* 撮影ボタン：中央下部に配置 */
+/* 撮影ボタン：通常は中央下部に配置 */
 #captureBtn{
   position: fixed;
   bottom: 30px;
@@ -358,6 +354,11 @@ body{
   cursor: pointer;
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
   white-space: nowrap;
+}
+
+/* 2つ目のフォトフレーム（frame2.png）用：撮影ボタンを少し上に配置 */
+#captureBtn.pos-up {
+  bottom: 100px;
 }
 
 /* 閉じるボタン：右上部に配置 */
@@ -521,6 +522,7 @@ const ctx = canvas.getContext("2d", { alpha: false });
 const frame = el("#overlayFrameImg");
 
 let isFrameActive = false;
+let launchedFromHint = false; // 場所確認から直接撮影モードに入ったかどうかのフラグ
 
 // マーカーIDとフレーム画像・保存IDの対応設定
 const photoSpots = [
@@ -528,6 +530,22 @@ const photoSpots = [
   { targetId: "#targetPhoto2", spotId: "9",  frameSrc: "frame2.png" },
   { targetId: "#targetPhoto3", spotId: "10", frameSrc: "frame3.png" }
 ];
+
+// カメラ停止共通処理
+async function stopARCamera() {
+  const arSystem = mainScene.systems["mindar-image-system"];
+  if (arSystem) {
+    try { await arSystem.stop(); } catch(e) { console.log(e); }
+  }
+
+  const video = el("video");
+  if (video) {
+    if (video.srcObject) {
+      video.srcObject.getTracks().forEach(t => t.stop()); 
+    }
+    video.remove(); 
+  }
+}
 
 // カメラ起動共通処理（presetFrameSrcが指定されていれば最初からフレームを表示）
 async function startARCamera(presetFrameSrc = null) {
@@ -537,9 +555,11 @@ async function startARCamera(presetFrameSrc = null) {
 
   if (presetFrameSrc) {
     // 場所確認から獲得済みフレームを選んで起動した場合
+    launchedFromHint = true;
     activatePhotoFrame(presetFrameSrc);
   } else {
     // 通常のマーカー読み込みモードで起動した場合
+    launchedFromHint = false;
     resetPhotoFrame();
   }
 
@@ -571,6 +591,14 @@ async function startARCamera(presetFrameSrc = null) {
 function activatePhotoFrame(frameSrc) {
   isFrameActive = true;
   frame.src = frameSrc;
+
+  // 2つ目のフォトフレーム（frame2.png）のときだけ撮影ボタンを少し上に配置
+  if (frameSrc === "frame2.png") {
+    captureBtn.classList.add("pos-up");
+  } else {
+    captureBtn.classList.remove("pos-up");
+  }
+
   photoFrameOverlay.style.display = "block"; 
   captureBtn.style.display = "block";       
   closeFrameBtn.style.display = "block";   
@@ -578,32 +606,39 @@ function activatePhotoFrame(frameSrc) {
   backBtn.style.display = "none";          
 }
 
-// フレーム撮影モードを解除し、通常のカメラ探索（またはメニュー）状態に戻す
+// フレーム撮影モードを解除し、通常のカメラ探索状態に戻す
 function resetPhotoFrame() {
   isFrameActive = false;
   photoFrameOverlay.style.display = "none";
   captureBtn.style.display = "none";
+  captureBtn.classList.remove("pos-up");
   closeFrameBtn.style.display = "none";
   bodyRoot.classList.remove("hide-scanning");
   backBtn.style.display = "block";
 }
 
+// 「❌ 閉じる」ボタンを押したときの処理
+async function handleCloseFrame() {
+  if (launchedFromHint) {
+    // 場所確認ページから来ていた場合は、カメラを停止して場所確認ページへ直接戻る
+    await stopARCamera();
+    resetPhotoFrame();
+    mainScene.style.display = "none";
+    backBtn.style.display = "none";
+    menuScreen.style.display = "flex";
+    updateHintPreviewUI();
+    hintScreen.style.display = "flex";
+    launchedFromHint = false;
+  } else {
+    // 通常のマーカー検索から表示した場合は、マーカー検索画面に戻る
+    resetPhotoFrame();
+  }
+}
+
 startBtn.addEventListener("click", () => startARCamera(null));
 
 backBtn.addEventListener("click", async () => {
-  const arSystem = mainScene.systems["mindar-image-system"];
-  if (arSystem) {
-    try { await arSystem.stop(); } catch(e) { console.log(e); }
-  }
-
-  const video = el("video");
-  if (video) {
-    if (video.srcObject) {
-      video.srcObject.getTracks().forEach(t => t.stop()); 
-    }
-    video.remove(); 
-  }
-
+  await stopARCamera();
   resetPhotoFrame();
   mainScene.style.display = "none";
   menuScreen.style.display = "flex";
@@ -619,7 +654,7 @@ el("#closeHintBtn").addEventListener("click", () => { hintScreen.style.display =
 el("#openExplainBtn").addEventListener("click", () => { explainScreen.style.display = "flex"; });
 el("#closeExplainBtn").addEventListener("click", () => { explainScreen.style.display = "none"; });
 
-closeFrameBtn.addEventListener("click", resetPhotoFrame);
+closeFrameBtn.addEventListener("click", handleCloseFrame);
 
 // 場所確認カードのUI更新とタップ時の撮影起動設定
 function updateHintPreviewUI() {
@@ -633,13 +668,11 @@ function updateHintPreviewUI() {
       tag.innerHTML = "獲得済み！";
       tag.style.background = "#28a745"; 
       img.src = realFrameSrc;           
-      img.classList.add("rotate-frame"); 
       card.classList.add("is-unlocked");
     } else {
       tag.innerHTML = "未獲得";
       tag.style.background = "#4da0ff"; 
       img.src = "unknown_photo.jpg";    
-      img.classList.remove("rotate-frame"); 
       card.classList.remove("is-unlocked");
     }
   });
@@ -716,3 +749,4 @@ window.addEventListener("touchmove", () => {}, { passive: true });
 </script>
 </body>
 </html>
+```[cite: 19]
