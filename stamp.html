@@ -197,16 +197,48 @@ body {
   justify-self: center;
 }
 
+.hintCardContainer {
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.hintCardContainer:active {
+  transform: scale(0.96);
+}
+
 .stampCardImgWrap, .hintCardImgWrap {
+  position: relative;
   width: 140px;
   height: 140px;
   overflow: hidden;
-  background: #f5f5f5;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.stampCardImgWrap img, .hintCardImgWrap img {
+.stampCardImgWrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+/* 場所確認の画像が見切れないように contain で全体表示 */
+.hintCardImgWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.zoomBadge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 7px;
+  border-radius: 8px;
+  pointer-events: none;
 }
 
 .stampBottomTextBar, .hintBottomTextBar {
@@ -230,8 +262,63 @@ body {
 .hintCardContainer:hover .hintCardImgWrap img {
   transform: scale(1.06);
 }
-.hintCardImgWrap img {
-  transition: transform 0.3s ease;
+
+/* ======================
+   場所確認 拡大モーダル
+====================== */
+#hintZoomModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 40000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  gap: 16px;
+}
+
+#hintZoomImg {
+  max-width: 92%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 20px;
+  border: 4px solid #ffb300;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+#hintZoomText {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.5;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px 18px;
+  border-radius: 16px;
+  border: 2px solid #ffb300;
+  max-width: 90%;
+}
+
+#closeHintZoomBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 #completeWrap {
@@ -354,16 +441,23 @@ body {
 <div id="hintScreen" class="blueSkyBg">
   <h1 class="screenTitleStyle">場所確認</h1>
   <div class="contentCard">
-    <div class="menuGuide">ここを探してみてね！</div>
+    <div class="menuGuide">ここを探してみてね！<br><span style="font-size: 12px; color: #e65100;">※画像をタッチすると拡大できるよ！</span></div>
     <div class="hintGrid">
-      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint1_t.jpg"></div><div class="hintBottomTextBar"><div class="hintText">1本館のクリスマスツリーに？</div></div></div>
-      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint2_t.jpg"></div><div class="hintBottomTextBar"><div class="hintText">2なりきり商店街の入り口に？</div></div></div>
-      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint3_t.jpg"></div><div class="hintBottomTextBar"><div class="hintText">3本館の食べ物売り場に？</div></div></div>
-      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint4_t.jpg"></div><div class="hintBottomTextBar"><div class="hintText">4ドーナツ屋さんの隣の軽トラックの間に？</div></div></div>
-      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint5_t.jpg"></div><div class="hintBottomTextBar"><div class="hintText">5竹迷路の前に？</div></div></div>
+      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint1_t.jpg"><span class="zoomBadge">🔍 拡大</span></div><div class="hintBottomTextBar"><div class="hintText">1本館のクリスマスツリーに？</div></div></div>
+      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint2_t.jpg"><span class="zoomBadge">🔍 拡大</span></div><div class="hintBottomTextBar"><div class="hintText">2なりきり商店街の入り口に？</div></div></div>
+      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint3_t.jpg"><span class="zoomBadge">🔍 拡大</span></div><div class="hintBottomTextBar"><div class="hintText">3本館の食べ物売り場に？</div></div></div>
+      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint4_t.jpg"><span class="zoomBadge">🔍 拡大</span></div><div class="hintBottomTextBar"><div class="hintText">4ドーナツ屋さんの隣の軽トラックの間に？</div></div></div>
+      <div class="hintCardContainer"><div class="hintCardImgWrap"><img src="hint5_t.jpg"><span class="zoomBadge">🔍 拡大</span></div><div class="hintBottomTextBar"><div class="hintText">5竹迷路の前に？</div></div></div>
     </div>
   </div>
   <button id="closeHintBtn" class="backBtn">戻る</button>
+</div>
+
+<!-- 場所確認 拡大モーダル -->
+<div id="hintZoomModal">
+  <button id="closeHintZoomBtn">×</button>
+  <img id="hintZoomImg" src="">
+  <div id="hintZoomText"></div>
 </div>
 
 <div id="stampScreen" class="blueSkyBg">
@@ -408,6 +502,9 @@ const UI = {
   stampCount: document.querySelector("#stampCount"),
   stampEffect: document.querySelector("#stampEffect"),
   hintScreen: document.querySelector("#hintScreen"),
+  hintZoomModal: document.querySelector("#hintZoomModal"),
+  hintZoomImg: document.querySelector("#hintZoomImg"),
+  hintZoomText: document.querySelector("#hintZoomText"),
   stampScreen: document.querySelector("#stampScreen"),
   completeWrap: document.querySelector("#completeWrap"),
   bonusGroup: document.querySelector("#bonusGroup"),
@@ -501,6 +598,27 @@ for (let i = 0; i < state.total; i++) {
     }
   });
 }
+
+// 場所確認カードをタッチしたときの拡大表示処理
+document.querySelectorAll(".hintCardContainer").forEach(card => {
+  card.addEventListener("click", () => {
+    const img = card.querySelector("img");
+    const text = card.querySelector(".hintText");
+    if (img) UI.hintZoomImg.src = img.src;
+    if (text) UI.hintZoomText.textContent = text.textContent;
+    UI.hintZoomModal.style.display = "flex";
+  });
+});
+
+// 拡大モーダルを閉じる処理
+document.querySelector("#closeHintZoomBtn").addEventListener("click", () => {
+  UI.hintZoomModal.style.display = "none";
+});
+UI.hintZoomModal.addEventListener("click", (e) => {
+  if (e.target === UI.hintZoomModal) {
+    UI.hintZoomModal.style.display = "none";
+  }
+});
 
 // イベントリスナー（スマホでのスクロールやタッチ操作の負荷を抑えるため passive: true を適用）
 UI.startBtn.addEventListener("click", startCamera);
