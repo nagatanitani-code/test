@@ -357,7 +357,12 @@ mindar-image="imageTargetSrc: targets.mind; maxTrack:1; autoStart:false; uiScann
 vr-mode-ui="enabled:false"
 device-orientation-permission-ui="enabled:false">
   <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
-  <a-entity id="targetPhoto" mindar-image-target="targetIndex:10"></a-entity>
+  <!-- マーカー1：frame.png -->
+  <a-entity id="targetPhoto1" mindar-image-target="targetIndex:10"></a-entity>
+  <!-- マーカー2：frame2.png -->
+  <a-entity id="targetPhoto2" mindar-image-target="targetIndex:11"></a-entity>
+  <!-- マーカー3：frame3.png -->
+  <a-entity id="targetPhoto3" mindar-image-target="targetIndex:12"></a-entity>
 </a-scene>
 
 <div id="menuScreen">
@@ -384,6 +389,7 @@ device-orientation-permission-ui="enabled:false">
 <div id="hintScreen">
   <h1 style="margin: 0; font-size: 38px;">場所確認</h1>
   <div class="hintContainer">
+    <!-- スポット1 -->
     <div class="hint-set-card" data-spot-id="8" data-frame-src="frame.png">
       <div class="set-cell cell-frame">
         <span class="cell-tag tag-frame">未獲得</span>
@@ -392,7 +398,35 @@ device-orientation-permission-ui="enabled:false">
       <div class="set-cell cell-location">
         <img src="hint_p.jpg">
         <div class="hint-overlay">
-          <div class="hint-text">花壇の近くに<br>あるよ！</div>
+          <div class="hint-text">竹やぶ入口付近<br>にあるよ！</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- スポット2 (frame2.png) -->
+    <div class="hint-set-card" data-spot-id="9" data-frame-src="frame2.png">
+      <div class="set-cell cell-frame">
+        <span class="cell-tag tag-frame">未獲得</span>
+        <img src="unknown_photo.jpg" class="frame-preview-img">
+      </div>
+      <div class="set-cell cell-location">
+        <img src="hint_p2.jpg">
+        <div class="hint-overlay">
+          <div class="hint-text">スポット2の<br>場所ヒント！</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- スポット3 (frame3.png) -->
+    <div class="hint-set-card" data-spot-id="10" data-frame-src="frame3.png">
+      <div class="set-cell cell-frame">
+        <span class="cell-tag tag-frame">未獲得</span>
+        <img src="unknown_photo.jpg" class="frame-preview-img">
+      </div>
+      <div class="set-cell cell-location">
+        <img src="hint_p3.jpg">
+        <div class="hint-overlay">
+          <div class="hint-text">スポット3の<br>場所ヒント！</div>
         </div>
       </div>
     </div>
@@ -434,7 +468,6 @@ const backBtn = el("#backToMenuBtn");
 const hintScreen = el("#hintScreen");
 const explainScreen = el("#explainScreen"); 
 const captureBtn = el("#captureBtn");
-const targetPhoto = el("#targetPhoto");
 const photoFrameOverlay = el("#photoFrameOverlay");
 const closeFrameBtn = el("#closeFrameBtn");
 const bodyRoot = el("#bodyRoot");
@@ -444,6 +477,13 @@ const ctx = canvas.getContext("2d", { alpha: false });
 const frame = el("#overlayFrameImg");
 
 let isFrameActive = false;
+
+// マーカーIDとフレーム画像・保存IDの対応設定
+const photoSpots = [
+  { targetId: "#targetPhoto1", spotId: "8",  frameSrc: "frame.png" },
+  { targetId: "#targetPhoto2", spotId: "9",  frameSrc: "frame2.png" },
+  { targetId: "#targetPhoto3", spotId: "10", frameSrc: "frame3.png" }
+];
 
 startBtn.addEventListener("click", async () => {
   menuScreen.style.display = "none";
@@ -534,7 +574,7 @@ function updateHintPreviewUI() {
   });
 }
 
-// 撮影処理（回転させず、そのままの向きでキャンバスに描画・出力）
+// 撮影処理（選択されているframe画像を重ねて保存）
 captureBtn.addEventListener("click", async () => {
   try {
     captureBtn.style.display = "none";
@@ -547,11 +587,9 @@ captureBtn.addEventListener("click", async () => {
       return;
     }
 
-    // カメラ映像の実際の解像度をそのままキャンバスに反映
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
-    // 回転処理を入れず、そのまま描画
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     if (frame.complete) {
@@ -577,16 +615,26 @@ captureBtn.addEventListener("click", async () => {
   closeFrameBtn.style.display = "block";
 });
 
-targetPhoto.addEventListener("targetFound", () => {
-  localStorage.setItem("ar_spot_scanned_8", "true");
+// 各マーカー検出時のイベントを一括登録
+photoSpots.forEach(spot => {
+  const targetEl = el(spot.targetId);
+  if (!targetEl) return;
 
-  if (isFrameActive) return;
-  isFrameActive = true;
-  photoFrameOverlay.style.display = "block"; 
-  captureBtn.style.display = "block";       
-  closeFrameBtn.style.display = "block";   
-  bodyRoot.classList.add("hide-scanning"); 
-  backBtn.style.display = "none";          
+  targetEl.addEventListener("targetFound", () => {
+    localStorage.setItem(`ar_spot_scanned_${spot.spotId}`, "true");
+
+    if (isFrameActive) return;
+    isFrameActive = true;
+
+    // 検出されたマーカーに対応するフレーム画像へ切り替え
+    frame.src = spot.frameSrc;
+
+    photoFrameOverlay.style.display = "block"; 
+    captureBtn.style.display = "block";       
+    closeFrameBtn.style.display = "block";   
+    bodyRoot.classList.add("hide-scanning"); 
+    backBtn.style.display = "none";          
+  });
 });
 
 window.addEventListener("touchstart", () => {}, { passive: true });
