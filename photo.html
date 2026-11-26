@@ -147,6 +147,14 @@ body{
   text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.hintSubGuide {
+  font-size: 14px;
+  color: #2c445e;
+  font-weight: bold;
+  margin-top: -12px;
+  text-align: center;
+}
+
 .hintContainer {
   display: flex;
   flex-direction: column;
@@ -166,6 +174,17 @@ body{
   box-shadow: 0 8px 20px rgba(0, 48, 120, 0.1);
   border: 2px solid rgba(77, 160, 255, 0.15);
   position: relative;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+/* 獲得済みカードはタップ可能にするスタイル */
+.hint-set-card.is-unlocked {
+  cursor: pointer;
+  border: 2px solid #28a745;
+  box-shadow: 0 8px 22px rgba(40, 167, 69, 0.2);
+}
+.hint-set-card.is-unlocked:active {
+  transform: scale(0.97);
 }
 
 .set-cell {
@@ -218,6 +237,27 @@ body{
 .tag-frame {
   background: #4da0ff;
   color: white;
+}
+
+/* 獲得済みカードに表示する「タップで撮影」バッジ */
+.shoot-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #ffaa00 0%, #ff5500 100%);
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  display: none;
+  z-index: 30000;
+}
+.hint-set-card.is-unlocked .shoot-badge {
+  display: block;
 }
 
 .hint-overlay {
@@ -388,12 +428,14 @@ device-orientation-permission-ui="enabled:false">
 
 <div id="hintScreen">
   <h1 style="margin: 0; font-size: 38px;">場所確認</h1>
+  <div class="hintSubGuide">獲得済みのフレームをタップするとそのまま撮影できるよ！</div>
   <div class="hintContainer">
     <!-- スポット1 -->
     <div class="hint-set-card" data-spot-id="8" data-frame-src="frame.png">
       <div class="set-cell cell-frame">
         <span class="cell-tag tag-frame">未獲得</span>
         <img src="unknown_photo.jpg" class="frame-preview-img">
+        <span class="shoot-badge">📸 タップで撮影</span>
       </div>
       <div class="set-cell cell-location">
         <img src="hint_p.jpg">
@@ -408,6 +450,7 @@ device-orientation-permission-ui="enabled:false">
       <div class="set-cell cell-frame">
         <span class="cell-tag tag-frame">未獲得</span>
         <img src="unknown_photo.jpg" class="frame-preview-img">
+        <span class="shoot-badge">📸 タップで撮影</span>
       </div>
       <div class="set-cell cell-location">
         <img src="hint_p2.jpg">
@@ -422,6 +465,7 @@ device-orientation-permission-ui="enabled:false">
       <div class="set-cell cell-frame">
         <span class="cell-tag tag-frame">未獲得</span>
         <img src="unknown_photo.jpg" class="frame-preview-img">
+        <span class="shoot-badge">📸 タップで撮影</span>
       </div>
       <div class="set-cell cell-location">
         <img src="hint_p3.jpg">
@@ -442,7 +486,7 @@ device-orientation-permission-ui="enabled:false">
     <img src="photo_img.jpg" class="explainImg" alt="マーカーの例">
 
     <h3>② 写真の保存の仕方</h3>
-    <p>マーカーを読み込むとフォトフレームが画面いっぱいに表示され、スキャン枠が非表示になります。<strong><span>📸 撮影する</span></strong>ボタンを押すと写真が保存されます。</p>
+    <p>マーカーを読み込むとフォトフレームが画面いっぱいに表示され、スキャン枠が非表示になります。<strong><span>📸 撮影する</span></strong>ボタンを押すと写真が保存されます。一度獲得したフレームは「場所確認」からいつでも撮影できます。</p>
     <h3>📱 iPhone (iOS) をお使いの方</h3>
     <p>撮影ボタンを押すと別タブ（白い画面）で写真が開きます。開いた写真を<strong><span>長押し</span></strong>して公式の「"写真"に追加」または保存を選んでください。</p>
     <h3>🤖 Android をお使いの方</h3>
@@ -485,10 +529,19 @@ const photoSpots = [
   { targetId: "#targetPhoto3", spotId: "10", frameSrc: "frame3.png" }
 ];
 
-startBtn.addEventListener("click", async () => {
+// カメラ起動共通処理（presetFrameSrcが指定されていれば最初からフレームを表示）
+async function startARCamera(presetFrameSrc = null) {
   menuScreen.style.display = "none";
+  hintScreen.style.display = "none";
   mainScene.style.display = "block";
-  backBtn.style.display = "block";
+
+  if (presetFrameSrc) {
+    // 場所確認から獲得済みフレームを選んで起動した場合
+    activatePhotoFrame(presetFrameSrc);
+  } else {
+    // 通常のマーカー読み込みモードで起動した場合
+    resetPhotoFrame();
+  }
 
   await new Promise(r => setTimeout(r, 200));
   const arSystem = mainScene.systems["mindar-image-system"];
@@ -512,7 +565,30 @@ startBtn.addEventListener("click", async () => {
       }
     }
   }, 1000);
-});
+}
+
+// フレーム撮影モードを有効にする共通関数
+function activatePhotoFrame(frameSrc) {
+  isFrameActive = true;
+  frame.src = frameSrc;
+  photoFrameOverlay.style.display = "block"; 
+  captureBtn.style.display = "block";       
+  closeFrameBtn.style.display = "block";   
+  bodyRoot.classList.add("hide-scanning"); 
+  backBtn.style.display = "none";          
+}
+
+// フレーム撮影モードを解除し、通常のカメラ探索（またはメニュー）状態に戻す
+function resetPhotoFrame() {
+  isFrameActive = false;
+  photoFrameOverlay.style.display = "none";
+  captureBtn.style.display = "none";
+  closeFrameBtn.style.display = "none";
+  bodyRoot.classList.remove("hide-scanning");
+  backBtn.style.display = "block";
+}
+
+startBtn.addEventListener("click", () => startARCamera(null));
 
 backBtn.addEventListener("click", async () => {
   const arSystem = mainScene.systems["mindar-image-system"];
@@ -543,16 +619,9 @@ el("#closeHintBtn").addEventListener("click", () => { hintScreen.style.display =
 el("#openExplainBtn").addEventListener("click", () => { explainScreen.style.display = "flex"; });
 el("#closeExplainBtn").addEventListener("click", () => { explainScreen.style.display = "none"; });
 
-function resetPhotoFrame() {
-  isFrameActive = false;
-  photoFrameOverlay.style.display = "none";
-  captureBtn.style.display = "none";
-  closeFrameBtn.style.display = "none";
-  bodyRoot.classList.remove("hide-scanning");
-  backBtn.style.display = "block";
-}
 closeFrameBtn.addEventListener("click", resetPhotoFrame);
 
+// 場所確認カードのUI更新とタップ時の撮影起動設定
 function updateHintPreviewUI() {
   document.querySelectorAll(".hint-set-card").forEach(card => {
     const spotId = card.getAttribute("data-spot-id");         
@@ -565,14 +634,28 @@ function updateHintPreviewUI() {
       tag.style.background = "#28a745"; 
       img.src = realFrameSrc;           
       img.classList.add("rotate-frame"); 
+      card.classList.add("is-unlocked");
     } else {
       tag.innerHTML = "未獲得";
       tag.style.background = "#4da0ff"; 
       img.src = "unknown_photo.jpg";    
       img.classList.remove("rotate-frame"); 
+      card.classList.remove("is-unlocked");
     }
   });
 }
+
+// 場所確認カードをタップしたときの処理（獲得済みなら撮影起動）
+document.querySelectorAll(".hint-set-card").forEach(card => {
+  card.addEventListener("click", () => {
+    const spotId = card.getAttribute("data-spot-id");
+    const realFrameSrc = card.getAttribute("data-frame-src");
+
+    if (localStorage.getItem(`ar_spot_scanned_${spotId}`) === "true") {
+      startARCamera(realFrameSrc);
+    }
+  });
+});
 
 // 撮影処理（選択されているframe画像を重ねて保存）
 captureBtn.addEventListener("click", async () => {
@@ -624,16 +707,7 @@ photoSpots.forEach(spot => {
     localStorage.setItem(`ar_spot_scanned_${spot.spotId}`, "true");
 
     if (isFrameActive) return;
-    isFrameActive = true;
-
-    // 検出されたマーカーに対応するフレーム画像へ切り替え
-    frame.src = spot.frameSrc;
-
-    photoFrameOverlay.style.display = "block"; 
-    captureBtn.style.display = "block";       
-    closeFrameBtn.style.display = "block";   
-    bodyRoot.classList.add("hide-scanning"); 
-    backBtn.style.display = "none";          
+    activatePhotoFrame(spot.frameSrc);
   });
 });
 
