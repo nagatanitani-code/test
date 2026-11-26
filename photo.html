@@ -148,11 +148,12 @@ body{
 }
 
 .hintSubGuide {
-  font-size: 14px;
+  font-size: 13px;
   color: #2c445e;
   font-weight: bold;
   margin-top: -12px;
   text-align: center;
+  line-height: 1.5;
 }
 
 .hintContainer {
@@ -174,36 +175,48 @@ body{
   box-shadow: 0 8px 20px rgba(0, 48, 120, 0.1);
   border: 2px solid rgba(77, 160, 255, 0.15);
   position: relative;
-  transition: transform 0.15s, box-shadow 0.15s;
 }
 
-/* 獲得済みカードはタップ可能にするスタイル */
+/* 獲得済みカードの枠線 */
 .hint-set-card.is-unlocked {
-  cursor: pointer;
   border: 2px solid #28a745;
   box-shadow: 0 8px 22px rgba(40, 167, 69, 0.2);
-}
-.hint-set-card.is-unlocked:active {
-  transform: scale(0.97);
 }
 
 .set-cell {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1; 
   overflow: hidden;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
 .cell-frame {
+  aspect-ratio: 1 / 1;
   background: #f4f9ff;
   border-right: 2px dashed rgba(77, 160, 255, 0.25); 
 }
 
+/* 獲得済みの場合、左側のフレームセルをタップ可能にする */
+.hint-set-card.is-unlocked .cell-frame {
+  cursor: pointer;
+}
+.hint-set-card.is-unlocked .cell-frame:active {
+  opacity: 0.8;
+}
+
+/* 右側の地図セル：画像が見切れないように縦並びレイアウト＆タップ拡大対応 */
 .cell-location {
-  background: #fcfcfc;
+  background: #f8fafc;
+  cursor: pointer;
+  justify-content: space-between;
+  padding: 8px;
+  box-sizing: border-box;
+}
+.cell-location:active {
+  opacity: 0.85;
 }
 
 .set-cell img {
@@ -215,8 +228,38 @@ body{
   padding: 8px;
   box-sizing: border-box;
 }
+
+/* 地図画像全体が見切れないようにcontainに変更 */
+.cell-location .map-img-wrap {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #ffffff;
+}
 .cell-location img {
-  object-fit: cover; 
+  width: 100%;
+  height: 100%;
+  max-height: 140px;
+  object-fit: contain;
+}
+
+/* 地図拡大アイコンバッジ */
+.zoom-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 3px 7px;
+  border-radius: 8px;
+  pointer-events: none;
 }
 
 .cell-tag {
@@ -228,7 +271,7 @@ body{
   padding: 3px 8px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-  z-index: 30000;
+  z-index: 10;
 }
 .tag-frame {
   background: #4da0ff;
@@ -250,31 +293,80 @@ body{
   white-space: nowrap;
   box-shadow: 0 2px 6px rgba(0,0,0,0.25);
   display: none;
-  z-index: 30000;
+  z-index: 10;
 }
 .hint-set-card.is-unlocked .shoot-badge {
   display: block;
 }
 
+/* ヒントテキストは地図の下にスッキリ配置して画像に被らないようにする */
 .hint-overlay {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+  width: 100%;
+  padding-top: 6px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  padding: 12px 8px;
-  height: 65%;
   box-sizing: border-box;
 }
 
 .hint-text {
-  color: #ffffff;
-  font-size: 13px;
+  color: #2c445e;
+  font-size: 12px;
   font-weight: bold;
   text-align: center;
-  line-height: 1.4;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  line-height: 1.35;
+}
+
+/* ======================
+   地図拡大モーダル
+====================== */
+#mapZoomModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  z-index: 50000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  gap: 16px;
+}
+
+#mapZoomImg {
+  max-width: 95%;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+#mapZoomCaption {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.5;
+}
+
+#closeMapZoomBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .explainBox {
@@ -429,7 +521,7 @@ device-orientation-permission-ui="enabled:false">
 
 <div id="hintScreen">
   <h1 style="margin: 0; font-size: 38px;">場所確認</h1>
-  <div class="hintSubGuide">獲得済みのフレームをタップするとそのまま撮影できるよ！</div>
+  <div class="hintSubGuide">獲得済みフレームをタップで撮影！<br>右の地図をタップすると拡大できるよ！</div>
   <div class="hintContainer">
     <!-- スポット1 -->
     <div class="hint-set-card" data-spot-id="8" data-frame-src="frame.png">
@@ -439,7 +531,10 @@ device-orientation-permission-ui="enabled:false">
         <span class="shoot-badge">📸 タップで撮影</span>
       </div>
       <div class="set-cell cell-location">
-        <img src="hint_p.jpg">
+        <div class="map-img-wrap">
+          <img src="hint_p.jpg">
+          <span class="zoom-badge">🔍 拡大</span>
+        </div>
         <div class="hint-overlay">
           <div class="hint-text">竹やぶ入口付近栗の木近く<br>にあるよ！</div>
         </div>
@@ -454,7 +549,10 @@ device-orientation-permission-ui="enabled:false">
         <span class="shoot-badge">📸 タップで撮影</span>
       </div>
       <div class="set-cell cell-location">
-        <img src="hint_p2.jpg">
+        <div class="map-img-wrap">
+          <img src="hint_p2.jpg">
+          <span class="zoom-badge">🔍 拡大</span>
+        </div>
         <div class="hint-overlay">
           <div class="hint-text">竹やぶ入口付近栗の木近く<br>にあるよ！</div>
         </div>
@@ -469,7 +567,10 @@ device-orientation-permission-ui="enabled:false">
         <span class="shoot-badge">📸 タップで撮影</span>
       </div>
       <div class="set-cell cell-location">
-        <img src="hint_p3.jpg">
+        <div class="map-img-wrap">
+          <img src="hint_p3.jpg">
+          <span class="zoom-badge">🔍 拡大</span>
+        </div>
         <div class="hint-overlay">
           <div class="hint-text">竹やぶ入口付近栗の木近く<br>にあるよ！</div>
         </div>
@@ -477,6 +578,13 @@ device-orientation-permission-ui="enabled:false">
     </div>
   </div>
   <button id="closeHintBtn" class="backBtn">戻る</button>
+</div>
+
+<!-- 地図拡大モーダル -->
+<div id="mapZoomModal">
+  <button id="closeMapZoomBtn">×</button>
+  <img id="mapZoomImg" src="">
+  <div id="mapZoomCaption"></div>
 </div>
 
 <div id="explainScreen">
@@ -516,6 +624,11 @@ const captureBtn = el("#captureBtn");
 const photoFrameOverlay = el("#photoFrameOverlay");
 const closeFrameBtn = el("#closeFrameBtn");
 const bodyRoot = el("#bodyRoot");
+
+const mapZoomModal = el("#mapZoomModal");
+const mapZoomImg = el("#mapZoomImg");
+const mapZoomCaption = el("#mapZoomCaption");
+const closeMapZoomBtn = el("#closeMapZoomBtn");
 
 const canvas = el("#captureCanvas");
 const ctx = canvas.getContext("2d", { alpha: false }); 
@@ -656,7 +769,7 @@ el("#closeExplainBtn").addEventListener("click", () => { explainScreen.style.dis
 
 closeFrameBtn.addEventListener("click", handleCloseFrame);
 
-// 場所確認カードのUI更新とタップ時の撮影起動設定
+// 場所確認カードのUI更新
 function updateHintPreviewUI() {
   document.querySelectorAll(".hint-set-card").forEach(card => {
     const spotId = card.getAttribute("data-spot-id");         
@@ -678,9 +791,10 @@ function updateHintPreviewUI() {
   });
 }
 
-// 場所確認カードをタップしたときの処理（獲得済みなら撮影起動）
-document.querySelectorAll(".hint-set-card").forEach(card => {
-  card.addEventListener("click", () => {
+// 左側のフレームセルをタップしたときの処理（獲得済みなら撮影起動）
+document.querySelectorAll(".hint-set-card .cell-frame").forEach(frameCell => {
+  frameCell.addEventListener("click", () => {
+    const card = frameCell.closest(".hint-set-card");
     const spotId = card.getAttribute("data-spot-id");
     const realFrameSrc = card.getAttribute("data-frame-src");
 
@@ -688,6 +802,27 @@ document.querySelectorAll(".hint-set-card").forEach(card => {
       startARCamera(realFrameSrc);
     }
   });
+});
+
+// 右側の地図セルをタップしたときの処理（拡大表示）
+document.querySelectorAll(".hint-set-card .cell-location").forEach(locCell => {
+  locCell.addEventListener("click", () => {
+    const img = locCell.querySelector("img");
+    const text = locCell.querySelector(".hint-text");
+    if (img) mapZoomImg.src = img.src;
+    if (text) mapZoomCaption.innerHTML = text.innerHTML;
+    mapZoomModal.style.display = "flex";
+  });
+});
+
+// 地図拡大モーダルを閉じる処理
+closeMapZoomBtn.addEventListener("click", () => {
+  mapZoomModal.style.display = "none";
+});
+mapZoomModal.addEventListener("click", (e) => {
+  if (e.target === mapZoomModal) {
+    mapZoomModal.style.display = "none";
+  }
 });
 
 // 撮影処理（選択されているframe画像を重ねて保存）
@@ -749,4 +884,4 @@ window.addEventListener("touchmove", () => {}, { passive: true });
 </script>
 </body>
 </html>
-```[cite: 19]
+```[cite: 21]
